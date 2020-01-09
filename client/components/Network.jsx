@@ -63,9 +63,7 @@ const Link = ({ source, target }) => {
     target.x +
     " " +
     target.y;
-  return (
-    <path className={classes.link} markerEnd={"url(#markerArrow)"} d={d}></path>
-  );
+  return <path className="link" markerEnd={"url(#markerArrow)"} d={d}></path>;
 };
 
 class Network extends React.Component {
@@ -83,7 +81,7 @@ class Network extends React.Component {
     const size = { width: 500, height: 500 };
     const nodesById = _.keyBy(nodes, "id");
     return (
-      <svg className={classes.svg} width={size.height} height={size.height}>
+      <svg className="network-game" width={size.height} height={size.height}>
         <defs>
           <marker
             id="markerArrow"

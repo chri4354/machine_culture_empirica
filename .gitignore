@@ -6,4 +6,5 @@ prod.json
 staging.json
 development.json
 dev.json
-local.json
+local.
+!sample-network.json

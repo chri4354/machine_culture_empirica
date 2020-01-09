@@ -7,3 +7,4 @@
 - Will there be many possible machine solutions for a single network?
 - Can each node be visited only once?
 - Is it possible for a user to get into a "stuck" state, where they are not able to make any valid moves but the path is not complete?
+- If the round ends before player1 finishes their solution, how will we show player1's solution to player2?

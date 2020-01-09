@@ -1,0 +1,9 @@
+- Where are the networks going to be stored?
+- Will all networks be pre-generated or will some networks be randomly created at runtime?
+- Should the network definition include the initial/starting node?
+- Should we display an error message if the user clicks on an invalid node?
+- Where are the machine's solutions going to be stored?
+- Will all machine solutions be pre-generated or will some machine solutions be randomly created at runtime?
+- Will there be many possible machine solutions for a single network?
+- Can each node be visited only once?
+- Is it possible for a user to get into a "stuck" state, where they are not able to make any valid moves but the path is not complete?

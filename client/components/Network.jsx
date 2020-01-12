@@ -1,16 +1,7 @@
 import React from "react";
 import _ from "lodash";
 
-const classes = {
-  link: {
-    fill: "none",
-    stroke: "black",
-    strokeWidth: "1.5px"
-  },
-  svg: { border: "0px solid black", cursor: "crosshair" }
-};
-
-const Node = ({ x, y, text, r, active, id, onNodeClick }) => {
+const Node = ({ x, y, text, r, isActive, id, onNodeClick }) => {
   return (
     <g style={{ cursor: "pointer" }} onClick={() => onNodeClick(id)}>
       <circle
@@ -18,7 +9,7 @@ const Node = ({ x, y, text, r, active, id, onNodeClick }) => {
         cy={y}
         r={r}
         key={"circle"}
-        fill={active ? "white" : "gray"}
+        fill={isActive ? "white" : "gray"}
         stroke="black"
         strokeWidth="3"
       />
@@ -67,14 +58,9 @@ const Link = ({ source, target }) => {
 };
 
 class Network extends React.Component {
-  state = {};
-
-  componentDidMount() {
-    // TODO the network should define the initial active node
-    this.setState({
-      activeNodeId: this.props.nodes[0].id
-    });
-  }
+  state = {
+    activeNodeId: this.props.startingNodeId
+  };
 
   render() {
     const { nodes, actions, onNodeClick } = this.props;
@@ -116,7 +102,7 @@ class Network extends React.Component {
               x={size.width * x}
               y={size.height * y}
               r={size.width / 15}
-              active={id === this.state.activeNodeId}
+              isActive={id === this.state.activeNodeId}
               text={displayName}
               onNodeClick={id => {
                 this.setState({

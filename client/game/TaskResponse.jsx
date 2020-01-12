@@ -28,7 +28,7 @@ export default class TaskResponse extends React.Component {
     return (
       <div className="task-response">
         <form style={{ textAlign: "right" }} onSubmit={this.handleSubmit}>
-          <button type="submit">Submit</button>
+          {/*<button type="submit">Submit</button> */}
         </form>
       </div>
     );

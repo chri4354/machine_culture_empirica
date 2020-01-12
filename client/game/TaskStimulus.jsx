@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Network } from "../components/Network";
-import sampleNetwork from "../sample-network.json";
+import sampleNetwork from "../sample-environment.json";
 
 export default class TaskStimulus extends React.Component {
   render() {

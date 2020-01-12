@@ -30,7 +30,7 @@ const Node = ({ x, y, text, r, isActive, id, onClick, isInvalidClick }) => {
   );
 };
 
-const Link = ({ source, target }) => {
+const Link = ({ source, target, reward, id }) => {
   const dx = target.x - source.x;
   const dy = target.y - source.y;
   const dr = Math.sqrt(dx * dx + dy * dy) * 3;
@@ -47,7 +47,18 @@ const Link = ({ source, target }) => {
     target.x +
     " " +
     target.y;
-  return <path className="link" markerEnd={"url(#markerArrow)"} d={d}></path>;
+  let textPath = `<textPath alignment-baseline="text-top" xlink:href="#${id}">${reward}</textPath>`;
+  return (
+    <g>
+      <path
+        id={id}
+        className="link"
+        markerEnd={"url(#markerArrow)"}
+        d={d}
+      ></path>
+      <text x="50" dangerouslySetInnerHTML={{ __html: textPath }}></text>;
+    </g>
+  );
 };
 
 class Network extends React.Component {
@@ -79,6 +90,8 @@ class Network extends React.Component {
           {actions.map(({ sourceId, targetId, reward }, idx) => (
             <Link
               r={size.width / 15}
+              reward={reward}
+              id={`${sourceId}_${targetId}`}
               source={{
                 x: size.width * nodesById[sourceId].x,
                 y: size.height * nodesById[sourceId].y

@@ -15,13 +15,57 @@ export default class TaskStimulus extends React.Component {
     }));
   }
 
+  onNodeClick(targetId) {
+    const { round, player } = this.props;
+    const network = round.get("network");
+    const { actions, requiredSolutionLength } = network;
+    if (this.state.numberOfActionsRemaining === 0) {
+      return;
+    }
+    const action = findAction(this.state.activeNodeId, targetId, actions);
+    if (!action) {
+      this.setState({
+        invalidClickNodeId: targetId
+      });
+      setTimeout(() => {
+        this.setState({
+          invalidClickNodeId: null
+        });
+      }, 500);
+      return;
+    }
+    let solution = player.round.get("solution");
+    if (!solution) {
+      solution = {
+        environmentId: 1, // TODO
+        actions: []
+      };
+    }
+    const solutionActions = [...solution.actions, { ...action }];
+    player.round.set("solution", {
+      ...solution,
+      actions: solutionActions
+    });
+    const numberOfActionsRemaining = Math.max(
+      requiredSolutionLength - solutionActions.length,
+      0
+    );
+    this.setState(() => ({
+      activeNodeId: targetId,
+      numberOfActionsRemaining,
+      roundScore: calculateScore(solutionActions)
+    }));
+
+    if (numberOfActionsRemaining === 0) {
+      player.stage.submit();
+    }
+  }
+
   render() {
-    const { round, stage, player } = this.props;
+    const { round } = this.props;
     const network = round.get("network");
     const { nodes, actions, startingNodeId, requiredSolutionLength } = network;
-    const description = `Find a path of ${
-      network.requiredSolutionLength
-    } steps, starting from node "${
+    const description = `Find a path of ${requiredSolutionLength} steps, starting from node "${
       nodes.find(n => n.id === startingNodeId).displayName
     }". The larger the reward, the better.`;
     return (
@@ -33,49 +77,7 @@ export default class TaskStimulus extends React.Component {
           nodes={nodes}
           activeNodeId={this.state.activeNodeId}
           invalidClickNodeId={this.state.invalidClickNodeId}
-          onNodeClick={targetId => {
-            const action = findAction(
-              this.state.activeNodeId,
-              targetId,
-              actions
-            );
-            if (!action) {
-              this.setState({
-                invalidClickNodeId: targetId
-              });
-              setTimeout(() => {
-                this.setState({
-                  invalidClickNodeId: null
-                });
-              }, 500);
-              return;
-            }
-            let solution = player.round.get("solution");
-            if (!solution) {
-              solution = {
-                environmentId: 1, // TODO
-                actions: []
-              };
-            }
-            const solutionActions = [...solution.actions, { ...action }];
-            player.round.set("solution", {
-              ...solution,
-              actions: solutionActions
-            });
-            const numberOfActionsRemaining = Math.max(
-              requiredSolutionLength - solutionActions.length,
-              0
-            );
-            this.setState(() => ({
-              activeNodeId: targetId,
-              numberOfActionsRemaining,
-              roundScore: calculateScore(solutionActions)
-            }));
-
-            if (numberOfActionsRemaining === 0) {
-              player.stage.submit();
-            }
-          }}
+          onNodeClick={targetId => this.onNodeClick(targetId)}
           actions={actions}
         />
       </div>

@@ -1,6 +1,6 @@
 import Empirica from "meteor/empirica:core";
 
-import { calculateReward } from "../imports/utils";
+import { calculateScore } from "../imports/utils";
 
 // onGameStart is triggered opnce per game before the game starts, and before
 // the first onRoundStart. It receives the game and list of all the players in
@@ -25,9 +25,9 @@ Empirica.onRoundEnd((game, round, players) => {
   players.forEach(player => {
     // TODO store the network in the round data
     const network = {};
-    const solution = player.round.get("solution") || [];
+    const solution = player.round.get("solution") || {};
     const prevScore = player.get("score") || 0;
-    player.set("score", prevScore + calculateReward(network, solution));
+    player.set("score", prevScore + calculateScore(network, solution.actions));
   });
 });
 

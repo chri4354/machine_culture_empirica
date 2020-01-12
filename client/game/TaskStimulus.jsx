@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Network } from "../components/Network";
-import { isValidStep } from "../../imports/utils";
+import { calculateScore, findAction } from "../../imports/utils";
 
 export default class TaskStimulus extends React.Component {
   state = {};
@@ -10,7 +10,8 @@ export default class TaskStimulus extends React.Component {
     const network = this.props.round.get("network");
     this.setState(() => ({
       activeNodeId: network.startingNodeId,
-      numberOfStepsRemaining: network.requiredSolutionLength
+      numberOfActionsRemaining: network.requiredSolutionLength,
+      roundScore: 0
     }));
   }
 
@@ -18,24 +19,29 @@ export default class TaskStimulus extends React.Component {
     const { round, stage, player } = this.props;
     const network = round.get("network");
     const { nodes, actions, startingNodeId, requiredSolutionLength } = network;
-    const description = `Find a path of ${nodes.length -
-      1} steps, starting from node "${
+    const description = `Find a path of ${
+      network.requiredSolutionLength
+    } steps, starting from node "${
       nodes.find(n => n.id === startingNodeId).displayName
     }". The larger the reward, the better.`;
     return (
       <div className="task-stimulus">
         <p>{description}</p>
-        <p>Number of steps remaining: {this.state.numberOfStepsRemaining}</p>
-        <p>Round Score: TODO</p>
-        <p>Error messages: TODO</p>
+        <p>Number of steps remaining: {this.state.numberOfActionsRemaining}</p>
+        <p>Round Score: {this.state.roundScore}</p>
         <Network
           nodes={nodes}
           activeNodeId={this.state.activeNodeId}
           invalidClickNodeId={this.state.invalidClickNodeId}
-          onNodeClick={id => {
-            if (!isValidStep(this.state.activeNodeId, id, actions)) {
+          onNodeClick={targetId => {
+            const action = findAction(
+              this.state.activeNodeId,
+              targetId,
+              actions
+            );
+            if (!action) {
               this.setState({
-                invalidClickNodeId: id
+                invalidClickNodeId: targetId
               });
               setTimeout(() => {
                 this.setState({
@@ -44,16 +50,31 @@ export default class TaskStimulus extends React.Component {
               }, 500);
               return;
             }
-            // TODO store soution in correct format
-            const solution = [...(player.round.get("solution") || []), id];
-            player.round.set("solution", solution);
+            let solution = player.round.get("solution");
+            if (!solution) {
+              solution = {
+                environmentId: 1, // TODO
+                actions: []
+              };
+            }
+            const solutionActions = [...solution.actions, { ...action }];
+            player.round.set("solution", {
+              ...solution,
+              actions: solutionActions
+            });
+            const numberOfActionsRemaining = Math.max(
+              requiredSolutionLength - solutionActions.length,
+              0
+            );
             this.setState(() => ({
-              activeNodeId: id,
-              numberOfStepsRemaining: Math.max(
-                requiredSolutionLength - solution.length,
-                0
-              )
+              activeNodeId: targetId,
+              numberOfActionsRemaining,
+              roundScore: calculateScore(solutionActions)
             }));
+
+            if (numberOfActionsRemaining === 0) {
+              player.stage.submit();
+            }
           }}
           actions={actions}
         />

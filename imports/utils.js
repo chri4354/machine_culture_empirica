@@ -1,22 +1,19 @@
 /** These function can be used on server and frontend */
 
-export const calculateReward = (network, solution) => {
-  if (!solution || !solution.length) {
+export const calculateScore = actions => {
+  if (!actions || !actions.length) {
     return 0;
   }
 
-  // TODO
-  return 10;
+  return actions.reduce((sum, action) => {
+    return sum + action.reward;
+  }, 0);
 };
 
-export const isValidStep = (sourceId, targetId, actions) => {
-  return actions.some(
+export const findAction = (sourceId, targetId, actions) => {
+  return actions.find(
     action => action.sourceId === sourceId && action.targetId === targetId
   );
-};
-
-const getPossibleActionsFromSourceNode = (sourceId, actions) => {
-  return actions.find(action => action.sourceId === sourceId);
 };
 
 export const isPlayerBot = player => {

@@ -4,6 +4,12 @@ import "./callbacks.js";
 import { Environments } from "./environment";
 import networks from "./networks.json";
 
+// TODO this should be disabled in production
+const resetDatabase = () => {
+  Environments.deleteAll();
+};
+resetDatabase();
+
 const numberOfEnvironments = Environments.count();
 console.log("Number of environments stored in Mongo: ", numberOfEnvironments);
 if (numberOfEnvironments === 0) {
@@ -31,7 +37,7 @@ Empirica.gameInit((game, treatment, players) => {
 
   _.times(numberOfRounds, i => {
     const round = game.addRound();
-    round.set("environment", environments[0]); // TODO How are environments chosen for a round?
+    round.set("network", environments[0]); // TODO How are environments chosen for a round?
     round.addStage({
       name: "response",
       displayName: "Response",

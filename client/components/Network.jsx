@@ -1,15 +1,19 @@
 import React from "react";
 import _ from "lodash";
 
-const Node = ({ x, y, text, r, isActive, id, onNodeClick }) => {
+const Node = ({ x, y, text, r, isActive, id, onClick, isInvalidClick }) => {
   return (
-    <g style={{ cursor: "pointer" }} onClick={() => onNodeClick(id)}>
+    <g
+      className={"node"}
+      style={{ cursor: "pointer", transition: "fill .4s ease" }}
+      onClick={() => onClick(id)}
+    >
       <circle
         cx={x}
         cy={y}
         r={r}
+        className={isInvalidClick ? "invalid-click" : isActive ? "active" : ""}
         key={"circle"}
-        fill={isActive ? "white" : "gray"}
         stroke="black"
         strokeWidth="3"
       />
@@ -22,17 +26,6 @@ const Node = ({ x, y, text, r, isActive, id, onNodeClick }) => {
       >
         {text}
       </text>
-      {/*
-      <text
-        x={x}
-        y={y + r * 2}
-        textAnchor="middle"
-        style={{ fontSize: "20px" }}
-        key={"state-info"}
-      >
-        {displayName}
-      </text>
-      */}
     </g>
   );
 };
@@ -58,12 +51,14 @@ const Link = ({ source, target }) => {
 };
 
 class Network extends React.Component {
-  state = {
-    activeNodeId: this.props.startingNodeId
-  };
-
   render() {
-    const { nodes, actions, onNodeClick } = this.props;
+    const {
+      activeNodeId,
+      actions,
+      invalidClickNodeId,
+      nodes,
+      onNodeClick
+    } = this.props;
     const size = { width: 500, height: 500 };
     const nodesById = _.keyBy(nodes, "id");
     return (
@@ -102,14 +97,10 @@ class Network extends React.Component {
               x={size.width * x}
               y={size.height * y}
               r={size.width / 15}
-              isActive={id === this.state.activeNodeId}
+              isInvalidClick={id === invalidClickNodeId}
+              isActive={id === activeNodeId}
               text={displayName}
-              onNodeClick={id => {
-                this.setState({
-                  activeNodeId: id
-                });
-                onNodeClick(id);
-              }}
+              onClick={onNodeClick}
               id={id}
               key={"point-" + idx}
             />

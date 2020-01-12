@@ -1,20 +1,23 @@
 import React from "react";
 
 import { Network } from "../components/Network";
+import { isValidStep } from "../../imports/utils";
 
 export default class TaskStimulus extends React.Component {
   state = {};
 
   componentDidMount() {
+    const network = this.props.round.get("network");
     this.setState(() => ({
-      numberOfStepsRemaining: this.props.round.get("environment").solutionLength
+      activeNodeId: network.startingNodeId,
+      numberOfStepsRemaining: network.requiredSolutionLength
     }));
   }
 
   render() {
     const { round, stage, player } = this.props;
-    const network = round.get("environment");
-    const { nodes, actions, startingNodeId, solutionLength } = network;
+    const network = round.get("network");
+    const { nodes, actions, startingNodeId, requiredSolutionLength } = network;
     const description = `Find a path of ${nodes.length -
       1} steps, starting from node "${
       nodes.find(n => n.id === startingNodeId).displayName
@@ -27,16 +30,27 @@ export default class TaskStimulus extends React.Component {
         <p>Error messages: TODO</p>
         <Network
           nodes={nodes}
-          startingNodeId={startingNodeId}
+          activeNodeId={this.state.activeNodeId}
+          invalidClickNodeId={this.state.invalidClickNodeId}
           onNodeClick={id => {
-            // TODO ensure a valid node was selected
-            console.log(`Node ${id} clicked`);
-            const previousSolution = player.round.get("solution") || [];
-            const solution = [...previousSolution, id];
-            player.round.set("solution", [...previousSolution, id]);
+            if (!isValidStep(this.state.activeNodeId, id, actions)) {
+              this.setState({
+                invalidClickNodeId: id
+              });
+              setTimeout(() => {
+                this.setState({
+                  invalidClickNodeId: null
+                });
+              }, 500);
+              return;
+            }
+            // TODO store soution in correct format
+            const solution = [...(player.round.get("solution") || []), id];
+            player.round.set("solution", solution);
             this.setState(() => ({
+              activeNodeId: id,
               numberOfStepsRemaining: Math.max(
-                solutionLength - solution.length,
+                requiredSolutionLength - solution.length,
                 0
               )
             }));

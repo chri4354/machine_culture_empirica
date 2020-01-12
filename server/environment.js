@@ -8,5 +8,10 @@ const loadAll = () => {
   return Environments.find({}).fetch();
 };
 
+const deleteAll = () => {
+  return Environments.remove({});
+};
+
 Environments.count = count;
+Environments.deleteAll = deleteAll;
 Environments.loadAll = loadAll;

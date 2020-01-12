@@ -191,4 +191,18 @@ button {
     stroke: black;
     stroke-width: 1.5px;
   }
+  .node {
+    circle {
+      fill: gray;
+      transition: fill 0.75s;
+    }
+    .active {
+      fill: white;
+      transition: fill 0.1s;
+    }
+    .invalid-click {
+      fill: red;
+      transition: fill 0.01s;
+    }
+  }
 }

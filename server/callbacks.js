@@ -23,6 +23,7 @@ Empirica.onStageEnd((game, round, stage, players) => {});
 // It receives the same options as onGameEnd, and the round that just ended.
 Empirica.onRoundEnd((game, round, players) => {
   players.forEach(player => {
+    // TODO ensure the solution is valid
     const solution = player.round.get("solution") || {};
     player.set(
       "score",

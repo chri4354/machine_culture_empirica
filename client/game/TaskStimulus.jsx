@@ -52,6 +52,7 @@ export default class TaskStimulus extends React.Component {
     );
     this.setState(() => ({
       activeNodeId: targetId,
+      lastScoreReceived: action.reward,
       numberOfActionsRemaining,
       roundScore: calculateScore(solutionActions)
     }));
@@ -71,8 +72,30 @@ export default class TaskStimulus extends React.Component {
     return (
       <div className="task-stimulus">
         <p>{description}</p>
-        <p>Number of steps remaining: {this.state.numberOfActionsRemaining}</p>
-        <p>Round Score: {this.state.roundScore}</p>
+        <div>
+          <div className="round-stat">
+            <h4>Number of steps remaining: </h4>
+            <span className="round-stat-value">
+              {this.state.numberOfActionsRemaining}
+            </span>
+          </div>
+          <div className="round-stat">
+            <h4>Round Score: </h4>
+            <span className="round-stat-value">{this.state.roundScore}</span>
+          </div>
+          <div className="round-stat">
+            <h4>
+              {this.state.lastScoreReceived && (
+                <span>
+                  <h4>Last Score Received: </h4>
+                  <span className="round-stat-value">
+                    {this.state.lastScoreReceived}
+                  </span>
+                </span>
+              )}
+            </h4>
+          </div>
+        </div>
         <Network
           nodes={nodes}
           activeNodeId={this.state.activeNodeId}

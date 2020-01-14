@@ -6,6 +6,10 @@ import { calculateScore, findAction } from "../../imports/utils";
 export default class TaskStimulus extends React.Component {
   state = {};
 
+  isPlanning() {
+    return this.props.stage.name === "plan";
+  }
+
   componentDidMount() {
     const network = this.props.round.get("network");
     this.setState(() => ({
@@ -19,7 +23,7 @@ export default class TaskStimulus extends React.Component {
     const { round, player } = this.props;
     const network = round.get("network");
     const { actions, requiredSolutionLength } = network;
-    if (this.state.numberOfActionsRemaining === 0) {
+    if (this.isPlanning() || this.state.numberOfActionsRemaining === 0) {
       return;
     }
     const action = findAction(this.state.activeNodeId, targetId, actions);
@@ -66,12 +70,13 @@ export default class TaskStimulus extends React.Component {
     const { round } = this.props;
     const network = round.get("network");
     const { nodes, actions, startingNodeId, requiredSolutionLength } = network;
-    const description = `Find a path of ${requiredSolutionLength} steps, starting from node "${
-      nodes.find(n => n.id === startingNodeId).displayName
-    }". The larger the reward, the better.`;
     return (
       <div className="task-stimulus">
-        <p>{description}</p>
+        <h2>
+          Find a path of {requiredSolutionLength} steps, starting from Node{" "}
+          {nodes.find(n => n.id === startingNodeId).displayName}. The larger the
+          reward, the better.
+        </h2>
         <div>
           <div className="round-stat">
             <h4>Number of steps remaining: </h4>
@@ -84,21 +89,16 @@ export default class TaskStimulus extends React.Component {
             <span className="round-stat-value">{this.state.roundScore}</span>
           </div>
           <div className="round-stat">
-            <h4>
-              {this.state.lastScoreReceived && (
-                <span>
-                  <h4>Last Score Received: </h4>
-                  <span className="round-stat-value">
-                    {this.state.lastScoreReceived}
-                  </span>
-                </span>
-              )}
-            </h4>
+            <h4>Last Score Received: </h4>
+            <span className="round-stat-value">
+              {this.state.lastScoreReceived || "--"}
+            </span>
           </div>
         </div>
         <Network
           nodes={nodes}
           activeNodeId={this.state.activeNodeId}
+          isDisabled={this.isPlanning()}
           invalidClickNodeId={this.state.invalidClickNodeId}
           onNodeClick={targetId => this.onNodeClick(targetId)}
           actions={actions}

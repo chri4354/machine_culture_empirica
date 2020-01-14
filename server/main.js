@@ -1,16 +1,23 @@
 import Empirica from "meteor/empirica:core";
+
 import "./environment";
 import "./callbacks.js";
 import { Environments } from "./environment";
 import networks from "./networks.json";
+import { getRandomInteger } from "./utils";
 
 // TODO this should be disabled in production
 const resetDatabase = () => {
   Environments.deleteAll();
 };
+let numberOfEnvironments = Environments.count();
+console.log(
+  "Number of environments stored in Mongo before reset: ",
+  numberOfEnvironments
+);
 resetDatabase();
 
-const numberOfEnvironments = Environments.count();
+numberOfEnvironments = Environments.count();
 console.log("Number of environments stored in Mongo: ", numberOfEnvironments);
 if (numberOfEnvironments === 0) {
   console.log("initializing the environments");
@@ -35,13 +42,26 @@ Empirica.gameInit((game, treatment, players) => {
     player.set("score", 0);
   });
 
+  const possibleStageDurations = [
+    [5, 25],
+    [15, 15]
+  ];
   _.times(numberOfRounds, i => {
     const round = game.addRound();
-    round.set("network", environments[0]); // TODO How are environments chosen for a round?
+    round.set("network", environments[Math.min(i, environments.length - 1)]); // TODO How are environments chosen for a round?
+    const stageDurations =
+      possibleStageDurations[
+        getRandomInteger(0, possibleStageDurations.length - 1)
+      ];
+    round.addStage({
+      name: "plan",
+      displayName: "PLAN",
+      durationInSeconds: stageDurations[0]
+    });
     round.addStage({
       name: "response",
-      displayName: "Response",
-      durationInSeconds: roundDuration
+      displayName: "GO!",
+      durationInSeconds: stageDurations[1]
     });
   });
 });

@@ -1,18 +1,36 @@
 import React from "react";
 import _ from "lodash";
 
-const Node = ({ x, y, text, r, isActive, id, onClick, isInvalidClick }) => {
+const Node = ({
+  x,
+  y,
+  text,
+  r,
+  isActive,
+  id,
+  onClick,
+  isDisabled,
+  isInvalidClick
+}) => {
   return (
     <g
       className={"node"}
-      style={{ cursor: "pointer" }}
+      style={{ cursor: !isDisabled && "pointer" }}
       onClick={() => onClick(id)}
     >
       <circle
         cx={x}
         cy={y}
         r={r}
-        className={isInvalidClick ? "invalid-click" : isActive ? "active" : ""}
+        className={
+          isDisabled
+            ? "disabled"
+            : isInvalidClick
+            ? "invalid-click"
+            : isActive
+            ? "active"
+            : ""
+        }
         key={"circle"}
         stroke="black"
         strokeWidth="3"
@@ -58,7 +76,8 @@ const Link = ({ source, target, reward, id }) => {
         d={d}
       ></path>
       <text
-        x={dist / 2 - 20}
+        x={dist / 2 - 23}
+        style={{ fontSize: "15px" }}
         dangerouslySetInnerHTML={{ __html: textPath }}
       ></text>
       ;
@@ -115,6 +134,7 @@ class Network extends React.Component {
               x={size.width * x}
               y={size.height * y}
               r={size.width / 15}
+              isDisabled={this.props.isDisabled}
               isInvalidClick={id === invalidClickNodeId}
               isActive={id === activeNodeId}
               text={displayName}

@@ -1,7 +1,9 @@
 import React from "react";
+import _ from "lodash";
 
 import { Network } from "../components/Network";
 import { calculateScore, findAction } from "../../imports/utils";
+import sampleSolution from "../sample-solution";
 
 export default class TaskStimulus extends React.Component {
   state = {};
@@ -70,6 +72,7 @@ export default class TaskStimulus extends React.Component {
     const { round } = this.props;
     const network = round.get("network");
     const { nodes, actions, startingNodeId, requiredSolutionLength } = network;
+    const nodesById = _.keyBy(nodes, "id");
     return (
       <div className="task-stimulus">
         <h2>
@@ -103,6 +106,29 @@ export default class TaskStimulus extends React.Component {
           onNodeClick={targetId => this.onNodeClick(targetId)}
           actions={actions}
         />
+        <div
+          style={{
+            height: "500px",
+            width: "200px",
+            textAlign: "center",
+            float: "right"
+          }}
+        >
+          <h3>Previous Player's Solution:</h3>
+          <div style={{ fontSize: "16px" }}>
+            <p style={{ marginBottom: "0px", fontWeight: "bold" }}>
+              {nodesById[startingNodeId].displayName}
+            </p>
+            {sampleSolution.actions.map(action => (
+              <>
+                <>&darr;</>
+                <p style={{ marginBottom: "0px", fontWeight: "bold" }}>
+                  {nodesById[action.targetId].displayName}
+                </p>
+              </>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

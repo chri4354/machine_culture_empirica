@@ -1,4 +1,5 @@
 import React from "react";
+import { Fragment } from "react";
 import _ from "lodash";
 
 import { Network } from "../components/Network";
@@ -71,7 +72,13 @@ export default class TaskStimulus extends React.Component {
   render() {
     const { round } = this.props;
     const network = round.get("network");
-    const { nodes, actions, startingNodeId, requiredSolutionLength } = network;
+    const {
+      nodes,
+      actions,
+      startingNodeId,
+      requiredSolutionLength,
+      version
+    } = network;
     const nodesById = _.keyBy(nodes, "id");
     return (
       <div className="task-stimulus">
@@ -100,6 +107,7 @@ export default class TaskStimulus extends React.Component {
         </div>
         <Network
           nodes={nodes}
+          version={version}
           activeNodeId={this.state.activeNodeId}
           isDisabled={this.isPlanning()}
           invalidClickNodeId={this.state.invalidClickNodeId}
@@ -119,13 +127,13 @@ export default class TaskStimulus extends React.Component {
             <p style={{ marginBottom: "0px", fontWeight: "bold" }}>
               {nodesById[startingNodeId].displayName}
             </p>
-            {sampleSolution.actions.map(action => (
-              <>
+            {sampleSolution.actions.map((action, idx) => (
+              <Fragment key={"solution-action-" + idx}>
                 <>&darr;</>
                 <p style={{ marginBottom: "0px", fontWeight: "bold" }}>
                   {nodesById[action.targetId].displayName}
                 </p>
-              </>
+              </Fragment>
             ))}
           </div>
         </div>

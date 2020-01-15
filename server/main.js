@@ -42,10 +42,16 @@ Empirica.gameInit((game, treatment, players) => {
     player.set("score", 0);
   });
 
-  const possibleStageDurations = [
-    [5, 25],
-    [15, 15]
-  ];
+  const possibleStageDurations = treatment.debug
+    ? [
+        [1, 20000],
+        [1, 20000]
+      ]
+    : [
+        [5, 25],
+        [15, 15]
+      ];
+
   _.times(numberOfRounds, i => {
     const round = game.addRound();
     round.set("network", environments[Math.min(i, environments.length - 1)]); // TODO How are environments chosen for a round?

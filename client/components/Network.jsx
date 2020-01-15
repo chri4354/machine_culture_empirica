@@ -1,18 +1,36 @@
 import React from "react";
 import _ from "lodash";
 
-const Node = ({ x, y, text, r, isActive, id, onClick, isInvalidClick }) => {
+const Node = ({
+  x,
+  y,
+  text,
+  r,
+  isActive,
+  id,
+  onClick,
+  isDisabled,
+  isInvalidClick
+}) => {
   return (
     <g
       className={"node"}
-      style={{ cursor: "pointer", transition: "fill .4s ease" }}
+      style={{ cursor: !isDisabled && "pointer" }}
       onClick={() => onClick(id)}
     >
       <circle
         cx={x}
         cy={y}
         r={r}
-        className={isInvalidClick ? "invalid-click" : isActive ? "active" : ""}
+        className={
+          isDisabled
+            ? "disabled"
+            : isInvalidClick
+            ? "invalid-click"
+            : isActive
+            ? "active"
+            : ""
+        }
         key={"circle"}
         stroke="black"
         strokeWidth="3"
@@ -33,7 +51,8 @@ const Node = ({ x, y, text, r, isActive, id, onClick, isInvalidClick }) => {
 const Link = ({ source, target, reward, id }) => {
   const dx = target.x - source.x;
   const dy = target.y - source.y;
-  const dr = Math.sqrt(dx * dx + dy * dy) * 3;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  const dr = dist * 3;
   const d =
     "M" +
     source.x +
@@ -47,7 +66,7 @@ const Link = ({ source, target, reward, id }) => {
     target.x +
     " " +
     target.y;
-  let textPath = `<textPath alignment-baseline="text-top" xlink:href="#${id}">${reward}</textPath>`;
+  let textPath = `<textPath alignment-baseline="text-bottom" xlink:href="#${id}">${reward}</textPath>`;
   return (
     <g>
       <path
@@ -56,7 +75,12 @@ const Link = ({ source, target, reward, id }) => {
         markerEnd={"url(#markerArrow)"}
         d={d}
       ></path>
-      <text x="50" dangerouslySetInnerHTML={{ __html: textPath }}></text>;
+      <text
+        x={dist / 2 - 23}
+        style={{ fontSize: "15px" }}
+        dangerouslySetInnerHTML={{ __html: textPath }}
+      ></text>
+      ;
     </g>
   );
 };
@@ -110,6 +134,7 @@ class Network extends React.Component {
               x={size.width * x}
               y={size.height * y}
               r={size.width / 15}
+              isDisabled={this.props.isDisabled}
               isInvalidClick={id === invalidClickNodeId}
               isActive={id === activeNodeId}
               text={displayName}

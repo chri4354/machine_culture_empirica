@@ -4,7 +4,6 @@ import _ from "lodash";
 
 import { Network } from "../components/Network";
 import { calculateScore, findAction } from "../../imports/utils";
-import sampleSolution from "../sample-solution";
 
 export default class TaskStimulus extends React.Component {
   state = {};
@@ -14,7 +13,7 @@ export default class TaskStimulus extends React.Component {
   }
 
   componentDidMount() {
-    const network = this.props.round.get("network");
+    const { network, solutions } = this.props.round.get("environment");
     this.setState(() => ({
       activeNodeId: network.startingNodeId,
       numberOfActionsRemaining: network.requiredSolutionLength,
@@ -24,7 +23,7 @@ export default class TaskStimulus extends React.Component {
 
   onNodeClick(targetId) {
     const { round, player } = this.props;
-    const network = round.get("network");
+    const { network } = round.get("environment");
     const { actions, requiredSolutionLength } = network;
     if (this.isPlanning() || this.state.numberOfActionsRemaining === 0) {
       return;
@@ -44,14 +43,16 @@ export default class TaskStimulus extends React.Component {
     let solution = player.round.get("solution");
     if (!solution) {
       solution = {
-        environmentId: 1, // TODO
-        actions: []
+        networkId: network.id,
+        actions: [],
+        totalReward: 0
       };
     }
     const solutionActions = [...solution.actions, { ...action }];
     player.round.set("solution", {
       ...solution,
-      actions: solutionActions
+      actions: solutionActions,
+      totalReward: calculateScore(solutionActions)
     });
     const numberOfActionsRemaining = Math.max(
       requiredSolutionLength - solutionActions.length,
@@ -71,7 +72,10 @@ export default class TaskStimulus extends React.Component {
 
   render() {
     const { round } = this.props;
-    const network = round.get("network");
+    const { network, solutions } = round.get("environment");
+    const previousSolution =
+      (solutions && solutions.length && solutions[solutions.length - 1]) ||
+      null;
     const {
       nodes,
       actions,
@@ -114,29 +118,46 @@ export default class TaskStimulus extends React.Component {
           onNodeClick={targetId => this.onNodeClick(targetId)}
           actions={actions}
         />
-        <div
-          style={{
-            height: "500px",
-            width: "200px",
-            textAlign: "center",
-            float: "right"
-          }}
-        >
-          <h3>Previous Player's Solution:</h3>
-          <div style={{ fontSize: "16px" }}>
-            <p style={{ marginBottom: "0px", fontWeight: "bold" }}>
-              {nodesById[startingNodeId].displayName}
-            </p>
-            {sampleSolution.actions.map((action, idx) => (
-              <Fragment key={"solution-action-" + idx}>
-                <>&darr;</>
-                <p style={{ marginBottom: "0px", fontWeight: "bold" }}>
-                  {nodesById[action.targetId].displayName}
-                </p>
-              </Fragment>
-            ))}
+        {previousSolution && (
+          <div
+            style={{
+              height: "500px",
+              width: "250px",
+              textAlign: "center",
+              fontSize: "18px",
+              fontWeight: "bold",
+              float: "right"
+            }}
+          >
+            <h3>Previous Player's Solution:</h3>
+            <div>
+              <table style={{ margin: "auto" }}>
+                {previousSolution.actions.map((action, idx) => (
+                  <Fragment key={"solution-action-" + idx}>
+                    <tr>
+                      <td>{nodesById[action.sourceId].displayName}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>&darr; </td>
+                      <td>{action.reward}</td>
+                    </tr>
+                    {idx === previousSolution.actions.length - 1 && (
+                      <tr>
+                        <td>{nodesById[action.targetId].displayName}</td>
+                        <td></td>
+                      </tr>
+                    )}
+                  </Fragment>
+                ))}
+              </table>
+
+              <p style={{ marginTop: "20px" }}>
+                Total Reward: {previousSolution.totalReward}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }

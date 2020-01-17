@@ -23,12 +23,12 @@ const Node = ({
         cy={y}
         r={r}
         className={
-          isDisabled
+          isActive
+            ? "active"
+            : isDisabled
             ? "disabled"
             : isInvalidClick
             ? "invalid-click"
-            : isActive
-            ? "active"
             : ""
         }
         key={"circle"}

@@ -1,30 +1,41 @@
 import Empirica from "meteor/empirica:core";
 
-import "./environment";
+import "./network";
 import "./callbacks.js";
-import { Environments } from "./environment";
+import { Networks } from "./network";
+import { Solutions } from "./solution";
 import networks from "./networks.json";
 import { getRandomInteger } from "./utils";
 
-// TODO this should be disabled in production
-const resetDatabase = () => {
-  Environments.deleteAll();
-};
-let numberOfEnvironments = Environments.count();
-console.log(
-  "Number of environments stored in Mongo before reset: ",
-  numberOfEnvironments
-);
-resetDatabase();
+const printDatabaseStatistics = () => {
+  const numberOfNetworks = Networks.count();
+  const numberOfSolutions = Solutions.count();
 
-numberOfEnvironments = Environments.count();
-console.log("Number of environments stored in Mongo: ", numberOfEnvironments);
-if (numberOfEnvironments === 0) {
-  console.log("initializing the environments");
+  console.log(
+    "Current Database stats: ",
+    JSON.stringify({ numberOfNetworks, numberOfSolutions })
+  );
+};
+
+const resetDatabase = () => {
+  console.log("resetting database...");
+  Networks.deleteAll();
+};
+
+const initializeDatabase = () => {
+  console.log("initializing the networks...");
   for (const network of networks) {
-    Environments.insert(network);
+    Networks.create(network);
   }
-}
+};
+
+const solutions = Solutions.loadAll();
+console.log(solutions);
+printDatabaseStatistics();
+resetDatabase(); // TODO this should be disabled in production
+printDatabaseStatistics();
+initializeDatabase();
+printDatabaseStatistics();
 
 // gameInit is where the structure of a game is defined.
 // Just before every game starts, once all the players needed are ready, this
@@ -36,13 +47,12 @@ if (numberOfEnvironments === 0) {
 Empirica.gameInit((game, treatment, players) => {
   const { numberOfRounds, roundDuration } = treatment;
 
-  const environments = Environments.loadAll();
   game.players.forEach(player => {
     player.set("avatar", `/avatars/jdenticon/${player._id}`);
     player.set("score", 0);
   });
 
-  const possibleStageDurations = treatment.debug
+  const availableStageDurations = treatment.debug
     ? [
         [1, 20000],
         [1, 20000]
@@ -54,10 +64,9 @@ Empirica.gameInit((game, treatment, players) => {
 
   _.times(numberOfRounds, i => {
     const round = game.addRound();
-    round.set("network", environments[Math.min(i, environments.length - 1)]); // TODO How are environments chosen for a round?
     const stageDurations =
-      possibleStageDurations[
-        getRandomInteger(0, possibleStageDurations.length - 1)
+      availableStageDurations[
+        getRandomInteger(0, availableStageDurations.length - 1)
       ];
     round.addStage({
       name: "plan",

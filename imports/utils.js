@@ -10,6 +10,10 @@ export const calculateScore = actions => {
   }, 0);
 };
 
+export const isSolutionValid = (actions, requiredSolutionLength) => {
+  return actions && actions.length === requiredSolutionLength;
+};
+
 export const findAction = (sourceId, targetId, actions) => {
   return actions.find(
     action => action.sourceId === sourceId && action.targetId === targetId

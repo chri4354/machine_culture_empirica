@@ -29,8 +29,6 @@ const initializeDatabase = () => {
   }
 };
 
-const solutions = Solutions.loadAll();
-console.log(solutions);
 printDatabaseStatistics();
 resetDatabase(); // TODO this should be disabled in production
 printDatabaseStatistics();
@@ -45,7 +43,7 @@ printDatabaseStatistics();
 // rounds and stages (with get/set methods), that will be able to use later in
 // the game.
 Empirica.gameInit((game, treatment, players) => {
-  const { numberOfRounds, roundDuration } = treatment;
+  const { numberOfRounds, roundDuration, experimentName } = treatment;
 
   game.players.forEach(player => {
     player.set("avatar", `/avatars/jdenticon/${player._id}`);
@@ -62,21 +60,42 @@ Empirica.gameInit((game, treatment, players) => {
         [15, 15]
       ];
 
-  _.times(numberOfRounds, i => {
+  const practiceNetworks = Networks.loadPracticeNetworks();
+  const mainNetworks = _.shuffle(Networks.loadAll(experimentName));
+  const networks = [...practiceNetworks, ...mainNetworks];
+  const numberOfPracticeRounds = practiceNetworks.length;
+  _.times(networks.length, i => {
     const round = game.addRound();
     const stageDurations =
       availableStageDurations[
         getRandomInteger(0, availableStageDurations.length - 1)
       ];
+
+    round.set("environment", {
+      isPractice: i < numberOfPracticeRounds,
+      network: networks[i],
+      solutions: []
+    });
+
+    // The player can view the network and plan their solution
     round.addStage({
       name: "plan",
       displayName: "PLAN",
       durationInSeconds: stageDurations[0]
     });
+
+    // The player can select their solution
     round.addStage({
       name: "response",
       displayName: "GO!",
       durationInSeconds: stageDurations[1]
+    });
+
+    // The player can review their score
+    round.addStage({
+      name: "review",
+      displayName: "REVIEW",
+      durationInSeconds: 5
     });
   });
 });

@@ -17,7 +17,8 @@ const deleteAll = () => {
   return Networks.remove({});
 };
 
-const loadAll = () => {
+const loadAll = experimentName => {
+  // TODO hook up experimentName
   return Networks.find({}).fetch();
 };
 
@@ -28,8 +29,18 @@ const loadOne = playerId => {
   return networks[getRandomInteger(0, networks.length - 1)];
 };
 
+const loadPracticeNetworks = () => {
+  // TODO this is temporary
+  const networks = loadAll();
+  return [
+    { isPractice: true, ...networks[0] },
+    { isPractice: true, ...networks[1] }
+  ];
+};
+
 Networks.count = count;
 Networks.create = create;
 Networks.deleteAll = deleteAll;
 Networks.loadAll = loadAll;
 Networks.loadOne = loadOne;
+Networks.loadPracticeNetworks = loadPracticeNetworks;

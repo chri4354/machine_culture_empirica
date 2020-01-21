@@ -10,13 +10,14 @@ export default class InstructionStepOne extends React.Component {
       <Centered>
         <div className="instructions">
           <h1> Instructions 1 </h1>
+          <p>Hi!</p>
+          <p>Thank you for participating in our experiment.</p>
           <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Optio,
-            animi? Quae autem asperiores officiis voluptatum fuga recusandae
-            minima! Animi pariatur ex sapiente laborum. Ipsa quo quia ab,
-            veritatis et labore.
+            On the following pages, you will see the instructions. Please make
+            sure you read them carefully. Before you proceed to the experiment,
+            you will have the chance to do a practice round.
           </p>
-
+          <p>Good luck!</p>
           <p>
             <button type="button" onClick={onPrev} disabled={!hasPrev}>
               Previous

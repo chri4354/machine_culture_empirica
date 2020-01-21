@@ -9,7 +9,16 @@ export default class Thanks extends React.Component {
       <div className="finished">
         <div>
           <h4>Finished!</h4>
-          <p>Thank you for participating!</p>
+          <p>
+            Thank you for your participation! You have successfully finished the
+            game.
+          </p>
+          <p>Please click on the link below to confirm your submission:</p>
+          <p>
+            <a href="https://app.prolific.co/submissions/complete?cc=72740B85">
+              https://app.prolific.co/submissions/complete?cc=72740B85
+            </a>
+          </p>
         </div>
       </div>
     );

@@ -1,5 +1,6 @@
 import Empirica from "meteor/empirica:core";
 import { render } from "react-dom";
+
 import ExitSurvey from "./exit/ExitSurvey";
 import Thanks from "./exit/Thanks";
 import About from "./game/About";
@@ -7,6 +8,8 @@ import Round from "./game/Round";
 import Consent from "./intro/Consent";
 import InstructionStepOne from "./intro/InstructionStepOne";
 import InstructionStepTwo from "./intro/InstructionStepTwo";
+import InstructionStepThree from "./intro/InstructionStepThree";
+import InstructionStepFour from "./intro/InstructionStepFour";
 import Quiz from "./intro/Quiz";
 
 // Set the About Component you want to use for the About dialog (optional).
@@ -23,10 +26,12 @@ Empirica.introSteps((game, treatment) => {
   if (treatment.debug) {
     return [];
   }
-  const steps = [InstructionStepOne];
-  if (treatment.playerCount > 1) {
-    steps.push(InstructionStepTwo);
-  }
+  const steps = [
+    InstructionStepOne,
+    InstructionStepTwo,
+    InstructionStepThree,
+    InstructionStepFour
+  ];
   steps.push(Quiz);
   return steps;
 });

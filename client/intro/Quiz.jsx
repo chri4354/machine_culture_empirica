@@ -2,8 +2,24 @@ import React from "react";
 
 import { Centered } from "meteor/empirica:core";
 
+const Radio = ({ selected, name, value, label, onChange }) => (
+  <label>
+    <input
+      type="radio"
+      name={name}
+      value={value}
+      checked={selected === value}
+      onChange={onChange}
+    />
+    {label}
+  </label>
+);
+
+const trueValue = "true";
+const falseValue = "false";
+
 export default class Quiz extends React.Component {
-  state = { sum: "", horse: "" };
+  state = { question1: "", question2: "", question3: "", question4: "" };
 
   handleChange = event => {
     const el = event.currentTarget;
@@ -11,9 +27,14 @@ export default class Quiz extends React.Component {
   };
 
   handleSubmit = event => {
+    console.log(this.state);
     event.preventDefault();
-
-    if (this.state.sum !== "4" || this.state.horse !== "white") {
+    if (
+      this.state.question1 !== falseValue ||
+      this.state.question2 !== falseValue ||
+      this.state.question3 !== falseValue ||
+      this.state.question4 !== trueValue
+    ) {
       alert("Incorrect! Read the instructions, and please try again.");
     } else {
       this.props.onNext();
@@ -22,42 +43,93 @@ export default class Quiz extends React.Component {
 
   render() {
     const { hasPrev, hasNext, onNext, onPrev } = this.props;
-    const { sum, horse } = this.state;
+    const { question1, question2, question3, question4 } = this.state;
     return (
       <Centered>
         <div className="quiz">
           <h1> Quiz </h1>
           <form onSubmit={this.handleSubmit}>
-            <p>
-              <label htmlFor="sum">What is 2+2?</label>
-              <input
-                type="text"
-                dir="auto"
-                id="sum"
-                name="sum"
-                placeholder="e.g. 3"
-                value={sum}
-                onChange={this.handleChange}
-                autoComplete="off"
-                required
-              />
-            </p>
-            <p>
-              <label htmlFor="horse">
-                What color was Napoleon's white horse?
+            <div className="question-group">
+              <label>
+                I will have unlimited time to submit my answer in each round:
               </label>
-              <input
-                type="text"
-                dir="auto"
-                id="horse"
-                name="horse"
-                placeholder="e.g. brown"
-                value={horse}
-                onChange={this.handleChange}
-                autoComplete="off"
-                required
-              />
-            </p>
+              <div>
+                <Radio
+                  selected={question1}
+                  name="question1"
+                  value={trueValue}
+                  label="True"
+                  onChange={this.handleChange}
+                />
+                <Radio
+                  selected={question1}
+                  name="question1"
+                  value={falseValue}
+                  label="False"
+                  onChange={this.handleChange}
+                />
+              </div>
+            </div>
+            <div className="question-group">
+              <label>I will see the same pattern in each round:</label>
+              <div>
+                <Radio
+                  selected={question2}
+                  name="question2"
+                  value={trueValue}
+                  label="True"
+                  onChange={this.handleChange}
+                />
+                <Radio
+                  selected={question2}
+                  name="question2"
+                  value={falseValue}
+                  label="False"
+                  onChange={this.handleChange}
+                />
+              </div>
+            </div>
+            <div className="question-group">
+              <label>I can start from any circle I choose:</label>
+              <div>
+                <Radio
+                  selected={question3}
+                  name="question3"
+                  value={trueValue}
+                  label="True"
+                  onChange={this.handleChange}
+                />
+                <Radio
+                  selected={question3}
+                  name="question3"
+                  value={falseValue}
+                  label="False"
+                  onChange={this.handleChange}
+                />
+              </div>
+            </div>
+            <div className="question-group">
+              <label>
+                The sum of the points between the circles I choose is my total
+                score for the round:
+              </label>
+              <div>
+                <Radio
+                  selected={question4}
+                  name="question4"
+                  value={trueValue}
+                  label="True"
+                  onChange={this.handleChange}
+                />
+                <Radio
+                  selected={question4}
+                  name="question4"
+                  value={falseValue}
+                  label="False"
+                  onChange={this.handleChange}
+                />
+              </div>
+            </div>
 
             <p>
               <button type="button" onClick={onPrev} disabled={!hasPrev}>

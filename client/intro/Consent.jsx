@@ -9,15 +9,26 @@ export default class Consent extends React.Component {
         <div className="consent">
           <h1> Consent Form </h1>
           <p>
-            This experiment is part of a MIT scientific project. Your decision
-            to participate in this experiment is entirely voluntary. There are
-            no known or anticipated risks to participating in this experiment.
+            This experiment is part of a scientific project at the Max Planck
+            Institute for Human Development in Berlin. Your decision to
+            participate in this experiment is entirely voluntary. There are no
+            known or anticipated risks to participating in this experiment.
             There is no way for us to identify you. The only information we will
-            have, in addition to your responses, is the timestamps of your
+            store, in addition to your responses, is the timestamps of your
             interactions with our site. The results of our research may be
             presented at scientific meetings or published in scientific
-            journals. Clicking on the "AGREE" button indicates that you are at
-            least 18 years of age, and agree to participate voluntary.
+            journals. The study data may be made publicly accessible via
+            research data bases or scientific publications. Please note the
+            publicly accessible data may also be used for purposes going beyond
+            this particular study.
+          </p>
+          <p>
+            You will receive £8 through Prolific for participating. In addition,
+            you may earn a £10 or a £5 bonus depending on your performance. You
+            may exit the study at any time before the end and will receive
+            partial compensation. By clicking on the ‘AGREE’ button, you confirm
+            that you are at least 18 years of age and agree to participate
+            voluntarily.
           </p>
           <br />
           <ConsentButton text="I AGREE" />

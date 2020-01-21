@@ -18,8 +18,11 @@ const deleteAll = () => {
 };
 
 const loadAll = experimentName => {
-  // TODO hook up experimentName
-  return Networks.find({}).fetch();
+  const where = {};
+  if (experimentName) {
+    where.experimentName = experimentName;
+  }
+  return Networks.find(where).fetch();
 };
 
 const loadOne = playerId => {
@@ -30,12 +33,7 @@ const loadOne = playerId => {
 };
 
 const loadPracticeNetworks = () => {
-  // TODO this is temporary
-  const networks = loadAll();
-  return [
-    { isPractice: true, ...networks[0] },
-    { isPractice: true, ...networks[1] }
-  ];
+  return Networks.find({ experimentName: "practice" });
 };
 
 Networks.count = count;

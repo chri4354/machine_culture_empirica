@@ -30,10 +30,13 @@ const initializeDatabase = () => {
 };
 
 printDatabaseStatistics();
-resetDatabase(); // TODO this should be disabled in production
+
+/*
+resetDatabase();
 printDatabaseStatistics();
 initializeDatabase();
 printDatabaseStatistics();
+*/
 
 // gameInit is where the structure of a game is defined.
 // Just before every game starts, once all the players needed are ready, this

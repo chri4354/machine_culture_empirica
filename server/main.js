@@ -31,12 +31,10 @@ const initializeDatabase = () => {
 
 printDatabaseStatistics();
 
-/*
-resetDatabase();
-printDatabaseStatistics();
-initializeDatabase();
-printDatabaseStatistics();
-*/
+// resetDatabase();
+// printDatabaseStatistics();
+// initializeDatabase();
+// printDatabaseStatistics();
 
 // gameInit is where the structure of a game is defined.
 // Just before every game starts, once all the players needed are ready, this
@@ -73,9 +71,9 @@ Empirica.gameInit((game, treatment, players) => {
         getRandomInteger(0, availableStageDurations.length - 1)
       ];
 
-    const stageDurationMultiplier = isPractice ? 2 : 1;
     const network = networks[i];
     const isPractice = network.experimentName === "practice";
+    const stageDurationMultiplier = isPractice ? 2 : 1;
     round.set("environment", {
       isPractice,
       network: networks[i],
@@ -93,8 +91,7 @@ Empirica.gameInit((game, treatment, players) => {
     round.addStage({
       name: "response",
       displayName: "GO!",
-      durationInSeconds:
-        stageDurationMultiplierstageDurations[1] * stageDurationMultiplier
+      durationInSeconds: stageDurations[1] * stageDurationMultiplier
     });
 
     // The player can review their score

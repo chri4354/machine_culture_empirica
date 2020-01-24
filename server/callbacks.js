@@ -11,6 +11,7 @@ Empirica.onGameStart((game, players) => {});
 // onRoundStart is triggered before each round starts, and before onStageStart.
 // It receives the same options as onGameStart, and the round that is starting.
 Empirica.onRoundStart((game, round, players) => {
+  const { batchId } = game;
   players.forEach(player => {
     // const network = Networks.loadOne(player.id);
     // const solutions = Solutions.loadForNetwork(network.id);

@@ -36,6 +36,10 @@ printDatabaseStatistics();
 // initializeDatabase();
 // printDatabaseStatistics();
 
+Empirica.batchInit(batch => {
+  console.log("batchInit", batch);
+});
+
 // gameInit is where the structure of a game is defined.
 // Just before every game starts, once all the players needed are ready, this
 // function is called with the treatment and the list of players.
@@ -44,7 +48,7 @@ printDatabaseStatistics();
 // rounds and stages (with get/set methods), that will be able to use later in
 // the game.
 Empirica.gameInit((game, treatment, players) => {
-  const { numberOfRounds, roundDuration, experimentName } = treatment;
+  const { experimentName } = treatment;
 
   game.players.forEach(player => {
     player.set("avatar", `/avatars/jdenticon/${player._id}`);

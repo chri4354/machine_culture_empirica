@@ -9,7 +9,16 @@ export default class InstructionStepFour extends React.Component {
       <Centered>
         <div className="instructions">
           <h1> Instructions 4 </h1>
-          <p>TODO</p>
+          <p>
+            You will see the remaining time and your total score on the left:
+          </p>
+
+          <p>
+            <img
+              style={{ width: "500px", padding: "30px" }}
+              src="images/instructions/timer-and-score.jpg"
+            />
+          </p>
 
           <p>
             <button type="button" onClick={onPrev} disabled={!hasPrev}>

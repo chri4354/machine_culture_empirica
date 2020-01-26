@@ -18,16 +18,16 @@ export default class Consent extends React.Component {
             interactions with our site. The results of our research may be
             presented at scientific meetings or published in scientific
             journals. The study data may be made publicly accessible via
-            research data bases or scientific publications. Please note the
+            research databases or scientific publications. Please note the
             publicly accessible data may also be used for purposes going beyond
             this particular study.
           </p>
           <p>
-            You will receive £8 through Prolific for participating. In addition,
-            you may earn a £10 or a £5 bonus depending on your performance. You
-            may exit the study at any time before the end and will receive
-            partial compensation. By clicking on the ‘AGREE’ button, you confirm
-            that you are at least 18 years of age and agree to participate
+            You will receive £# through Prolific for participating. In addition,
+            you may earn a bonus depending on your performance. You may exit the
+            study at any time before the end and will receive partial
+            compensation. By clicking on the ‘AGREE’ button, you confirm that
+            you are at least 18 years of age and agree to participate
             voluntarily.
           </p>
           <br />

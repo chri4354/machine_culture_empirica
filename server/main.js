@@ -78,8 +78,12 @@ Empirica.gameInit((game, treatment, players) => {
     const network = networks[i];
     const isPractice = network.experimentName === "practice";
     const stageDurationMultiplier = isPractice ? 2 : 1;
+    const planningStageDurationInSeconds =
+      stageDurations[0] * stageDurationMultiplier;
+
     round.set("environment", {
       isPractice,
+      planningStageDurationInSeconds,
       network: networks[i],
       solutions: []
     });
@@ -88,7 +92,7 @@ Empirica.gameInit((game, treatment, players) => {
     round.addStage({
       name: "plan",
       displayName: "PLAN",
-      durationInSeconds: stageDurations[0] * stageDurationMultiplier
+      durationInSeconds: planningStageDurationInSeconds
     });
 
     // The player can select their solution

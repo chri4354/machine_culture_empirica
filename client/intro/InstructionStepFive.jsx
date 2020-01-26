@@ -2,21 +2,25 @@ import React from "react";
 
 import { Centered } from "meteor/empirica:core";
 
-export default class InstructionStepOne extends React.Component {
+export default class InstructionStepFour extends React.Component {
   render() {
-    const { hasPrev, hasNext, onNext, onPrev, game } = this.props;
-
+    const { hasPrev, hasNext, onNext, onPrev } = this.props;
     return (
       <Centered>
         <div className="instructions">
-          <h1> Instructions 1 </h1>
-          <p>Hi!</p>
-          <p>Thank you for participating in our experiment.</p>
+          <h1> Instructions 5 </h1>
           <p>
-            On the following pages, you will see the instructions. Please make
-            sure you <b>read them carefully</b>.
+            On the top you will see the number of steps remaining for each round
+            and your current round score:
           </p>
-          <p>Good luck!</p>
+
+          <p>
+            <img
+              style={{ width: "500px", padding: "30px" }}
+              src="images/instructions/round-stats.jpg"
+            />
+          </p>
+
           <p>
             <button type="button" onClick={onPrev} disabled={!hasPrev}>
               Previous

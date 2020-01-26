@@ -10,6 +10,9 @@ import InstructionStepOne from "./intro/InstructionStepOne";
 import InstructionStepTwo from "./intro/InstructionStepTwo";
 import InstructionStepThree from "./intro/InstructionStepThree";
 import InstructionStepFour from "./intro/InstructionStepFour";
+import InstructionStepFive from "./intro/InstructionStepFive";
+import InstructionStepSix from "./intro/InstructionStepSix";
+import InstructionStepSeven from "./intro/InstructionStepSeven";
 import Quiz from "./intro/Quiz";
 
 // Set the About Component you want to use for the About dialog (optional).
@@ -30,7 +33,10 @@ Empirica.introSteps((game, treatment) => {
     InstructionStepOne,
     InstructionStepTwo,
     InstructionStepThree,
-    InstructionStepFour
+    InstructionStepFour,
+    InstructionStepFive,
+    InstructionStepSix,
+    InstructionStepSeven
   ];
   steps.push(Quiz);
   return steps;

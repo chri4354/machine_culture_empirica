@@ -10,50 +10,35 @@ export default class InstructionStepTwo extends React.Component {
         <div className="instructions">
           <h1> Instructions 2 </h1>
           <p>
-            In each round, you will see 6 circles, each marked be letters from A
-            to F. From each circle, there are two options to go to another
-            circle, marked by a line with an arrow pointing to the circle you
-            can reach.
+            In each round, you will see the following pattern. This might seem a
+            bit complicated at first, but don’t worry! It’s actually pretty
+            simple!
           </p>
 
           <p>
-            Each line has a point assigned to it. If you take the one with
-            “+20”, you will collect 20 points. If you take the one with “-20”,
-            you will lose 20 points.
+            You will see a starting node (marked in grey). Your task is to move
+            from one node to connected ones to try to collect as many points as
+            possible.
           </p>
 
           <p>
             <img
               style={{ width: "500px", padding: "30px" }}
-              src="images/instructions/network.png"
+              src="images/instructions/image1.png"
             />
           </p>
 
           <p>
-            You will be shown the starting circle before each round, and your
-            task is to collect the highest number of points you can by moving 8
-            times from the starting circ
+            You will have 8 steps in every round. On each step, you can either
+            lose or gain points. The points you lose or gain with each step are
+            indicated along with the arrows connecting nodes.
           </p>
           <p>
-            You will be told, which is the starting circle before each round,
-            and your task is to collect the highest number of points you can by
-            moving 8 times from the starting circ
+            <b>
+              In the end, you will be compensated for the total number of points
+              you gained, so try to do as best as you can!
+            </b>
           </p>
-          <p>
-            To gain the most points, you will have to think about the path you
-            want to take before!
-          </p>
-          <p>
-            You will have some time to look at the graph first (you will see the
-            countdown clock on the left). When the clock resets, you will be
-            allowed to make your choice. Make sure you submit your answer on
-            time!
-          </p>
-          <p>
-            If you do not make any choice in time you will lose (the maximum
-            amount of points you can lose in this round).
-          </p>
-          <p>Each point you collect worth about £x.x</p>
           <p>
             <button type="button" onClick={onPrev} disabled={!hasPrev}>
               Previous

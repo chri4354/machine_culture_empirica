@@ -25,13 +25,13 @@ export default class TaskStimulus extends React.Component {
   }
 
   componentDidMount() {
-    const { network, solutions } = this.props.round.get("environment");
+    const { network } = this.props.round.get("environment");
     if (!this.isReviewStage()) {
-      this.setState(() => ({
+      this.setState({
         activeNodeId: network.startingNodeId,
         numberOfActionsRemaining: network.requiredSolutionLength,
         roundScore: 0
-      }));
+      });
     }
     if (this.isResponseStage()) {
       this.updateSolution(network.id, [], network.requiredSolutionLength);
@@ -39,12 +39,15 @@ export default class TaskStimulus extends React.Component {
   }
 
   updateSolution(networkId, actions, requiredSolutionLength) {
-    const { network } = this.props.round.get("environment");
+    const { network, planningStageDurationInSeconds } = this.props.round.get(
+      "environment"
+    );
     const isValid = isSolutionValid(actions, requiredSolutionLength);
     const solution = {
       actions,
       networkId,
       isValid,
+      planningStageDurationInSeconds,
       totalReward: isValid
         ? calculateScore(actions)
         : network.missingSolutionPenalty
@@ -99,13 +102,7 @@ export default class TaskStimulus extends React.Component {
     const previousSolution =
       (solutions && solutions.length && solutions[solutions.length - 1]) ||
       null;
-    const {
-      nodes,
-      actions,
-      startingNodeId,
-      requiredSolutionLength,
-      version
-    } = network;
+    const { nodes, actions, version } = network;
     const nodesById = _.keyBy(nodes, "id");
     return (
       <div className="task-stimulus">
@@ -116,8 +113,8 @@ export default class TaskStimulus extends React.Component {
           <div>
             {!playerSolution.isValid && (
               <h2>
-                Oops! Your solution was not valid. You received a{" "}
-                {network.missingSolutionPenalty} point penalty!
+                Oh no! You were too slow! You received{" "}
+                {network.missingSolutionPenalty} points penalty.
               </h2>
             )}
             {playerSolution.isValid && (
@@ -131,9 +128,8 @@ export default class TaskStimulus extends React.Component {
         {(this.isPlanStage() || this.isResponseStage()) && (
           <>
             <h2>
-              Find a path of {requiredSolutionLength} steps, starting from Node{" "}
-              {nodes.find(n => n.id === startingNodeId).displayName}. The larger
-              the reward, the better.
+              {this.isPlanStage() && "Planning Phase"}
+              {this.isResponseStage() && "GO!"}
             </h2>
             <div>
               <div className="round-stat">

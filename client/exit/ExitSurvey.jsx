@@ -12,8 +12,7 @@ export default class ExitSurvey extends React.Component {
     question5: "",
     question6: "",
     question7: "",
-    question8: "",
-    question9: ""
+    question8: ""
   };
 
   handleChange = event => {
@@ -36,8 +35,7 @@ export default class ExitSurvey extends React.Component {
       question5,
       question6,
       question7,
-      question8,
-      question9
+      question8
     } = this.state;
 
     return (
@@ -49,146 +47,113 @@ export default class ExitSurvey extends React.Component {
             any information you feel uncomfortable with.
           </p>
           <form onSubmit={this.handleSubmit}>
-            <div className="form-line">
-              <label htmlFor="question1">
-                Did you try to find the best path throughout all the trials?
-                (This will not reflect on your Prolific Score, but will help us
-                to evaluate the data better)
-              </label>
-              <div>
-                <textarea
-                  dir="auto"
-                  id="question1"
-                  name="question1"
-                  value={question1}
-                  onChange={this.handleChange}
-                />
-              </div>
+            <label htmlFor="question1">
+              Did you notice any irregularities in the interface?
+            </label>
+            <div>
+              <textarea
+                dir="auto"
+                id="question1"
+                name="question1"
+                value={question1}
+                onChange={this.handleChange}
+              />
             </div>
 
-            <div className="form-line">
-              <label htmlFor="question2">
-                How many options did you consider before making a decision?
-              </label>
-              <br />
-              <div>
-                <textarea
-                  dir="auto"
-                  id="question2"
-                  name="question2"
-                  value={question2}
-                  onChange={this.handleChange}
-                />
-              </div>
+            <label htmlFor="question2">
+              Did you get too exhausted to focus on the task? (Y/N) When did you
+              notice your loss of focus?
+            </label>
+            <br />
+            <div>
+              <textarea
+                dir="auto"
+                id="question2"
+                name="question2"
+                value={question2}
+                onChange={this.handleChange}
+              />
             </div>
 
-            <div className="form-line">
-              <label htmlFor="question3">
-                Have you had a strategy? If yes please describe briefly:
-              </label>
-              <div>
-                <textarea
-                  dir="auto"
-                  id="question3"
-                  name="question3"
-                  value={question3}
-                  onChange={this.handleChange}
-                />
-              </div>
+            <label htmlFor="question3">
+              How many options did you consider before making a decision?
+            </label>
+            <div>
+              <textarea
+                dir="auto"
+                id="question3"
+                name="question3"
+                value={question3}
+                onChange={this.handleChange}
+              />
             </div>
 
-            <div className="form-line">
-              <label htmlFor="question4">
-                Please rate the difficulty of the task from 1 (very easy) to 10
-                (very hard).
-              </label>
-              <div>
-                <textarea
-                  dir="auto"
-                  id="question4"
-                  name="question4"
-                  value={question4}
-                  onChange={this.handleChange}
-                />
-              </div>
+            <label htmlFor="question4">
+              Did you follow a strategy? If yes, please describe briefly:
+            </label>
+            <div>
+              <textarea
+                dir="auto"
+                id="question4"
+                name="question4"
+                value={question4}
+                onChange={this.handleChange}
+              />
             </div>
 
-            <div className="form-line">
-              <label htmlFor="question5">
-                Did you experience the time as sufficient to concentrate on each
-                trial?
-              </label>
-              <div>
-                <textarea
-                  dir="auto"
-                  id="question5"
-                  name="question5"
-                  value={question5}
-                  onChange={this.handleChange}
-                />
-              </div>
+            <label htmlFor="question5">
+              Please rate the difficulty of the task from 1 (very easy) to 10
+              (very hard).
+            </label>
+            <div>
+              <textarea
+                dir="auto"
+                id="question5"
+                name="question5"
+                value={question5}
+                onChange={this.handleChange}
+              />
             </div>
 
-            <div className="form-line">
-              <label htmlFor="question6">
-                Would you have considered more options, had it been more time
-                available?
-              </label>
-              <div>
-                <textarea
-                  dir="auto"
-                  id="question6"
-                  name="question6"
-                  value={question6}
-                  onChange={this.handleChange}
-                />
-              </div>
+            <label htmlFor="question6">
+              Did you experience the time as sufficient to concentrate on each
+              trial?
+            </label>
+            <div>
+              <textarea
+                dir="auto"
+                id="question6"
+                name="question6"
+                value={question6}
+                onChange={this.handleChange}
+              />
             </div>
 
-            <div className="form-line">
-              <label htmlFor="question7">
-                Did you guess what the purpose of this experiment? Please
-                describe briefly:
-              </label>
-              <div>
-                <textarea
-                  dir="auto"
-                  id="question7"
-                  name="question7"
-                  value={question7}
-                  onChange={this.handleChange}
-                />
-              </div>
+            <label htmlFor="question7">
+              Did you guess the purpose of this experiment? Please describe
+              briefly:
+            </label>
+            <div>
+              <textarea
+                dir="auto"
+                id="question7"
+                name="question7"
+                value={question7}
+                onChange={this.handleChange}
+              />
             </div>
 
-            <div className="form-line">
-              <label htmlFor="question8">
-                Do you have any additional comments on the experiment?
-              </label>
-              <div>
-                <textarea
-                  dir="auto"
-                  id="question8"
-                  name="question8"
-                  value={question8}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="form-line">
-              <label htmlFor="question9">
-                Did you notice any irregularities?
-              </label>
-              <div>
-                <textarea
-                  dir="auto"
-                  id="question9"
-                  name="question9"
-                  value={question9}
-                  onChange={this.handleChange}
-                />
-              </div>
+            <label htmlFor="question8">
+              Do you have any additional comments on the experiment?
+            </label>
+            <div>
+              <textarea
+                dir="auto"
+                id="question8"
+                name="question8"
+                value={question8}
+                onChange={this.handleChange}
+              />
             </div>
 
             <button type="submit">Submit</button>

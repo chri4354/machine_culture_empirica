@@ -2,7 +2,7 @@ import React from "react";
 import { Fragment } from "react";
 import _ from "lodash";
 
-import { Network } from "../components/Network";
+import Network from "../components/Network2";
 import {
   calculateScore,
   findAction,

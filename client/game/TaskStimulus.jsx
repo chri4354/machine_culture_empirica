@@ -106,8 +106,8 @@ export default class TaskStimulus extends React.Component {
     const nodesById = _.keyBy(nodes, "id");
     return (
       <div className="task-stimulus">
-        {network.isPractice && (
-          <h2 style={{ color: "green" }}>Practice Round</h2>
+        {network.experimentName === "practice" && (
+          <h2 style={{ color: "red" }}>Practice Round</h2>
         )}
         {this.isReviewStage() && (
           <div>
@@ -127,10 +127,10 @@ export default class TaskStimulus extends React.Component {
         )}
         {(this.isPlanStage() || this.isResponseStage()) && (
           <>
-            <h2>
+            <h1 style={{ color: "green" }}>
               {this.isPlanStage() && "Planning Phase"}
               {this.isResponseStage() && "GO!"}
-            </h2>
+            </h1>
             <div>
               <div className="round-stat">
                 <h4>Number of steps remaining: </h4>

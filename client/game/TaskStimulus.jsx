@@ -1,4 +1,5 @@
 import React from "react";
+import { StageTimeWrapper } from "meteor/empirica:core";
 import { Fragment } from "react";
 import _ from "lodash";
 
@@ -9,7 +10,7 @@ import {
   isSolutionValid
 } from "../../imports/utils";
 
-export default class TaskStimulus extends React.Component {
+class TaskStimulus extends React.Component {
   state = {};
 
   isPlanStage() {
@@ -48,6 +49,8 @@ export default class TaskStimulus extends React.Component {
       networkId,
       isValid,
       planningStageDurationInSeconds,
+      timeElapsedInSeconds:
+        this.props.stage.durationInSeconds - this.props.remainingSeconds,
       totalReward: isValid
         ? calculateScore(actions)
         : network.missingSolutionPenalty
@@ -106,8 +109,11 @@ export default class TaskStimulus extends React.Component {
     const nodesById = _.keyBy(nodes, "id");
     return (
       <div className="task-stimulus">
-        {network.experimentName === "practice" && (
-          <h2 style={{ color: "red" }}>Practice Round</h2>
+        {network.experimentName === "practice" && !this.isReviewStage() && (
+          <h2 style={{ color: "red" }}>
+            This is a trial round. You will have more time to complete this
+            round.
+          </h2>
         )}
         {this.isReviewStage() && (
           <div>
@@ -206,3 +212,5 @@ export default class TaskStimulus extends React.Component {
     );
   }
 }
+
+export default StageTimeWrapper(TaskStimulus);

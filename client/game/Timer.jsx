@@ -21,4 +21,4 @@ class timer extends React.Component {
   }
 }
 
-export default (Timer = StageTimeWrapper(timer));
+export default Timer = StageTimeWrapper(timer);

@@ -1,7 +1,6 @@
 import Empirica from "meteor/empirica:core";
 
 import { Solutions } from "./solution";
-import { Networks } from "./network";
 
 // onGameStart is triggered opnce per game before the game starts, and before
 // the first onRoundStart. It receives the game and list of all the players in
@@ -33,10 +32,13 @@ Empirica.onStageEnd((game, round, stage, players) => {});
 // onRoundEnd is triggered after each round.
 // It receives the same options as onGameEnd, and the round that just ended.
 Empirica.onRoundEnd((game, round, players) => {
+  const { network } = round.get("environment");
   players.forEach(player => {
-    const solution = player.round.get("solution") || {};
-    Solutions.create({ ...solution, playerId: player.id });
-    player.set("score", (player.get("score") || 0) + solution.totalReward);
+    if (network.experimentName !== "practice") {
+      const solution = player.round.get("solution") || {};
+      Solutions.create({ ...solution, playerId: player.id });
+      player.set("score", (player.get("score") || 0) + solution.totalReward);
+    }
   });
 });
 

@@ -11,8 +11,8 @@ export default class InstructionStepThree extends React.Component {
           <h1> Instructions 3 </h1>
           <p>
             It is important that you complete <b>all of the 8 steps</b> in every
-            round! If you are not able to finish all 8 steps you will lose the
-            highest amount you could possibly lose by taking the wrong paths.
+            round! If you are not able to finish all 8 steps you will receive a
+            punishment of -200 points.
           </p>
           <p>So make sure you finish each round in time!</p>
           <p>

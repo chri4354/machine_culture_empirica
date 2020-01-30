@@ -23,7 +23,7 @@ export default class Consent extends React.Component {
             this particular study.
           </p>
           <p>
-            You will receive £# through Prolific for participating. In addition,
+            You will receive £8 through Prolific for participating. In addition,
             you may earn a bonus depending on your performance. You may exit the
             study at any time before the end and will receive partial
             compensation. By clicking on the ‘AGREE’ button, you confirm that

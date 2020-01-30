@@ -47,7 +47,15 @@ const Node = ({
   );
 };
 
-const Link = ({ isLinkFromActiveNode, source, target, text, colorClass, id, size }) => {
+const Link = ({
+  isLinkFromActiveNode,
+  source,
+  target,
+  text,
+  colorClass,
+  id,
+  size
+}) => {
   const dx = target.x - source.x;
   const dy = target.y - source.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
@@ -66,7 +74,7 @@ const Link = ({ isLinkFromActiveNode, source, target, text, colorClass, id, size
   }
 
   if (isLinkFromActiveNode) {
-    size *= 2.5;
+    size *= 1;
   }
 
   return (
@@ -249,7 +257,11 @@ class Network extends React.Component {
         height={size.height}
       >
         <LinkMarker size={size} />
-        <Links activeNodeId={activeNodeId} actions={parsedActions} nodeSize={nodeSize} />
+        <Links
+          activeNodeId={activeNodeId}
+          actions={parsedActions}
+          nodeSize={nodeSize}
+        />
         {/* <Links actions={parsedSolution} nodeSize={nodeSize} /> */}
         <g>
           {parsedNodes.map(({ x, y, displayName, id }, idx) => (

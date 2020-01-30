@@ -40,15 +40,20 @@ class TaskStimulus extends React.Component {
   }
 
   updateSolution(networkId, actions, requiredSolutionLength) {
-    const { network, planningStageDurationInSeconds } = this.props.round.get(
-      "environment"
-    );
+    const {
+      network,
+      planningStageDurationInSeconds,
+      responseStageDurationInSeconds,
+      reviewStageDurationInSeconds
+    } = this.props.round.get("environment");
     const isValid = isSolutionValid(actions, requiredSolutionLength);
     const solution = {
       actions,
       networkId,
       isValid,
       planningStageDurationInSeconds,
+      responseStageDurationInSeconds,
+      reviewStageDurationInSeconds,
       timeElapsedInSeconds:
         this.props.stage.durationInSeconds - this.props.remainingSeconds,
       totalReward: isValid
@@ -61,6 +66,10 @@ class TaskStimulus extends React.Component {
 
   onNodeClick(targetId) {
     const { round, player } = this.props;
+    if (player.stage.submitted) {
+      // prevents the user from double clicking on the final node and recording an extra action
+      return;
+    }
     const { network } = round.get("environment");
     const { actions, requiredSolutionLength } = network;
     if (!this.isResponseStage() || this.state.numberOfActionsRemaining === 0) {

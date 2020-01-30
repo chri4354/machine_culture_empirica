@@ -80,10 +80,13 @@ Empirica.gameInit((game, treatment, players) => {
     const stageDurationMultiplier = isPractice ? 2 : 1;
     const planningStageDurationInSeconds =
       stageDurations[0] * stageDurationMultiplier;
+    const responseStageDurationInSeconds = stageDurations[1] * stageDurationMultiplier;
+    const reviewStageDurationInSeconds = 5 * stageDurationMultiplier;
 
     round.set("environment", {
-      isPractice,
       planningStageDurationInSeconds,
+      responseStageDurationInSeconds,
+      reviewStageDurationInSeconds,
       network: networks[i],
       solutions: []
     });
@@ -99,14 +102,14 @@ Empirica.gameInit((game, treatment, players) => {
     round.addStage({
       name: "response",
       displayName: "GO!",
-      durationInSeconds: stageDurations[1] * stageDurationMultiplier
+      durationInSeconds: responseStageDurationInSeconds
     });
 
     // The player can review their score
     round.addStage({
       name: "review",
       displayName: "REVIEW",
-      durationInSeconds: 5 * stageDurationMultiplier
+      durationInSeconds: reviewStageDurationInSeconds
     });
   });
 });

@@ -47,7 +47,7 @@ const Node = ({
   );
 };
 
-const Link = ({ source, target, text, colorClass, id, size }) => {
+const Link = ({ isLinkFromActiveNode, source, target, text, colorClass, id, size }) => {
   const dx = target.x - source.x;
   const dy = target.y - source.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
@@ -63,6 +63,10 @@ const Link = ({ source, target, text, colorClass, id, size }) => {
     markerStart = `url(#marker-arrow-start-${colorClass})`;
     d = `M ${target.x} ${target.y} A ${dr} ${dr} 0 0 0 ${source.x} ${source.y}`;
     textx = dist * 0.9 - 80;
+  }
+
+  if (isLinkFromActiveNode) {
+    size *= 2.5;
   }
 
   return (
@@ -149,13 +153,14 @@ const LinkMarker = ({ size }) => (
   </defs>
 );
 
-const Links = ({ actions, nodeSize }) => (
+const Links = ({ actions, activeNodeId, nodeSize }) => (
   <>
     <g>
       {actions.map(({ id, source, target, text, colorClass, size }, idx) => (
         <Link
           r={nodeSize}
           text={text}
+          isLinkFromActiveNode={activeNodeId === source.id}
           colorClass={colorClass}
           size={size}
           id={id}
@@ -244,7 +249,7 @@ class Network extends React.Component {
         height={size.height}
       >
         <LinkMarker size={size} />
-        <Links actions={parsedActions} nodeSize={nodeSize} />
+        <Links activeNodeId={activeNodeId} actions={parsedActions} nodeSize={nodeSize} />
         {/* <Links actions={parsedSolution} nodeSize={nodeSize} /> */}
         <g>
           {parsedNodes.map(({ x, y, displayName, id }, idx) => (

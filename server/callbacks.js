@@ -33,10 +33,18 @@ Empirica.onStageEnd((game, round, stage, players) => {});
 // It receives the same options as onGameEnd, and the round that just ended.
 Empirica.onRoundEnd((game, round, players) => {
   const { network } = round.get("environment");
+  const { batchId, treatment } = game;
   players.forEach(player => {
     if (network.experimentName !== "practice") {
+      console.log(`Saving solution game: ${game._id} player: ${player.id} round: ${round._id}`);
       const solution = player.round.get("solution") || {};
-      Solutions.create({ ...solution, playerId: player.id });
+      Solutions.create({
+        ...solution,
+        batchId,
+        treatment,
+        experimentApplicationVersion: '1.0--2019-01-29',
+        playerId: player.id
+      });
       player.set("score", (player.get("score") || 0) + solution.totalReward);
     }
   });

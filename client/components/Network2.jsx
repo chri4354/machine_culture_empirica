@@ -48,7 +48,7 @@ const Node = ({
 };
 
 const Link = ({
-  isLinkFromActiveNode,
+  isThickerLink,
   source,
   target,
   text,
@@ -73,8 +73,8 @@ const Link = ({
     textx = dist * 0.9 - 80;
   }
 
-  if (isLinkFromActiveNode) {
-    size *= 1;
+  if (isThickerLink) {
+    size *= 2.5;
   }
 
   return (
@@ -168,7 +168,7 @@ const Links = ({ actions, activeNodeId, nodeSize }) => (
         <Link
           r={nodeSize}
           text={text}
-          isLinkFromActiveNode={activeNodeId === source.id}
+          isThickerLink={activeNodeId === source.id}
           colorClass={colorClass}
           size={size}
           id={id}

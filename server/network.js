@@ -25,11 +25,8 @@ const loadAll = experimentName => {
   return Networks.find(where).fetch();
 };
 
-const loadOne = playerId => {
-  // TODO improve selection logic
-  const networks = loadAll();
-  // return networks[getRandomInteger(0, 10)];
-  return networks[getRandomInteger(0, networks.length - 1)];
+const loadById = id => {
+  return Networks.findOne({ id });
 };
 
 const loadPracticeNetworks = () => {
@@ -40,5 +37,5 @@ Networks.count = count;
 Networks.create = create;
 Networks.deleteAll = deleteAll;
 Networks.loadAll = loadAll;
-Networks.loadOne = loadOne;
+Networks.loadById = loadById;
 Networks.loadPracticeNetworks = loadPracticeNetworks;

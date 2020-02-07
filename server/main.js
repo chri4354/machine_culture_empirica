@@ -6,20 +6,57 @@ import { Networks } from "./network";
 import { Solutions } from "./solution";
 import networks from "./networks.json";
 import { getRandomInteger } from "./utils";
+import { Chains } from "./chain";
+
+function initializeChains(
+  experimentName,
+  lengthOfChain,
+  numberOfChainsPerEnvironment,
+  probabilityOfRobotSolutionInChain
+) {
+  // check if the chains have already been initialized for the experiment
+  const chains = Chains.loadAll(experimentName);
+  if (chains.length) {
+    return;
+  }
+
+  console.log("Number of chains per env: ", numberOfChainsPerEnvironment);
+  const networks = Networks.loadAll(experimentName);
+  for (const network of networks) {
+    // TODO bulk insert chains
+    _.times(numberOfChainsPerEnvironment, i => {
+      const hasRobotSolution =
+        Math.random() < probabilityOfRobotSolutionInChain;
+      const chain = {
+        experimentName,
+        networkId: network.id,
+        hasRobotSolution: Math.random() < probabilityOfRobotSolutionInChain,
+        positionOfRobotSolution:
+          hasRobotSolution && getRandomInteger(0, lengthOfChain - 1)
+      };
+      console.log("CHAIN::");
+      console.log(chain);
+      Chains.create(chain);
+    });
+  }
+}
 
 const printDatabaseStatistics = () => {
   const numberOfNetworks = Networks.count();
   const numberOfSolutions = Solutions.count();
+  const numberOfChains = Chains.count();
 
   console.log(
     "Current Database stats: ",
-    JSON.stringify({ numberOfNetworks, numberOfSolutions })
+    JSON.stringify({ numberOfNetworks, numberOfSolutions, numberOfChains })
   );
 };
 
 const resetDatabase = () => {
   console.log("resetting database...");
   Networks.deleteAll();
+  Solutions.deleteAll();
+  Chains.deleteAll();
 };
 
 const initializeDatabase = () => {
@@ -29,36 +66,41 @@ const initializeDatabase = () => {
   }
 };
 
-printDatabaseStatistics();
-
-// resetDatabase();
-// printDatabaseStatistics();
-// initializeDatabase();
-// printDatabaseStatistics();
-
 Empirica.batchInit(batch => {
+  console.log("------------------------");
   console.log("batchInit", batch);
+  // TODO call initializeChains() here. We need to have access to the treatment/factors.
 });
 
-// gameInit is where the structure of a game is defined.
-// Just before every game starts, once all the players needed are ready, this
-// function is called with the treatment and the list of players.
-// You must then add rounds and stages to the game, depending on the treatment
-// and the players. You can also get/set initial values on your game, players,
-// rounds and stages (with get/set methods), that will be able to use later in
-// the game.
 Empirica.gameInit((game, treatment, players) => {
-  const { experimentName } = treatment;
+  console.log(`Game Init: treatments: ${JSON.stringify(treatment)}`);
+  const {
+    experimentName,
+    lengthOfChain,
+    numberOfChainsPerEnvironment,
+    numberOfRounds,
+    probabilityOfRobotSolutionInChain
+  } = treatment;
+
+  // TODO call initializeChains() in the batchInit callback
+  initializeChains(
+    experimentName,
+    lengthOfChain,
+    numberOfChainsPerEnvironment,
+    probabilityOfRobotSolutionInChain
+  );
 
   game.players.forEach(player => {
     player.set("avatar", `/avatars/jdenticon/${player._id}`);
     player.set("score", 0);
   });
 
+  game.set("experimentName", experimentName);
+
   const availableStageDurations = treatment.debug
     ? [
-        [1, 20000],
-        [1, 20000]
+        [30, 20000],
+        [30, 20000]
       ]
     : [
         [5, 25],
@@ -66,29 +108,27 @@ Empirica.gameInit((game, treatment, players) => {
       ];
 
   const practiceNetworks = Networks.loadPracticeNetworks();
-  const mainNetworks = _.shuffle(Networks.loadAll(experimentName));
-  const networks = [...practiceNetworks, ...mainNetworks];
-  _.times(networks.length, i => {
+  const numberOfPracticeRounds =
+    (practiceNetworks && practiceNetworks.length) || 0;
+  _.times(numberOfPracticeRounds + numberOfRounds, i => {
     const round = game.addRound();
     const stageDurations =
       availableStageDurations[
         getRandomInteger(0, availableStageDurations.length - 1)
       ];
 
-    const network = networks[i];
-    const isPractice = network.experimentName === "practice";
+    const isPractice = i < numberOfPracticeRounds;
     const stageDurationMultiplier = isPractice ? 2 : 1;
     const planningStageDurationInSeconds =
       stageDurations[0] * stageDurationMultiplier;
-    const responseStageDurationInSeconds = stageDurations[1] * stageDurationMultiplier;
+    const responseStageDurationInSeconds =
+      stageDurations[1] * stageDurationMultiplier;
     const reviewStageDurationInSeconds = 5 * stageDurationMultiplier;
 
     round.set("environment", {
       planningStageDurationInSeconds,
       responseStageDurationInSeconds,
-      reviewStageDurationInSeconds,
-      network: networks[i],
-      solutions: []
+      reviewStageDurationInSeconds
     });
 
     // The player can view the network and plan their solution
@@ -113,3 +153,11 @@ Empirica.gameInit((game, treatment, players) => {
     });
   });
 });
+
+printDatabaseStatistics();
+const chains = Chains.loadAll();
+console.log(chains[0]);
+// resetDatabase();
+// printDatabaseStatistics();
+// initializeDatabase();
+// printDatabaseStatistics();

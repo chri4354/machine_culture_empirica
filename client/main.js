@@ -19,7 +19,6 @@ import Quiz from "./intro/Quiz";
 Empirica.about(About);
 
 // Set the Consent Component you want to present players (optional).
-// TODO: activate when development finished
 Empirica.consent(Consent);
 
 // Introduction pages to show before they play the game (optional).
@@ -30,13 +29,13 @@ Empirica.introSteps((game, treatment) => {
     return [];
   }
   const steps = [
-    InstructionStepOne,
-    InstructionStepTwo,
-    InstructionStepThree,
-    InstructionStepFour,
-    InstructionStepFive,
-    InstructionStepSix,
-    InstructionStepSeven
+    // InstructionStepOne,
+    // InstructionStepTwo,
+    // InstructionStepThree,
+    // InstructionStepFour,
+    // InstructionStepFive,
+    // InstructionStepSix,
+    // InstructionStepSeven
   ];
   steps.push(Quiz);
   return steps;

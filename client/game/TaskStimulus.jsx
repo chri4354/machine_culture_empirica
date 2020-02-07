@@ -1,6 +1,5 @@
 import React from "react";
 import { StageTimeWrapper } from "meteor/empirica:core";
-import { Fragment } from "react";
 import _ from "lodash";
 
 import Network from "../components/Network2";
@@ -25,8 +24,16 @@ class TaskStimulus extends React.Component {
     return this.props.stage.name === "response";
   }
 
-  componentDidMount() {
-    const { network } = this.props.round.get("environment");
+  getNetwork() {
+    return this.props.player.round.get("network");
+  }
+
+  getPreviousSolutionInChain() {
+    return this.props.player.round.get("previousSolutionInChain");
+  }
+
+  async componentDidMount() {
+    const network = this.getNetwork();
     if (!this.isReviewStage()) {
       this.setState({
         activeNodeId: network.startingNodeId,
@@ -37,11 +44,32 @@ class TaskStimulus extends React.Component {
     if (this.isResponseStage()) {
       this.updateSolution(network.id, [], network.requiredSolutionLength);
     }
+    if (this.isPlanStage()) {
+      // run animation of previous solution
+      const previousSolutionInChain = this.getPreviousSolutionInChain();
+      const { actions } = previousSolutionInChain;
+      for (const action of actions) {
+        const that = this;
+        await new Promise(function(resolve) {
+          setTimeout(() => {
+            that.setState({
+              activeNodeId: action.sourceId
+            });
+            resolve();
+          }, 1.5 * 1000);
+        });
+      }
+
+      // Show the use a static image of the network
+      this.setState({
+        activeNodeId: network.startingNodeId
+      });
+    }
   }
 
   updateSolution(networkId, actions, requiredSolutionLength) {
+    const network = this.getNetwork();
     const {
-      network,
       planningStageDurationInSeconds,
       responseStageDurationInSeconds,
       reviewStageDurationInSeconds
@@ -65,12 +93,12 @@ class TaskStimulus extends React.Component {
   }
 
   onNodeClick(targetId) {
-    const { round, player } = this.props;
+    const { player } = this.props;
     if (player.stage.submitted) {
       // prevents the user from double clicking on the final node and recording an extra action
       return;
     }
-    const { network } = round.get("environment");
+    const network = this.getNetwork();
     const { actions, requiredSolutionLength } = network;
     if (!this.isResponseStage() || this.state.numberOfActionsRemaining === 0) {
       return;
@@ -108,14 +136,11 @@ class TaskStimulus extends React.Component {
   }
 
   render() {
-    const { round, player } = this.props;
+    const { player } = this.props;
     const playerSolution = player.round.get("solution");
-    const { network, solutions } = round.get("environment");
-    const previousSolution =
-      (solutions && solutions.length && solutions[solutions.length - 1]) ||
-      null;
+    const network = this.getNetwork();
     const { nodes, actions, version } = network;
-    const nodesById = _.keyBy(nodes, "id");
+    // const nodesById = _.keyBy(nodes, "id");
     return (
       <div className="task-stimulus">
         {network.experimentName === "practice" && !this.isReviewStage() && (
@@ -175,46 +200,6 @@ class TaskStimulus extends React.Component {
               onNodeClick={targetId => this.onNodeClick(targetId)}
               actions={actions}
             />
-            {previousSolution && (
-              <div
-                style={{
-                  height: "500px",
-                  width: "250px",
-                  textAlign: "center",
-                  fontSize: "18px",
-                  fontWeight: "bold",
-                  float: "right"
-                }}
-              >
-                <h3>Previous Player's Solution:</h3>
-                <div>
-                  <table style={{ margin: "auto" }}>
-                    {previousSolution.actions.map((action, idx) => (
-                      <Fragment key={"solution-action-" + idx}>
-                        <tr>
-                          <td>{nodesById[action.sourceId].displayName}</td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>&darr; </td>
-                          <td>{action.reward}</td>
-                        </tr>
-                        {idx === previousSolution.actions.length - 1 && (
-                          <tr>
-                            <td>{nodesById[action.targetId].displayName}</td>
-                            <td></td>
-                          </tr>
-                        )}
-                      </Fragment>
-                    ))}
-                  </table>
-
-                  <p style={{ marginTop: "20px" }}>
-                    Total Reward: {previousSolution.totalReward}
-                  </p>
-                </div>
-              </div>
-            )}
           </>
         )}
       </div>

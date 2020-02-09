@@ -7,18 +7,26 @@ import { Chains } from "./chain";
 Empirica.onRoundStart((game, round, players) => {
   const experimentName = game.get("experimentName");
   const { batchId } = game;
-  players.forEach(player => {
+  for (const player of players) {
     console.log(
       `Loading network for player ${player._id}, experiment ${experimentName}`
     );
 
-    const chain = Chains.loadNextChainForPlayer(player.id);
+    const chain = Chains.loadNextChainForPlayer(player._id);
+
+    if (!chain) {
+      // There are no available chains for the player
+      // TODO display error message to user or end the game
+      console.error(`No chains available for player ${player._id}`);
+      return;
+    }
+
     const network = Networks.loadById(chain.networkId);
-    const solutions = Solutions.loadForChain(chain._id);
+    const solutions = Solutions.loadValidSolutionsForChain(chain._id);
 
     /*
      * We store the network on the `player.round` object instead of the round object.
-     * If there are multiple players in the game then each player should have a different network.
+     * If there are multiple players in the game then each player should have a different chain and network.
      */
     player.round.set("network", network);
     player.round.set("chain", chain);
@@ -28,18 +36,18 @@ Empirica.onRoundStart((game, round, players) => {
         actions: []
       }
     );
-  });
+  }
 });
 
 Empirica.onRoundEnd((game, round, players) => {
   const { batchId, treatment } = game;
-  players.forEach(player => {
+  for (const player of players) {
     const network = player.round.get("network");
     if (network.experimentName === "practice") {
       return;
     }
     console.log(
-      `Saving solution game: ${game._id} player: ${player.id} round: ${round._id}`
+      `Saving solution game: ${game._id} player: ${player._id} round: ${round._id}`
     );
     const solution = player.round.get("solution") || {};
     const chain = player.round.get("chain");
@@ -49,12 +57,18 @@ Empirica.onRoundEnd((game, round, players) => {
       treatment,
       chainId: chain._id,
       experimentApplicationVersion: "2.0--2019-02-05",
-      playerId: player.id
+      playerId: player._id
     });
     player.set("score", (player.get("score") || 0) + solution.totalReward);
-  });
 
-  // TODO if the next solution is a robot solution then add that solution
+    // TODO if the next solution is a robot solution then add that solution
+
+    Chains.updateChainAfterRound(
+      chain._id,
+      player._id,
+      solution.isValid ? chain.numberOfValidSolutions + 1 : chain.numberOfValidSolutions
+    );
+  }
 });
 
 // onGameEnd is triggered when the game ends.

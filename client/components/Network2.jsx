@@ -161,22 +161,27 @@ const LinkMarker = ({ size }) => (
   </defs>
 );
 
-const Links = ({ actions, activeNodeId, nodeSize }) => (
+const Links = ({ actions, activeNodeId, planningAnimationTargetNodeId, nodeSize }) => (
   <>
     <g>
-      {actions.map(({ id, source, target, text, colorClass, size }, idx) => (
-        <Link
-          r={nodeSize}
-          text={text}
-          isThickerLink={activeNodeId === source.id}
-          colorClass={colorClass}
-          size={size}
-          id={id}
-          source={source}
-          target={target}
-          key={"link-" + idx}
-        />
-      ))}
+      {actions.map(({ id, source, target, text, colorClass, size }, idx) => {
+        const isThickerLink = planningAnimationTargetNodeId !== null
+          ? activeNodeId === source.id && planningAnimationTargetNodeId === target.id
+          : activeNodeId === source.id;
+        return (
+          <Link
+            r={nodeSize}
+            text={text}
+            isThickerLink={isThickerLink}
+            colorClass={colorClass}
+            size={size}
+            id={id}
+            source={source}
+            target={target}
+            key={"link-" + idx}
+          />
+        );
+      })}
     </g>
     {/* to bring the link describtion (rewards) to the front */}
     <g>
@@ -238,6 +243,7 @@ class Network extends React.Component {
     const {
       activeNodeId,
       actions,
+      planningAnimationTargetNodeId,
       invalidClickNodeId,
       nodes,
       onNodeClick,
@@ -259,6 +265,7 @@ class Network extends React.Component {
         <LinkMarker size={size} />
         <Links
           activeNodeId={activeNodeId}
+          planningAnimationTargetNodeId={planningAnimationTargetNodeId}
           actions={parsedActions}
           nodeSize={nodeSize}
         />

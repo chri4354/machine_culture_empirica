@@ -10,18 +10,24 @@ import {
 } from "../../imports/utils";
 
 class TaskStimulus extends React.Component {
-  state = {};
+  state = {
+    planningAnimationTargetNodeId: null,
+  };
+
+  getStageName() {
+    return this.props.stage.name;
+  }
 
   isPlanStage() {
-    return this.props.stage.name === "plan";
+    return this.getStageName() === "plan";
   }
 
   isReviewStage() {
-    return this.props.stage.name === "review";
+    return this.getStageName() === "review";
   }
 
   isResponseStage() {
-    return this.props.stage.name === "response";
+    return this.getStageName() === "response";
   }
 
   getNetwork() {
@@ -42,18 +48,26 @@ class TaskStimulus extends React.Component {
       });
     }
     if (this.isResponseStage()) {
-      this.updateSolution(network.id, [], network.requiredSolutionLength);
+      this.updateSolution(network._id, [], network.requiredSolutionLength);
     }
     if (this.isPlanStage()) {
       // run animation of previous solution
       const previousSolutionInChain = this.getPreviousSolutionInChain();
+      console.log("PREV: ", previousSolutionInChain);
       const { actions } = previousSolutionInChain;
+      if (actions && actions.length) {
+        this.setState({
+          activeNodeId: actions[0].sourceId,
+          planningAnimationTargetNodeId: actions[0].targetId
+        });
+      }
       for (const action of actions) {
         const that = this;
         await new Promise(function(resolve) {
           setTimeout(() => {
             that.setState({
-              activeNodeId: action.sourceId
+              activeNodeId: action.sourceId,
+              planningAnimationTargetNodeId: action.targetId,
             });
             resolve();
           }, 1.5 * 1000);
@@ -62,7 +76,8 @@ class TaskStimulus extends React.Component {
 
       // Show the use a static image of the network
       this.setState({
-        activeNodeId: network.startingNodeId
+        activeNodeId: network.startingNodeId,
+        planningAnimationTargetNodeId: null
       });
     }
   }
@@ -116,7 +131,7 @@ class TaskStimulus extends React.Component {
       return;
     }
     const solution = this.updateSolution(
-      network.id,
+      network._id,
       [...player.round.get("solution").actions, { ...action }],
       requiredSolutionLength
     );
@@ -194,6 +209,7 @@ class TaskStimulus extends React.Component {
             <Network
               nodes={nodes}
               version={version}
+              planningAnimationTargetNodeId={this.state.planningAnimationTargetNodeId}
               activeNodeId={this.state.activeNodeId}
               isDisabled={this.isPlanStage()}
               invalidClickNodeId={this.state.invalidClickNodeId}

@@ -1,4 +1,3 @@
-import { getRandomInteger } from "./utils";
 
 export const Networks = new Mongo.Collection("networks");
 
@@ -25,8 +24,8 @@ const loadAll = experimentName => {
   return Networks.find(where).fetch();
 };
 
-const loadById = id => {
-  return Networks.findOne({ id });
+const loadById = _id => {
+  return Networks.findOne({ _id });
 };
 
 const loadPracticeNetworks = () => {

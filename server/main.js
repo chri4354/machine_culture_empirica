@@ -14,6 +14,8 @@ function initializeChains(
   numberOfChainsPerEnvironment,
   probabilityOfRobotSolutionInChain
 ) {
+
+  console.log(`Initializing chains for experiment ${experimentName}`);
   // check if the chains have already been initialized for the experiment
   const chains = Chains.loadAll(experimentName);
   if (chains.length) {
@@ -23,19 +25,15 @@ function initializeChains(
   console.log("Number of chains per env: ", numberOfChainsPerEnvironment);
   const networks = Networks.loadAll(experimentName);
   for (const network of networks) {
-    // TODO bulk insert chains
-    _.times(numberOfChainsPerEnvironment, i => {
-      const hasRobotSolution =
-        Math.random() < probabilityOfRobotSolutionInChain;
+    [...Array(numberOfChainsPerEnvironment).keys()].map(i => {
+      const hasRobotSolution = Math.random() < probabilityOfRobotSolutionInChain;
       const chain = {
         experimentName,
-        networkId: network.id,
-        hasRobotSolution: Math.random() < probabilityOfRobotSolutionInChain,
-        positionOfRobotSolution:
-          hasRobotSolution && getRandomInteger(0, lengthOfChain - 1)
+        lengthOfChain,
+        networkId: network._id,
+        hasRobotSolution: hasRobotSolution,
+        positionOfRobotSolution: hasRobotSolution ? getRandomInteger(0, lengthOfChain - 1) : null
       };
-      console.log("CHAIN::");
-      console.log(chain);
       Chains.create(chain);
     });
   }
@@ -59,6 +57,13 @@ const resetDatabase = () => {
   Chains.deleteAll();
 };
 
+const initializeDatabaseForDebugging = () => {
+  console.log("initializing the networks for debugging...");
+  [...Array(10).keys()].map(i => {
+    Networks.create(networks[i]);
+  });
+};
+
 const initializeDatabase = () => {
   console.log("initializing the networks...");
   for (const network of networks) {
@@ -67,7 +72,6 @@ const initializeDatabase = () => {
 };
 
 Empirica.batchInit(batch => {
-  console.log("------------------------");
   console.log("batchInit", batch);
   // TODO call initializeChains() here. We need to have access to the treatment/factors.
 });
@@ -99,8 +103,8 @@ Empirica.gameInit((game, treatment, players) => {
 
   const availableStageDurations = treatment.debug
     ? [
-        [30, 20000],
-        [30, 20000]
+        [25, 20000],
+        [25, 20000]
       ]
     : [
         [5, 25],
@@ -154,10 +158,10 @@ Empirica.gameInit((game, treatment, players) => {
   });
 });
 
-printDatabaseStatistics();
-const chains = Chains.loadAll();
-console.log(chains[0]);
 // resetDatabase();
-// printDatabaseStatistics();
+printDatabaseStatistics();
+// resetDatabase();
 // initializeDatabase();
+// initializeDatabaseForDebugging();
+// initializeChains();
 // printDatabaseStatistics();

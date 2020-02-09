@@ -29,13 +29,13 @@ Empirica.introSteps((game, treatment) => {
     return [];
   }
   const steps = [
-    // InstructionStepOne,
-    // InstructionStepTwo,
-    // InstructionStepThree,
-    // InstructionStepFour,
-    // InstructionStepFive,
-    // InstructionStepSix,
-    // InstructionStepSeven
+    InstructionStepOne,
+    InstructionStepTwo,
+    InstructionStepThree,
+    InstructionStepFour,
+    InstructionStepFive,
+    InstructionStepSix,
+    InstructionStepSeven
   ];
   steps.push(Quiz);
   return steps;

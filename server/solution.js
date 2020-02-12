@@ -5,6 +5,8 @@ export const Solutions = new Mongo.Collection("solutions");
  *
  * {
  *   chainId: string;
+ *   environmentId: string;
+ *   experimentName: string;
  *   experimentEnvironmentId: string;
  *   isValid: boolean;
  *   batchId: string;
@@ -45,7 +47,10 @@ const loadForPlayer = playerId => {
 };
 
 const loadValidSolutionsForChain = chainId => {
-  return Solutions.find({ chainId, isValid: true }, { sort: { createdAt: 1 } }).fetch();
+  return Solutions.find(
+    { chainId, isValid: true },
+    { sort: { createdAt: 1 } }
+  ).fetch();
 };
 
 Solutions.count = count;

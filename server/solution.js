@@ -5,7 +5,7 @@ export const Solutions = new Mongo.Collection("solutions");
  *
  * {
  *   chainId: string;
- *   networkId: string;
+ *   experimentEnvironmentId: string;
  *   isValid: boolean;
  *   batchId: string;
  *   treatment: Object;

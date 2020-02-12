@@ -1,20 +1,30 @@
 import Empirica from "meteor/empirica:core";
 
-import "./network";
+import "./experiment-environments";
 import "./callbacks.js";
-import { Networks } from "./network";
+import { ExperimentEnvironments } from "./experiment-environments";
 import { Solutions } from "./solution";
-import networks from "./networks.json";
+import experimentEnvironmentsJson from "./experimentEnvironments.json";
 import { getRandomInteger } from "./utils";
 import { Chains } from "./chain";
+
+/**
+ * Updates the chain.randomNumberForSorting value every 20 seconds
+ * so that players always get a random chain from the set of longest chains
+ */
+setInterval(
+  Meteor.bindEnvironment(() => {
+    Chains.updateRandomNumbersForSorting();
+  }),
+  20 * 1000
+);
 
 function initializeChains(
   experimentName,
   lengthOfChain,
   numberOfChainsPerEnvironment,
-  probabilityOfRobotSolutionInChain
+  positionOfMachineSolution
 ) {
-
   console.log(`Initializing chains for experiment ${experimentName}`);
   // check if the chains have already been initialized for the experiment
   const chains = Chains.loadAll(experimentName);
@@ -23,16 +33,19 @@ function initializeChains(
   }
 
   console.log("Number of chains per env: ", numberOfChainsPerEnvironment);
-  const networks = Networks.loadAll(experimentName);
-  for (const network of networks) {
+  const experimentEnvironments = ExperimentEnvironments.loadAll(experimentName);
+  for (const experimentEnvironment of experimentEnvironments) {
     [...Array(numberOfChainsPerEnvironment).keys()].map(i => {
-      const hasRobotSolution = Math.random() < probabilityOfRobotSolutionInChain;
+      const hasRobotSolution = Math.random() < 0.5;
       const chain = {
         experimentName,
+        hasRobotSolution,
         lengthOfChain,
-        networkId: network._id,
-        hasRobotSolution: hasRobotSolution,
-        positionOfRobotSolution: hasRobotSolution ? getRandomInteger(0, lengthOfChain - 1) : null
+        randomNumberForSorting: Math.random(), // this value is updated every 20 seconds
+        experimentEnvironmentId: experimentEnvironment._id,
+        positionOfMachineSolution: hasRobotSolution
+          ? positionOfMachineSolution
+          : null
       };
       Chains.create(chain);
     });
@@ -40,59 +53,59 @@ function initializeChains(
 }
 
 const printDatabaseStatistics = () => {
-  const numberOfNetworks = Networks.count();
+  const numberOfExperimentEnvironments = ExperimentEnvironments.count();
   const numberOfSolutions = Solutions.count();
   const numberOfChains = Chains.count();
 
   console.log(
     "Current Database stats: ",
-    JSON.stringify({ numberOfNetworks, numberOfSolutions, numberOfChains })
+    JSON.stringify({
+      numberOfExperimentEnvironments,
+      numberOfSolutions,
+      numberOfChains
+    })
   );
 };
 
 const resetDatabase = () => {
   console.log("resetting database...");
-  Networks.deleteAll();
+  ExperimentEnvironments.deleteAll();
   Solutions.deleteAll();
   Chains.deleteAll();
 };
 
 const initializeDatabaseForDebugging = () => {
-  console.log("initializing the networks for debugging...");
+  console.log("initializing the experimentEnvironments for debugging...");
   [...Array(10).keys()].map(i => {
-    Networks.create(networks[i]);
+    ExperimentEnvironments.create(experimentEnvironmentsJson[i]);
   });
 };
 
 const initializeDatabase = () => {
-  console.log("initializing the networks...");
-  for (const network of networks) {
-    Networks.create(network);
+  console.log("initializing the experimentEnvironments...");
+  for (const experimentEnvironments of experimentEnvironmentsJson) {
+    ExperimentEnvironments.create(experimentEnvironments);
   }
 };
 
-Empirica.batchInit(batch => {
-  console.log("batchInit", batch);
-  // TODO call initializeChains() here. We need to have access to the treatment/factors.
-});
-
-Empirica.gameInit((game, treatment, players) => {
-  console.log(`Game Init: treatments: ${JSON.stringify(treatment)}`);
+Empirica.batchInit((batch, treatments) => {
   const {
     experimentName,
     lengthOfChain,
     numberOfChainsPerEnvironment,
-    numberOfRounds,
-    probabilityOfRobotSolutionInChain
-  } = treatment;
-
-  // TODO call initializeChains() in the batchInit callback
+    positionOfMachineSolution
+  } = treatments[0];
   initializeChains(
     experimentName,
     lengthOfChain,
     numberOfChainsPerEnvironment,
-    probabilityOfRobotSolutionInChain
+    positionOfMachineSolution
   );
+});
+
+Empirica.gameInit((game, treatment, players) => {
+  console.log(`Game Init: treatments: ${JSON.stringify(treatment)}`);
+  const { experimentName, numberOfRounds } = treatment;
 
   game.players.forEach(player => {
     player.set("avatar", `/avatars/jdenticon/${player._id}`);
@@ -111,9 +124,10 @@ Empirica.gameInit((game, treatment, players) => {
         [15, 15]
       ];
 
-  const practiceNetworks = Networks.loadPracticeNetworks();
+  const practiceExperimentEnvironments = ExperimentEnvironments.loadPracticeExperimentEnvironments();
   const numberOfPracticeRounds =
-    (practiceNetworks && practiceNetworks.length) || 0;
+    (practiceExperimentEnvironments && practiceExperimentEnvironments.length) ||
+    0;
   _.times(numberOfPracticeRounds + numberOfRounds, i => {
     const round = game.addRound();
     const stageDurations =
@@ -135,7 +149,7 @@ Empirica.gameInit((game, treatment, players) => {
       reviewStageDurationInSeconds
     });
 
-    // The player can view the network and plan their solution
+    // The player can view the environment and plan their solution
     round.addStage({
       name: "plan",
       displayName: "PLAN",

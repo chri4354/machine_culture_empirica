@@ -30,8 +30,12 @@ class TaskStimulus extends React.Component {
     return this.getStageName() === "response";
   }
 
-  getNetwork() {
-    return this.props.player.round.get("network");
+  getChain() {
+    return this.props.player.round.get("chain");
+  }
+
+  getEnvironment() {
+    return this.props.player.round.get("environment");
   }
 
   getPreviousSolutionInChain() {
@@ -39,21 +43,20 @@ class TaskStimulus extends React.Component {
   }
 
   async componentDidMount() {
-    const network = this.getNetwork();
+    const {startingNodeId, requiredSolutionLength} = this.getEnvironment();
     if (!this.isReviewStage()) {
       this.setState({
-        activeNodeId: network.startingNodeId,
-        numberOfActionsRemaining: network.requiredSolutionLength,
+        activeNodeId: startingNodeId,
+        numberOfActionsRemaining: requiredSolutionLength,
         roundScore: 0
       });
     }
     if (this.isResponseStage()) {
-      this.updateSolution(network._id, [], network.requiredSolutionLength);
+      this.updateSolution([], requiredSolutionLength);
     }
     if (this.isPlanStage()) {
       // run animation of previous solution
       const previousSolutionInChain = this.getPreviousSolutionInChain();
-      console.log("PREV: ", previousSolutionInChain);
       const { actions } = previousSolutionInChain;
       if (actions && actions.length) {
         this.setState({
@@ -74,34 +77,43 @@ class TaskStimulus extends React.Component {
         });
       }
 
-      // Show the use a static image of the network
+      // Show the use a static image of the environment
       this.setState({
-        activeNodeId: network.startingNodeId,
+        activeNodeId: startingNodeId,
         planningAnimationTargetNodeId: null
       });
     }
   }
 
-  updateSolution(networkId, actions, requiredSolutionLength) {
-    const network = this.getNetwork();
+  updateSolution(actions, requiredSolutionLength) {
     const {
+      environmentId,
+      experimentName,
+      experimentEnvironmentId,
+      missingSolutionPenalty,
+      networkId,
       planningStageDurationInSeconds,
       responseStageDurationInSeconds,
       reviewStageDurationInSeconds
-    } = this.props.round.get("environment");
+    } = this.getEnvironment();
+    const chain = this.getChain();
     const isValid = isSolutionValid(actions, requiredSolutionLength);
     const solution = {
       actions,
-      networkId,
+      environmentId,
+      experimentEnvironmentId,
+      experimentName,
       isValid,
+      networkId,
       planningStageDurationInSeconds,
       responseStageDurationInSeconds,
       reviewStageDurationInSeconds,
+      chainId: chain._id,
       timeElapsedInSeconds:
-        this.props.stage.durationInSeconds - this.props.remainingSeconds,
+        isValid ? this.props.stage.durationInSeconds - this.props.remainingSeconds : null,
       totalReward: isValid
         ? calculateScore(actions)
-        : network.missingSolutionPenalty
+        : missingSolutionPenalty
     };
     this.props.player.round.set("solution", solution);
     return solution;
@@ -113,8 +125,7 @@ class TaskStimulus extends React.Component {
       // prevents the user from double clicking on the final node and recording an extra action
       return;
     }
-    const network = this.getNetwork();
-    const { actions, requiredSolutionLength } = network;
+    const { actions, requiredSolutionLength } = this.getEnvironment();
     if (!this.isResponseStage() || this.state.numberOfActionsRemaining === 0) {
       return;
     }
@@ -131,7 +142,6 @@ class TaskStimulus extends React.Component {
       return;
     }
     const solution = this.updateSolution(
-      network._id,
       [...player.round.get("solution").actions, { ...action }],
       requiredSolutionLength
     );
@@ -143,7 +153,7 @@ class TaskStimulus extends React.Component {
       activeNodeId: targetId,
       lastScoreReceived: action.reward,
       numberOfActionsRemaining: Math.max(
-        network.requiredSolutionLength - solution.actions.length,
+        requiredSolutionLength - solution.actions.length,
         0
       ),
       roundScore: calculateScore(solution.actions)
@@ -153,12 +163,10 @@ class TaskStimulus extends React.Component {
   render() {
     const { player } = this.props;
     const playerSolution = player.round.get("solution");
-    const network = this.getNetwork();
-    const { nodes, actions, version } = network;
-    // const nodesById = _.keyBy(nodes, "id");
+    const { actions, experimentName, missingSolutionPenalty, nodes, version } = this.getEnvironment();
     return (
       <div className="task-stimulus">
-        {network.experimentName === "practice" && !this.isReviewStage() && (
+        {experimentName === "practice" && !this.isReviewStage() && (
           <h2 style={{ color: "red" }}>
             This is a trial round. You will have more time to complete this
             round.
@@ -169,7 +177,7 @@ class TaskStimulus extends React.Component {
             {!playerSolution.isValid && (
               <h2>
                 Oh no! You were too slow! You received{" "}
-                {network.missingSolutionPenalty} points penalty.
+                {missingSolutionPenalty} points penalty.
               </h2>
             )}
             {playerSolution.isValid && (

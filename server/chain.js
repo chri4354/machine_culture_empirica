@@ -10,7 +10,8 @@ export const Chains = new Mongo.Collection("chains");
  *   lengthOfChain: number;
  *   lockedByPlayerId: string;
  *   numberOfValidSolutions: number;
- *   positionOfRobotSolution: boolean;
+ *   positionOfMachineSolution: boolean;
+ *   randomNumberForSorting: number;
  *   ...
  * }
  */
@@ -32,43 +33,23 @@ const deleteAll = () => {
   return Chains.remove({});
 };
 
-const loadAllAvailableChainsForPlayer = playerId => {
+/**
+ *
+ * @returns {chain | null}
+ */
+const loadNextChainForPlayer = playerId => {
   const playerSolutions = Solutions.loadForPlayer(playerId);
   const playerSoltutionChainIds = playerSolutions.map(
     solution => solution.chainId
   );
   const playerSolutionNetworkIds = playerSolutions.map(
     solution => solution.networkId
-  )
-
-  return chains = Chains.find(
-    {
-      _id: { $nin: playerSoltutionChainIds },
-      networkId: { $nin: playerSolutionNetworkIds },
-      lockedByPlayerId: null, // the chain is not locked
-      $expr: { $ne: [ "lengthOfChain", "numberOfValidSolutions" ] } // the chain is not complete
-    },
-    {
-      sort: {
-        numberOfValidSolutions: 1
-      }
-    }
-  ).fetch();
-};
-
-/**
- *
- * @returns {chain | null}
- */
-const loadNextChainForPlayer = playerId => {
-  const availableChains = loadAllAvailableChainsForPlayer(playerId);
-  let chain;
-  for (const availableChain of availableChains) {
-    chain = Chains.lockChainForPlayer(availableChain._id, playerId);
-    if (chain) {
-      break;
-    }
-  }
+  );
+  const chain = Chains.lockChainForPlayer(
+    playerId,
+    playerSoltutionChainIds,
+    playerSolutionNetworkIds
+  );
   return chain;
 };
 
@@ -80,14 +61,37 @@ const loadAll = experimentName => {
   return Chains.find(where).fetch();
 };
 
+const updateRandomNumbersForSorting = () => {
+  return Chains.find({}).forEach(function(chain) {
+    Chains.update(
+      { _id: chain._id },
+      { $set: { randomNumberForSorting: Math.random() } }
+    );
+  });
+};
+
 /**
-  * A player must obtain a lock on a chain in order to play that chain/environment
-  *
-  * @returns {chain | null}
-  */
-const lockChainForPlayer = (chainId, playerId) => {
+ * A player must obtain a lock on a chain in order to play that chain/environment
+ *
+ * @returns {chain | null}
+ */
+const lockChainForPlayer = (
+  playerId,
+  playerSolutionChainIds,
+  playerSolutionNetworkIds
+) => {
+  // findAndModify updates one document
   return Chains.findAndModify({
-    query: { _id: chainId, lockedByPlayerId: null },
+    query: {
+      _id: { $nin: playerSolutionChainIds },
+      networkId: { $nin: playerSolutionNetworkIds },
+      $expr: { $ne: ["lengthOfChain", "numberOfValidSolutions"] }, // the chain is not complete
+      lockedByPlayerId: null
+    },
+    sort: {
+      numberOfValidSolutions: 1,
+      randomNumberForSorting: 1 // selects a random chain
+    },
     update: { $set: { lockedByPlayerId: playerId } },
     new: true
   });
@@ -112,3 +116,4 @@ Chains.loadAll = loadAll;
 Chains.loadNextChainForPlayer = loadNextChainForPlayer;
 Chains.lockChainForPlayer = lockChainForPlayer;
 Chains.updateChainAfterRound = updateChainAfterRound;
+Chains.updateRandomNumbersForSorting = updateRandomNumbersForSorting;

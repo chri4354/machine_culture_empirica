@@ -1,7 +1,7 @@
 import Empirica from "meteor/empirica:core";
 
 import { Solutions } from "./solution";
-import { Networks } from "./network";
+import { ExperimentEnvironments } from "./experiment-environments";
 import { Chains } from "./chain";
 
 Empirica.onRoundStart((game, round, players) => {
@@ -9,7 +9,7 @@ Empirica.onRoundStart((game, round, players) => {
   const { batchId } = game;
   for (const player of players) {
     console.log(
-      `Loading network for player ${player._id}, experiment ${experimentName}`
+      `Loading ExperimentEnvironments for player ${player._id}, experiment ${experimentName}`
     );
 
     const chain = Chains.loadNextChainForPlayer(player._id);
@@ -21,14 +21,14 @@ Empirica.onRoundStart((game, round, players) => {
       return;
     }
 
-    const network = Networks.loadById(chain.networkId);
+    const environment = ExperimentEnvironments.loadById(chain.experimentEnvironmentId);
     const solutions = Solutions.loadValidSolutionsForChain(chain._id);
 
     /*
-     * We store the network on the `player.round` object instead of the round object.
-     * If there are multiple players in the game then each player should have a different chain and network.
+     * We store the environment on the `player.round` object instead of the round object.
+     * If there are multiple players in the game then each player should have a different chain and environment.
      */
-    player.round.set("network", network);
+    player.round.set("environment", environment);
     player.round.set("chain", chain);
     player.round.set(
       "previousSolutionInChain",
@@ -42,8 +42,8 @@ Empirica.onRoundStart((game, round, players) => {
 Empirica.onRoundEnd((game, round, players) => {
   const { batchId, treatment } = game;
   for (const player of players) {
-    const network = player.round.get("network");
-    if (network.experimentName === "practice") {
+    const { experimentName } = player.round.get("environment");
+    if (experimentName === "practice") {
       return;
     }
     console.log(
@@ -55,8 +55,7 @@ Empirica.onRoundEnd((game, round, players) => {
       ...solution,
       batchId,
       treatment,
-      chainId: chain._id,
-      experimentApplicationVersion: "2.0--2019-02-05",
+      experimentApplicationVersion: "2.0--2019-02-10",
       playerId: player._id
     });
     player.set("score", (player.get("score") || 0) + solution.totalReward);

@@ -14,6 +14,7 @@ export const Solutions = new Mongo.Collection("solutions");
  *   experimentApplicationVersion: string;
  *   playerId: string;
  *   actions: any[];
+ *   isMachineSolution: boolean;
  *   ...
  * }
  *
@@ -26,7 +27,8 @@ const count = () => {
 const create = solution => {
   return Solutions.insert({
     ...solution,
-    createdAt: new Date()
+    createdAt: new Date(),
+    experimentApplicationVersion: "2.0--2019-02-16"
   });
 };
 
@@ -53,9 +55,17 @@ const loadValidSolutionsForChain = chainId => {
   ).fetch();
 };
 
+const loadLastValidSolutionForChain = chainId => {
+  return Solutions.findOne(
+    { chainId, isValid: true },
+    { sort: { createdAt: -1 } }
+  );
+};
+
 Solutions.count = count;
 Solutions.create = create;
 Solutions.deleteAll = deleteAll;
 Solutions.loadAll = loadAll;
+Solutions.loadLastValidSolutionForChain = loadLastValidSolutionForChain;
 Solutions.loadValidSolutionsForChain = loadValidSolutionsForChain;
 Solutions.loadForPlayer = loadForPlayer;

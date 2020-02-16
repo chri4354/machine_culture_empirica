@@ -1,2 +1,0 @@
-- should every player/solution in a chain have the same `planningStageDurationInSeconds` and `responseStageDurationInSeconds` values
-- can the robot solution be first solution in a chain?

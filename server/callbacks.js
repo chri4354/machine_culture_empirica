@@ -2,11 +2,13 @@ import Empirica from "meteor/empirica:core";
 
 import { Solutions } from "./solution";
 import { ExperimentEnvironments } from "./experiment-environments";
+import { MachineSolutions } from "./machine-solution";
 import { Chains } from "./chain";
 
 Empirica.onRoundStart((game, round, players) => {
   const experimentName = game.get("experimentName");
-  const { batchId } = game;
+  const { batchId, treatment } = game;
+  const { startingSolutionModelName } = treatment;
   for (const player of players) {
     console.log(
       `Loading ExperimentEnvironments for player ${player._id}, experiment ${experimentName}`
@@ -21,8 +23,21 @@ Empirica.onRoundStart((game, round, players) => {
       return;
     }
 
-    const environment = ExperimentEnvironments.loadById(chain.experimentEnvironmentId);
-    const solutions = Solutions.loadValidSolutionsForChain(chain._id);
+    const environment = ExperimentEnvironments.loadById(
+      chain.experimentEnvironmentId
+    );
+    console.log("Environment: ", environment._id);
+    let previousSolutionInChain;
+    if (chain.numberOfValidSolutions === 0) {
+      previousSolutionInChain = MachineSolutions.load(
+        environment.environmentId,
+        startingSolutionModelName
+      );
+    } else {
+      const solutions = Solutions.loadValidSolutionsForChain(chain._id);
+      previousSolutionInChain =
+        solutions && solutions.length && solutions[solutions.length - 1];
+    }
 
     /*
      * We store the environment on the `player.round` object instead of the round object.
@@ -32,9 +47,7 @@ Empirica.onRoundStart((game, round, players) => {
     player.round.set("chain", chain);
     player.round.set(
       "previousSolutionInChain",
-      (solutions && solutions.length && solutions[solutions.length - 1]) || {
-        actions: []
-      }
+      previousSolutionInChain || { actions: [] }
     );
   }
 });
@@ -42,8 +55,8 @@ Empirica.onRoundStart((game, round, players) => {
 Empirica.onRoundEnd((game, round, players) => {
   const { batchId, treatment } = game;
   for (const player of players) {
-    const { experimentName } = player.round.get("environment");
-    if (experimentName === "practice") {
+    const environment = player.round.get("environment");
+    if (environment.experimentName === "practice") {
       return;
     }
     console.log(
@@ -55,18 +68,48 @@ Empirica.onRoundEnd((game, round, players) => {
       ...solution,
       batchId,
       treatment,
-      experimentApplicationVersion: "2.0--2019-02-10",
+      isMachineSolution: false,
       playerId: player._id
     });
     player.set("score", (player.get("score") || 0) + solution.totalReward);
 
-    // TODO if the next solution is a robot solution then add that solution
+    let numberOfValidSolutions = solution.isValid
+      ? chain.numberOfValidSolutions + 1
+      : chain.numberOfValidSolutions;
 
-    Chains.updateChainAfterRound(
-      chain._id,
-      player._id,
-      solution.isValid ? chain.numberOfValidSolutions + 1 : chain.numberOfValidSolutions
-    );
+    // add machine solution to the chain
+    if (
+      chain.hasMachineSolution &&
+      chain.positionOfMachineSolution === numberOfValidSolutions
+    ) {
+      const machineSolution = MachineSolutions.load(
+        environment.environmentId,
+        treatment.machineSolutionModelName
+      );
+      const lastValidSolutionInChain = Solutions.loadLastValidSolutionForChain(
+        chain._id
+      );
+      const machineSolutionTotalReward = machineSolution.actions.reduce(
+        (totalReward, action) => {
+          return totalReward + action.reward;
+        },
+        0
+      );
+      Solutions.create({
+        ...(lastValidSolutionInChain &&
+        lastValidSolutionInChain.totalReward > machineSolutionTotalReward
+          ? lastValidSolutionInChain
+          : machineSolution),
+        batchId,
+        treatment,
+        isMachineSolution: true,
+        playerId: null
+      });
+      numberOfValidSolutions++;
+    }
+
+    // releasing the chain lock
+    Chains.updateChainAfterRound(chain._id, player._id, numberOfValidSolutions);
   }
 });
 

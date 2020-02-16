@@ -6,7 +6,7 @@ export const Chains = new Mongo.Collection("chains");
  * Chain Schema
  * {
  *   experimentName: string;
- *   hasRobotSolution: boolean;
+ *   hasMachineSolution: boolean;
  *   lengthOfChain: number;
  *   lockedByPlayerId: string;
  *   numberOfValidSolutions: number;

@@ -48,6 +48,11 @@ Empirica.batchInit(batch => {
 // rounds and stages (with get/set methods), that will be able to use later in
 // the game.
 Empirica.gameInit((game, treatment, players) => {
+  // first (and supposedly only) playerid
+  const firstPlayerId = game.players[0]._id;
+
+  console.time("gameInit" + "#" + firstPlayerId);
+
   const { experimentName } = treatment;
 
   game.players.forEach(player => {
@@ -55,20 +60,26 @@ Empirica.gameInit((game, treatment, players) => {
     player.set("score", 0);
   });
 
-  const availableStageDurations = treatment.debug
-    ? [
-        [1, 20000],
-        [1, 20000]
-      ]
-    : [
-        [5, 25],
-        [15, 15]
-      ];
+  // const availableStageDurations = treatment.debug
+  //   ? [
+  //       [1, 20000],
+  //       [1, 20000]
+  //     ]
+  //   : [
+  //       [5, 25],
+  //       [15, 15]
+  //     ];
+
+  const availableStageDurations = [
+    [5, 25],
+    [15, 15]
+  ];
 
   const practiceNetworks = Networks.loadPracticeNetworks();
   const mainNetworks = _.shuffle(Networks.loadAll(experimentName));
   const networks = [...practiceNetworks, ...mainNetworks];
   _.times(networks.length, i => {
+    console.time("addRound" + "#" + firstPlayerId + "#" + i);
     const round = game.addRound();
     const stageDurations =
       availableStageDurations[
@@ -80,7 +91,8 @@ Empirica.gameInit((game, treatment, players) => {
     const stageDurationMultiplier = isPractice ? 2 : 1;
     const planningStageDurationInSeconds =
       stageDurations[0] * stageDurationMultiplier;
-    const responseStageDurationInSeconds = stageDurations[1] * stageDurationMultiplier;
+    const responseStageDurationInSeconds =
+      stageDurations[1] * stageDurationMultiplier;
     const reviewStageDurationInSeconds = 5 * stageDurationMultiplier;
 
     round.set("environment", {
@@ -111,5 +123,8 @@ Empirica.gameInit((game, treatment, players) => {
       displayName: "REVIEW",
       durationInSeconds: reviewStageDurationInSeconds
     });
+
+    console.timeEnd("addRound" + "#" + firstPlayerId + "#" + i);
   });
+  console.timeEnd("gameInit" + "#" + firstPlayerId);
 });

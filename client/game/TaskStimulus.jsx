@@ -35,7 +35,11 @@ class TaskStimulus extends React.Component {
       });
     }
     if (this.isResponseStage()) {
-      this.updateSolution(network.id, [], network.requiredSolutionLength);
+      this.updateSolution(
+        network.environmentId,
+        [],
+        network.requiredSolutionLength
+      );
     }
   }
 
@@ -88,7 +92,7 @@ class TaskStimulus extends React.Component {
       return;
     }
     const solution = this.updateSolution(
-      network.id,
+      network.environmentId,
       [...player.round.get("solution").actions, { ...action }],
       requiredSolutionLength
     );

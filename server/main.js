@@ -101,7 +101,8 @@ Empirica.gameInit((game, treatment, players) => {
     experimentName,
     numberOfRounds,
     planningStageDurationInSeconds,
-    responseStageDurationInSeconds
+    responseStageDurationInSeconds,
+    debug
   } = treatment;
 
   game.players.forEach(player => {
@@ -119,8 +120,10 @@ Empirica.gameInit((game, treatment, players) => {
     const round = game.addRound();
 
     const isPractice = i < numberOfPracticeRounds;
-    const stageDurationMultiplier = isPractice ? 2 : 1;
-    const reviewStageDurationInSeconds = 5 * stageDurationMultiplier;
+    let stageDurationMultiplier = isPractice ? 2 : 1;
+    stageDurationMultiplier = debug ? stageDurationMultiplier * 1 : 1;
+
+    const reviewStageDurationInSeconds = 5;
 
     round.set("environment", {
       planningStageDurationInSeconds,
@@ -132,30 +135,28 @@ Empirica.gameInit((game, treatment, players) => {
     round.addStage({
       name: "plan",
       displayName: "PLAN",
-      durationInSeconds: isPractice
-        ? planningStageDurationInSeconds * stageDurationMultiplier
-        : planningStageDurationInSeconds
+      durationInSeconds:
+        planningStageDurationInSeconds * stageDurationMultiplier
     });
 
     // The player can select their solution
     round.addStage({
       name: "response",
       displayName: "GO!",
-      durationInSeconds: isPractice
-        ? responseStageDurationInSeconds * stageDurationMultiplier
-        : responseStageDurationInSeconds
+      durationInSeconds:
+        responseStageDurationInSeconds * stageDurationMultiplier
     });
 
     // The player can review their score
     round.addStage({
       name: "review",
       displayName: "REVIEW",
-      durationInSeconds: reviewStageDurationInSeconds
+      durationInSeconds: reviewStageDurationInSeconds * stageDurationMultiplier
     });
   });
 });
 
 // resetDatabase();
-printDatabaseStatistics();
-// initializeDatabase();
 // printDatabaseStatistics();
+// initializeDatabase();
+printDatabaseStatistics();

@@ -11,7 +11,8 @@ const Node = ({
   id,
   onClick,
   isDisabled,
-  isInvalidClick
+  isInvalidClick,
+  isStartingNode
 }) => {
   return (
     <g
@@ -24,7 +25,9 @@ const Node = ({
         cy={y}
         r={r}
         className={
-          isActive
+          isStartingNode
+            ? "starting"
+            : isActive
             ? "active"
             : isDisabled
             ? "disabled"
@@ -161,13 +164,20 @@ const LinkMarker = ({ size }) => (
   </defs>
 );
 
-const Links = ({ actions, activeNodeId, planningAnimationTargetNodeId, nodeSize }) => (
+const Links = ({
+  actions,
+  activeNodeId,
+  planningAnimationTargetNodeId,
+  nodeSize
+}) => (
   <>
     <g>
       {actions.map(({ id, source, target, text, colorClass, size }, idx) => {
-        const isThickerLink = planningAnimationTargetNodeId !== null
-          ? activeNodeId === source.id && planningAnimationTargetNodeId === target.id
-          : activeNodeId === source.id;
+        const isThickerLink =
+          planningAnimationTargetNodeId !== null
+            ? activeNodeId === source.id &&
+              planningAnimationTargetNodeId === target.id
+            : false;
         return (
           <Link
             r={nodeSize}
@@ -244,11 +254,15 @@ class Network extends React.Component {
       activeNodeId,
       actions,
       planningAnimationTargetNodeId,
+      animationLink,
+      animationTarget,
+      animationSource,
       invalidClickNodeId,
       nodes,
       onNodeClick,
       version,
-      solution
+      solution,
+      startingNodeId
     } = this.props;
     const size = { width: 600, height: 600 };
     const nodeSize = size.width / 15;
@@ -256,6 +270,7 @@ class Network extends React.Component {
     const nodesById = _.keyBy(parsedNodes, "id");
     const parsedActions = parseActions(actions, true, 3, nodesById);
     // const parsedSolution = parseSolutions(solution, nodesById);
+
     return (
       <svg
         className={`network-game ${version}`}
@@ -265,7 +280,9 @@ class Network extends React.Component {
         <LinkMarker size={size} />
         <Links
           activeNodeId={activeNodeId}
-          planningAnimationTargetNodeId={planningAnimationTargetNodeId}
+          planningAnimationTargetNodeId={
+            animationLink ? planningAnimationTargetNodeId : null
+          }
           actions={parsedActions}
           nodeSize={nodeSize}
         />
@@ -277,8 +294,18 @@ class Network extends React.Component {
               y={y}
               r={nodeSize}
               isDisabled={this.props.isDisabled}
+              isStartingNode={
+                planningAnimationTargetNodeId == null
+                  ? (id === activeNodeId) & (id === startingNodeId)
+                  : false
+              }
               isInvalidClick={id === invalidClickNodeId}
-              isActive={id === activeNodeId}
+              isActive={
+                planningAnimationTargetNodeId == null
+                  ? id === activeNodeId
+                  : ((id === activeNodeId) & animationSource) |
+                    ((id === planningAnimationTargetNodeId) & animationTarget)
+              }
               text={displayName}
               onClick={onNodeClick}
               id={id}

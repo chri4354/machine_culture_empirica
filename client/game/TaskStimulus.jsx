@@ -12,6 +12,9 @@ import {
 class TaskStimulus extends React.Component {
   state = {
     planningAnimationTargetNodeId: null,
+    animationTarget: false,
+    animationLink: false,
+    animationSource: true
   };
 
   getStageName() {
@@ -43,7 +46,7 @@ class TaskStimulus extends React.Component {
   }
 
   async componentDidMount() {
-    const {startingNodeId, requiredSolutionLength} = this.getEnvironment();
+    const { startingNodeId, requiredSolutionLength } = this.getEnvironment();
     if (!this.isReviewStage()) {
       this.setState({
         activeNodeId: startingNodeId,
@@ -61,27 +64,71 @@ class TaskStimulus extends React.Component {
       if (actions && actions.length) {
         this.setState({
           activeNodeId: actions[0].sourceId,
-          planningAnimationTargetNodeId: actions[0].targetId
+          planningAnimationTargetNodeId: null
         });
       }
+
+      await new Promise(function(resolve) {
+        setTimeout(() => {
+          resolve();
+        }, 1 * 1000);
+      });
+      const that = this;
       for (const action of actions) {
-        const that = this;
         await new Promise(function(resolve) {
           setTimeout(() => {
             that.setState({
               activeNodeId: action.sourceId,
               planningAnimationTargetNodeId: action.targetId,
+              animationLink: true,
+              animationTarget: false,
+              animationSource: true
             });
             resolve();
-          }, 1.5 * 1000);
+          }, 0.1 * 1000);
+        });
+        await new Promise(function(resolve) {
+          setTimeout(() => {
+            that.setState({
+              animationTarget: true
+            });
+            resolve();
+          }, 0.1 * 1000);
+        });
+        await new Promise(function(resolve) {
+          setTimeout(() => {
+            that.setState({
+              animationLink: true,
+              animationSource: false
+            });
+            resolve();
+          }, 0.1 * 1000);
+        });
+        await new Promise(function(resolve) {
+          setTimeout(() => {
+            that.setState({
+              animationLink: false,
+              animationSource: false
+            });
+            resolve();
+          }, 1 * 1000);
         });
       }
-
-      // Show the use a static image of the environment
-      this.setState({
-        activeNodeId: startingNodeId,
+      that.setState({
+        activeNodeId: null,
         planningAnimationTargetNodeId: null
       });
+      await new Promise(function(resolve) {
+        setTimeout(() => {
+          that.setState({
+            activeNodeId: startingNodeId,
+            planningAnimationTargetNodeId: null
+          });
+          resolve();
+        }, 1 * 1000);
+      });
+
+      // Show the use a static image of the environment
     }
   }
 
@@ -109,11 +156,10 @@ class TaskStimulus extends React.Component {
       responseStageDurationInSeconds,
       reviewStageDurationInSeconds,
       chainId: chain._id,
-      timeElapsedInSeconds:
-        isValid ? this.props.stage.durationInSeconds - this.props.remainingSeconds : null,
-      totalReward: isValid
-        ? calculateScore(actions)
-        : missingSolutionPenalty
+      timeElapsedInSeconds: isValid
+        ? this.props.stage.durationInSeconds - this.props.remainingSeconds
+        : null,
+      totalReward: isValid ? calculateScore(actions) : missingSolutionPenalty
     };
     this.props.player.round.set("solution", solution);
     return solution;
@@ -162,8 +208,16 @@ class TaskStimulus extends React.Component {
 
   render() {
     const { player } = this.props;
+
     const playerSolution = player.round.get("solution");
-    const { actions, experimentName, missingSolutionPenalty, nodes, version } = this.getEnvironment();
+    const {
+      actions,
+      experimentName,
+      missingSolutionPenalty,
+      nodes,
+      version,
+      startingNodeId
+    } = this.getEnvironment();
     return (
       <div className="task-stimulus">
         {experimentName === "practice" && !this.isReviewStage() && (
@@ -176,8 +230,8 @@ class TaskStimulus extends React.Component {
           <div>
             {!playerSolution.isValid && (
               <h2>
-                Oh no! You were too slow! You received{" "}
-                {missingSolutionPenalty} points penalty.
+                Oh no! You were too slow! You received {missingSolutionPenalty}{" "}
+                points penalty.
               </h2>
             )}
             {playerSolution.isValid && (
@@ -217,9 +271,15 @@ class TaskStimulus extends React.Component {
             <Network
               nodes={nodes}
               version={version}
-              planningAnimationTargetNodeId={this.state.planningAnimationTargetNodeId}
+              planningAnimationTargetNodeId={
+                this.state.planningAnimationTargetNodeId
+              }
+              animationLink={this.state.animationLink}
+              animationTarget={this.state.animationTarget}
+              animationSource={this.state.animationSource}
               activeNodeId={this.state.activeNodeId}
               isDisabled={this.isPlanStage()}
+              startingNodeId={startingNodeId}
               invalidClickNodeId={this.state.invalidClickNodeId}
               onNodeClick={targetId => this.onNodeClick(targetId)}
               actions={actions}
@@ -231,4 +291,4 @@ class TaskStimulus extends React.Component {
   }
 }
 
-export default StageTimeWrapper(TaskStimulus);
+export default TaskStimulus;

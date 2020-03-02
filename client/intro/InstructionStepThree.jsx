@@ -15,7 +15,7 @@ export default class InstructionStepThree extends React.Component {
             punishment of -500 points.
           </p>
           <p>
-            A random sequence will usually get you more points than not
+            Even a random sequence will usually get you more points than not
             finishing on time!
           </p>
           <p>

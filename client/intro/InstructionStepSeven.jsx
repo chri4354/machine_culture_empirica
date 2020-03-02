@@ -14,7 +14,7 @@ export default class InstructionStepFour extends React.Component {
             will follow afterwards and has a total of <b>87 rounds</b>.
           </p>
           <p>
-            In addition to your base payment you will be compensated with{" "}
+            In addition to your base payment you will be compensated with
             <b>1 pence per 100 points</b>. Most players got a bonus payment of
             around 3 - 4 pounds in total. Let's see if you can beat the average!
           </p>

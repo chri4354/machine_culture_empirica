@@ -12,9 +12,12 @@ export default class InstructionStepThree extends React.Component {
           <p>
             It is important that you complete <b>all of the 8 steps</b> in every
             round! If you are not able to finish all 8 steps you will receive a
-            punishment of -200 points.
+            punishment of -500 points.
           </p>
-          <p>So make sure you finish each round in time!</p>
+          <p>
+            Even a random sequence will usually get you more points than not
+            finishing on time!
+          </p>
           <p>
             <button type="button" onClick={onPrev} disabled={!hasPrev}>
               Previous

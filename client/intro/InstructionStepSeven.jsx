@@ -11,15 +11,12 @@ export default class InstructionStepFour extends React.Component {
           <h1> Instructions 7 </h1>
           <p>
             You will now have two practice rounds to try it out! The actual game
-            will follow afterwards and has a total of <b>82 rounds</b>.
+            will follow afterwards and has a total of <b>87 rounds</b>.
           </p>
           <p>
-            The goal is to score better than the average! Since an average score
-            is 400 points per round and 32000 points in total, you will be
-            compensated with <b>10 pence for every 100 points above 32000</b>.
-          </p>
-          <p>
-            You can reach a bonus of up to <b>£14.96</b>!
+            In addition to your base payment you will be compensated with
+            <b>1 pence per 100 points</b>. Most players got a bonus payment of
+            around 3 - 4 pounds in total. Let's see if you can beat the average!
           </p>
           <p>
             <button type="button" onClick={onPrev} disabled={!hasPrev}>

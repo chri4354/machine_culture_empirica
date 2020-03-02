@@ -31,7 +31,7 @@ export default class Quiz extends React.Component {
     event.preventDefault();
     if (
       this.state.question1 !== falseValue ||
-      this.state.question2 !== falseValue ||
+      this.state.question2 !== trueValue ||
       this.state.question3 !== falseValue ||
       this.state.question4 !== trueValue
     ) {
@@ -71,7 +71,10 @@ export default class Quiz extends React.Component {
               </div>
             </div>
             <div className="question-group">
-              <label>I will see the same pattern in each round:</label>
+              <label>
+                It is better to finish on time even if it is only a random
+                solution:
+              </label>
               <div>
                 <Radio
                   selected={question2}

@@ -1,5 +1,4 @@
 import React from "react";
-import { StageTimeWrapper } from "meteor/empirica:core";
 import _ from "lodash";
 
 import Network from "../components/Network2";
@@ -74,6 +73,7 @@ class TaskStimulus extends React.Component {
         }, 1 * 1000);
       });
       const that = this;
+      let index = 0;
       for (const action of actions) {
         await new Promise(function(resolve) {
           setTimeout(() => {
@@ -113,6 +113,13 @@ class TaskStimulus extends React.Component {
             resolve();
           }, 1 * 1000);
         });
+
+        index++;
+        this.setState(() => ({
+          lastScoreReceived: action.reward,
+          numberOfActionsRemaining: Math.max(actions.length - index, 0),
+          roundScore: calculateScore(actions.slice(0, index))
+        }));
       }
       that.setState({
         activeNodeId: null,

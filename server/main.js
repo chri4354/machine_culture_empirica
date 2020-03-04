@@ -134,7 +134,7 @@ Empirica.gameInit((game, treatment, players) => {
     // The player can view the environment and plan their solution
     round.addStage({
       name: "plan",
-      displayName: "PLAN",
+      displayName: "Watch previous player",
       durationInSeconds:
         planningStageDurationInSeconds * stageDurationMultiplier
     });
@@ -142,7 +142,7 @@ Empirica.gameInit((game, treatment, players) => {
     // The player can select their solution
     round.addStage({
       name: "response",
-      displayName: "GO!",
+      displayName: "Play yourself",
       durationInSeconds:
         responseStageDurationInSeconds * stageDurationMultiplier
     });
@@ -150,7 +150,7 @@ Empirica.gameInit((game, treatment, players) => {
     // The player can review their score
     round.addStage({
       name: "review",
-      displayName: "REVIEW",
+      displayName: "Review results",
       durationInSeconds: reviewStageDurationInSeconds * stageDurationMultiplier
     });
   });

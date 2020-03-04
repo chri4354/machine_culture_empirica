@@ -259,6 +259,7 @@ class Network extends React.Component {
       animationSource,
       invalidClickNodeId,
       nodes,
+      numberOfActionsTaken,
       onNodeClick,
       version,
       solution,
@@ -296,7 +297,9 @@ class Network extends React.Component {
               isDisabled={this.props.isDisabled}
               isStartingNode={
                 planningAnimationTargetNodeId == null
-                  ? (id === activeNodeId) & (id === startingNodeId)
+                  ? numberOfActionsTaken === 0 &&
+                    id === activeNodeId &&
+                    id === startingNodeId
                   : false
               }
               isInvalidClick={id === invalidClickNodeId}

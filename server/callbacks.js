@@ -20,6 +20,7 @@ Empirica.onRoundStart((game, round, players) => {
       // There are no available chains for the player
       // TODO display error message to user or end the game
       console.error(`No chains available for player ${player._id}`);
+      player.exit("No further games avaible for player.");
       return;
     }
 
@@ -56,6 +57,14 @@ Empirica.onRoundEnd((game, round, players) => {
   const { batchId, treatment } = game;
   for (const player of players) {
     const environment = player.round.get("environment");
+    if (!environment) {
+      // For some reason we are sometimes missing the environment.
+      // This is just to survive these edge cases
+      // TODO: finding the
+      console.error(`No environment found.`);
+      return;
+    }
+
     if (environment.experimentName === "practice") {
       return;
     }

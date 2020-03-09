@@ -18,7 +18,7 @@ class TaskStimulus extends React.Component {
   };
 
   getPlanningDelayBeforeAnimationMs() {
-    return 3 * 1000;
+    return 1.5 * 1000;
   }
 
   getStageName() {
@@ -93,7 +93,7 @@ class TaskStimulus extends React.Component {
       await new Promise(function(resolve) {
         setTimeout(() => {
           resolve();
-        }, 2 * 1000);
+        }, 1 * 1000);
       });
       for (const action of actions) {
         await new Promise(function(resolve) {
@@ -144,7 +144,8 @@ class TaskStimulus extends React.Component {
         setTimeout(() => {
           that.setState({
             activeNodeId: startingNodeId,
-            planningAnimationTargetNodeId: null
+            planningAnimationTargetNodeId: null,
+            numberOfActionsTaken: 0
           });
           resolve();
         }, 1 * 1000);

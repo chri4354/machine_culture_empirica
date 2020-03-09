@@ -8,5 +8,5 @@
       "password": "w14is7j5n6k"
     }
   ],
-  "machineBackendUrl": "http://3.122.195.208/"
+  "machineBackendUrl": "http://0.0.0.0:8085"
 }

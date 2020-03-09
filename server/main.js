@@ -108,18 +108,10 @@ Empirica.gameInit((game, treatment, players) => {
 
   game.set("experimentName", experimentName);
 
-  const practiceExperimentEnvironments = ExperimentEnvironments.loadPracticeExperimentEnvironments();
-  const numberOfPracticeRounds =
-    (practiceExperimentEnvironments && practiceExperimentEnvironments.length) ||
-    0;
-  _.times(numberOfPracticeRounds + numberOfRounds, i => {
+  const reviewStageDurationInSeconds = 5;
+
+  _.times(numberOfRounds, i => {
     const round = game.addRound();
-
-    const isPractice = i < numberOfPracticeRounds;
-    let stageDurationMultiplier = isPractice ? 2 : 1;
-    stageDurationMultiplier = debug ? stageDurationMultiplier * 1 : 1;
-
-    const reviewStageDurationInSeconds = 5;
 
     round.set("environment", {
       planningStageDurationInSeconds,
@@ -131,23 +123,21 @@ Empirica.gameInit((game, treatment, players) => {
     round.addStage({
       name: "plan",
       displayName: "Watch previous player",
-      durationInSeconds:
-        planningStageDurationInSeconds * stageDurationMultiplier
+      durationInSeconds: planningStageDurationInSeconds
     });
 
     // The player can select their solution
     round.addStage({
       name: "response",
       displayName: "Play yourself",
-      durationInSeconds:
-        responseStageDurationInSeconds * stageDurationMultiplier
+      durationInSeconds: responseStageDurationInSeconds
     });
 
     // The player can review their score
     round.addStage({
       name: "review",
       displayName: "Review results",
-      durationInSeconds: reviewStageDurationInSeconds * stageDurationMultiplier
+      durationInSeconds: reviewStageDurationInSeconds
     });
   });
 });

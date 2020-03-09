@@ -6,6 +6,7 @@ import Thanks from "./exit/Thanks";
 import About from "./game/About";
 import Round from "./game/Round";
 import Consent from "./intro/Consent";
+import InstructionShort from "./intro/InstructionShort";
 import InstructionStepOne from "./intro/InstructionStepOne";
 import InstructionStepTwo from "./intro/InstructionStepTwo";
 import InstructionStepThree from "./intro/InstructionStepThree";
@@ -26,19 +27,20 @@ Empirica.consent(Consent);
 // different instruction steps depending on the assigned treatment.
 Empirica.introSteps((game, treatment) => {
   if (treatment.debug) {
-    return [];
+    return [InstructionShort];
+  } else {
+    const steps = [
+      InstructionStepOne,
+      InstructionStepTwo,
+      InstructionStepThree,
+      InstructionStepFour,
+      InstructionStepFive,
+      InstructionStepSix,
+      InstructionStepSeven
+    ];
+    steps.push(Quiz);
+    return steps;
   }
-  const steps = [
-    InstructionStepOne,
-    InstructionStepTwo,
-    InstructionStepThree,
-    InstructionStepFour,
-    InstructionStepFive,
-    InstructionStepSix,
-    InstructionStepSeven
-  ];
-  steps.push(Quiz);
-  return steps;
 });
 
 // The Round component containing the game UI logic.
@@ -55,7 +57,11 @@ Empirica.round(Round);
 // If you don't return anything, or do not define this function, a default
 // exit screen will be shown.
 Empirica.exitSteps((game, player) => {
-  return [ExitSurvey, Thanks];
+  if (game.treatment.debug) {
+    return [Thanks];
+  } else {
+    return [ExitSurvey, Thanks];
+  }
 });
 
 // Start the app render tree.

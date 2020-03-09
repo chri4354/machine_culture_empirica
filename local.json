@@ -1,8 +1,12 @@
 {
+  "public": {
+    "playerIdParam": "PROLIFIC_PID"
+  },
   "admins": [
     {
       "username": "admin",
       "password": "w14is7j5n6k"
     }
-  ]
+  ],
+  "machineBackendUrl": "http://3.122.195.208/"
 }

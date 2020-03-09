@@ -48,7 +48,7 @@ Empirica.onRoundStart((game, round, players) => {
       previousSolutionInChain = machineSolutionService.fetchMachineSolution({
         modelName: treatment.startingSolutionModelName,
         environment,
-        previousSolution: {}
+        previousSolution: null
       });
       // The machine solution is saved into the chain
       saveMachineSolution(previousSolutionInChain, batchId, treatment);

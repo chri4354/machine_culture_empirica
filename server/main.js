@@ -4,8 +4,6 @@ import "./callbacks.js";
 import { ExperimentEnvironments } from "./experiment-environments";
 import { Solutions } from "./solution";
 import experimentEnvironmentsJson from "./experimentEnvironments.json";
-import machineSolutionsJson from "./machineSolutions.json";
-import { MachineSolutions } from "./machine-solution";
 import { Chains } from "./chain";
 
 /**
@@ -52,15 +50,13 @@ const printDatabaseStatistics = () => {
   const numberOfExperimentEnvironments = ExperimentEnvironments.count();
   const numberOfSolutions = Solutions.count();
   const numberOfChains = Chains.count();
-  const numberOfMachineSolutions = MachineSolutions.count();
 
   console.log(
     "Current Database stats: ",
     JSON.stringify({
       numberOfExperimentEnvironments,
       numberOfSolutions,
-      numberOfChains,
-      numberOfMachineSolutions
+      numberOfChains
     })
   );
 };
@@ -70,7 +66,6 @@ const resetDatabase = () => {
   ExperimentEnvironments.deleteAll();
   Solutions.deleteAll();
   Chains.deleteAll();
-  MachineSolutions.deleteAll();
 };
 
 const initializeDatabase = () => {
@@ -78,16 +73,17 @@ const initializeDatabase = () => {
   for (const experimentEnvironments of experimentEnvironmentsJson) {
     ExperimentEnvironments.create(experimentEnvironments);
   }
-  for (const machineSolution of machineSolutionsJson) {
-    MachineSolutions.create(machineSolution);
-  }
 };
 
 Empirica.batchInit((batch, treatments) => {
   for (const treatment of treatments) {
     initializeChains(
       treatment.experimentName,
-      treatment.lengthOfChain,
+      /**
+       * The length of the chain is increased by one because the starting machine
+       * solution has to be saved in the chain
+       */
+      treatment.lengthOfChain + 1,
       treatment.numberOfChainsPerEnvironment,
       treatment.positionOfMachineSolution,
       treatment.chainsHaveMachineSolution

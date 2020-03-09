@@ -2,13 +2,27 @@ import Empirica from "meteor/empirica:core";
 
 import { Solutions } from "./solution";
 import { ExperimentEnvironments } from "./experiment-environments";
-import { MachineSolutions } from "./machine-solution";
 import { Chains } from "./chain";
+import * as machineSolutionService from "./machine-solution-service";
+
+const saveMachineSolution = (machineSolution, batchId, treatment) => {
+  Solutions.create({
+    ...machineSolution,
+    batchId,
+    treatment,
+    isMachineSolution: true,
+    playerId: null
+  });
+};
+
+const loadPreviousValidSolution = chainId => {
+  const solutions = Solutions.loadValidSolutionsForChain(chainId);
+  return solutions && solutions.length && solutions[solutions.length - 1];
+};
 
 Empirica.onRoundStart((game, round, players) => {
   const experimentName = game.get("experimentName");
   const { batchId, treatment } = game;
-  const { startingSolutionModelName } = treatment;
   for (const player of players) {
     console.log(
       `Loading ExperimentEnvironments for player ${player._id}, experiment ${experimentName}`
@@ -29,14 +43,16 @@ Empirica.onRoundStart((game, round, players) => {
     console.log("Environment: ", environment._id);
     let previousSolutionInChain;
     if (chain.numberOfValidSolutions === 0) {
-      previousSolutionInChain = MachineSolutions.load(
-        environment.environmentId,
-        startingSolutionModelName
-      );
+      // load initial solution
+      previousSolutionInChain = machineSolutionService.fetchMachineSolution({
+        modelName: treatment.startingSolutionModelName,
+        environment,
+        previousSolution: {}
+      });
+      // The machine solution is saved into the chain
+      saveMachineSolution(previousSolutionInChain, batchId, treatment);
     } else {
-      const solutions = Solutions.loadValidSolutionsForChain(chain._id);
-      previousSolutionInChain =
-        solutions && solutions.length && solutions[solutions.length - 1];
+      previousSolutionInChain = loadPreviousValidSolution(chain._id);
     }
 
     /*
@@ -82,29 +98,14 @@ Empirica.onRoundEnd((game, round, players) => {
       chain.hasMachineSolution &&
       chain.positionOfMachineSolution === numberOfValidSolutions
     ) {
-      const machineSolution = MachineSolutions.load(
-        environment.environmentId,
-        treatment.machineSolutionModelName
-      );
-      const lastValidSolutionInChain = Solutions.loadLastValidSolutionForChain(
-        chain._id
-      );
-      const machineSolutionTotalReward = machineSolution.actions.reduce(
-        (totalReward, action) => {
-          return totalReward + action.reward;
-        },
-        0
-      );
-      Solutions.create({
-        ...(lastValidSolutionInChain &&
-        lastValidSolutionInChain.totalReward > machineSolutionTotalReward
-          ? lastValidSolutionInChain
-          : machineSolution),
-        batchId,
-        treatment,
-        isMachineSolution: true,
-        playerId: null
+      const previousSolution = loadPreviousValidSolution(chain._id);
+      const machineSolution = machineSolutionService.fetchMachineSolution({
+        modelName: treatment.machineSolutionModelName,
+        environment,
+        previousSolution
       });
+
+      saveMachineSolution(machineSolution, batchId, treatment);
       numberOfValidSolutions++;
     }
 

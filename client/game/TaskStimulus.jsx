@@ -95,6 +95,9 @@ class TaskStimulus extends React.Component {
           resolve();
         }, 1 * 1000);
       });
+
+      console.log(actions);
+
       for (const action of actions) {
         await new Promise(function(resolve) {
           setTimeout(() => {

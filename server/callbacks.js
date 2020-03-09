@@ -20,7 +20,7 @@ const loadPreviousValidSolution = chainId => {
   return solutions && solutions.length && solutions[solutions.length - 1];
 };
 
-Empirica.onRoundStart((game, round, players) => {
+Empirica.onRoundStart(async (game, round, players) => {
   const experimentName = game.get("experimentName");
   const { batchId, treatment } = game;
   for (const player of players) {
@@ -45,11 +45,14 @@ Empirica.onRoundStart((game, round, players) => {
     let previousSolutionInChain;
     if (chain.numberOfValidSolutions === 0) {
       // load initial solution
-      previousSolutionInChain = machineSolutionService.fetchMachineSolution({
-        modelName: treatment.startingSolutionModelName,
-        environment,
-        previousSolution: null
-      });
+      previousSolutionInChain = await machineSolutionService.fetchMachineSolution(
+        {
+          modelName: treatment.startingSolutionModelName,
+          environment,
+          previousSolution: null
+        }
+      );
+
       // The machine solution is saved into the chain
       saveMachineSolution(previousSolutionInChain, batchId, treatment);
     } else {

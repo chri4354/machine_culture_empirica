@@ -149,10 +149,7 @@ Empirica.gameInit((game, treatment, players) => {
       displayName: "Review results",
       durationInSeconds: reviewStageDurationInSeconds * stageDurationMultiplier
     });
-
-    console.timeEnd("addRound" + "#" + firstPlayerId + "#" + i);
   });
-  console.timeEnd("gameInit" + "#" + firstPlayerId);
 });
 
 // resetDatabase();

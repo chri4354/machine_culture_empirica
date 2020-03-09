@@ -2,6 +2,7 @@ import Empirica from "meteor/empirica:core";
 import { render } from "react-dom";
 
 import ExitSurvey from "./exit/ExitSurvey";
+import ExitSurveyShort from "./exit/ExitSurveyShort";
 import Thanks from "./exit/Thanks";
 import About from "./game/About";
 import Round from "./game/Round";
@@ -58,7 +59,7 @@ Empirica.round(Round);
 // exit screen will be shown.
 Empirica.exitSteps((game, player) => {
   if (game.treatment.debug) {
-    return [Thanks];
+    return [ExitSurveyShort, Thanks];
   } else {
     return [ExitSurvey, Thanks];
   }

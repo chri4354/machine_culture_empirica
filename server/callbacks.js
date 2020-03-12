@@ -28,7 +28,7 @@ Empirica.onRoundStart(async (game, round, players) => {
       `Loading ExperimentEnvironments for player ${player._id}, experiment ${experimentName}`
     );
 
-    const chain = Chains.loadNextChainForPlayer(player._id);
+    const chain = Chains.loadNextChainForPlayer(player._id, batchId);
 
     if (!chain) {
       // There are no available chains for the player

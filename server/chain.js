@@ -5,6 +5,7 @@ export const Chains = new Mongo.Collection("chains");
 /*
  * Chain Schema
  * {
+ *   batchId: number;
  *   experimentName: string;
  *   hasMachineSolution: boolean;
  *   lengthOfChain: number;
@@ -37,7 +38,7 @@ const deleteAll = () => {
  *
  * @returns {chain | null}
  */
-const loadNextChainForPlayer = playerId => {
+const loadNextChainForPlayer = (playerId, batchId) => {
   const playerSolutions = Solutions.loadForPlayer(playerId);
   const playerSoltutionChainIds = playerSolutions.map(
     solution => solution.chainId
@@ -48,7 +49,8 @@ const loadNextChainForPlayer = playerId => {
   const chain = Chains.lockChainForPlayer(
     playerId,
     playerSoltutionChainIds,
-    playerSolutionNetworkIds
+    playerSolutionNetworkIds,
+    batchId
   );
   return chain;
 };
@@ -78,12 +80,14 @@ const updateRandomNumbersForSorting = () => {
 const lockChainForPlayer = (
   playerId,
   playerSolutionChainIds,
-  playerSolutionNetworkIds
+  playerSolutionNetworkIds,
+  batchId
 ) => {
   // findAndModify updates one document
   return Chains.findAndModify({
     query: {
       _id: { $nin: playerSolutionChainIds },
+      batchId,
       networkId: { $nin: playerSolutionNetworkIds },
       $expr: { $ne: ["lengthOfChain", "numberOfValidSolutions"] }, // the chain is not complete
       lockedByPlayerId: null

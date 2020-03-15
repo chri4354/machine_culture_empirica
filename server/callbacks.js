@@ -5,6 +5,12 @@ import { ExperimentEnvironments } from "./experiment-environments";
 import { Chains } from "./chain";
 import * as machineSolutionService from "./machine-solution-service";
 
+Meteor.methods({
+  fetchMachineSolution: function(params) {
+    return machineSolutionService.fetchMachineSolution(params);
+  }
+});
+
 const saveMachineSolution = (machineSolution, batchId, treatment) => {
   Solutions.create({
     ...machineSolution,
@@ -20,12 +26,12 @@ const loadPreviousValidSolution = chainId => {
   return solutions && solutions.length && solutions[solutions.length - 1];
 };
 
-Empirica.onRoundStart(async (game, round, players) => {
+Empirica.onRoundStart((game, round, players) => {
   const experimentName = game.get("experimentName");
   const { batchId, treatment } = game;
   for (const player of players) {
     console.log(
-      `Loading ExperimentEnvironments for player ${player._id}, experiment ${experimentName}`
+      `Loading ExperimentEnvironments for playerId: ${player._id}, experimentName: ${experimentName}, batchId: ${batchId}`
     );
 
     const chain = Chains.loadNextChainForPlayer(player._id, batchId);
@@ -41,17 +47,14 @@ Empirica.onRoundStart(async (game, round, players) => {
     const environment = ExperimentEnvironments.loadById(
       chain.experimentEnvironmentId
     );
-    console.log("Environment: ", environment._id);
     let previousSolutionInChain;
     if (chain.numberOfValidSolutions === 0) {
       // load initial solution
-      previousSolutionInChain = await machineSolutionService.fetchMachineSolution(
-        {
-          modelName: treatment.startingSolutionModelName,
-          environment,
-          previousSolution: null
-        }
-      );
+      const previousSolutionInChain = Meteor.call("fetchMachineSolution", {
+        modelName: treatment.startingSolutionModelName,
+        environment,
+        previousSolution: null
+      });
 
       // The machine solution is saved into the chain
       saveMachineSolution(previousSolutionInChain, batchId, treatment);
@@ -111,7 +114,7 @@ Empirica.onRoundEnd((game, round, players) => {
       chain.positionOfMachineSolution === numberOfValidSolutions
     ) {
       const previousSolution = loadPreviousValidSolution(chain._id);
-      const machineSolution = machineSolutionService.fetchMachineSolution({
+      const machineSolution = Meteor.call("fetchMachineSolution", {
         modelName: treatment.machineSolutionModelName,
         environment,
         previousSolution

@@ -5,8 +5,8 @@
   "admins": [
     {
       "username": "admin",
-      "password": "w14is7j5n6k"
+      "password": "machineculture"
     }
   ],
-  "machineBackendUrl": "http://0.0.0.0:8085"
+  "machineBackendUrl": "http://3.122.195.208/"
 }

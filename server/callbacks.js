@@ -50,7 +50,7 @@ Empirica.onRoundStart((game, round, players) => {
     let previousSolutionInChain;
     if (chain.numberOfValidSolutions === 0) {
       // load initial solution
-      const previousSolutionInChain = Meteor.call("fetchMachineSolution", {
+      previousSolutionInChain = Meteor.call("fetchMachineSolution", {
         modelName: treatment.startingSolutionModelName,
         environment,
         previousSolution: null

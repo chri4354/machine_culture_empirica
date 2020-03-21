@@ -162,10 +162,7 @@ class TaskStimulus extends React.Component {
       experimentName,
       experimentEnvironmentId,
       missingSolutionPenalty,
-      networkId,
-      planningStageDurationInSeconds,
-      responseStageDurationInSeconds,
-      reviewStageDurationInSeconds
+      networkId
     } = this.getEnvironment();
     const chain = this.getChain();
     const previousSolution = this.getPreviousSolutionInChain();
@@ -177,9 +174,6 @@ class TaskStimulus extends React.Component {
       experimentName,
       isValid,
       networkId,
-      planningStageDurationInSeconds,
-      responseStageDurationInSeconds,
-      reviewStageDurationInSeconds,
       chainId: chain._id,
       previousSolutionId: previousSolution._id,
       timeElapsedInSeconds: isValid

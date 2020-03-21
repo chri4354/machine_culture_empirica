@@ -4,6 +4,7 @@ import { Solutions } from "./solution";
 import { ExperimentEnvironments } from "./experiment-environments";
 import { Chains } from "./chain";
 import * as machineSolutionService from "./machine-solution-service";
+import { createTreatmentForSolution, pickChainFactorsFromChain } from "./utils";
 
 Meteor.methods({
   fetchMachineSolution: function(params) {
@@ -14,7 +15,8 @@ Meteor.methods({
 const saveMachineSolution = (
   machineSolution,
   batchId,
-  treatment,
+  globalFactors,
+  chainFactors,
   chainId,
   experimentName,
   previousSolutionId
@@ -25,7 +27,7 @@ const saveMachineSolution = (
     chainId,
     experimentName,
     previousSolutionId,
-    treatment,
+    treatment: createTreatmentForSolution(globalFactors, chainFactors),
     isValid: true,
     isMachineSolution: true,
     playerId: null
@@ -39,7 +41,9 @@ const loadPreviousValidSolution = chainId => {
 
 Empirica.onRoundStart((game, round, players) => {
   const experimentName = game.get("experimentName");
-  const { batchId, treatment } = game;
+  const globalFactors = game.get("globalFactors");
+  const { batchId } = game;
+
   for (const player of players) {
     console.log(
       `Loading ExperimentEnvironments for playerId: ${player._id}, experimentName: ${experimentName}, batchId: ${batchId}`
@@ -55,6 +59,7 @@ Empirica.onRoundStart((game, round, players) => {
       return;
     }
 
+    const chainFactors = pickChainFactorsFromChain(chain);
     const environment = ExperimentEnvironments.loadById(
       chain.experimentEnvironmentId
     );
@@ -62,7 +67,7 @@ Empirica.onRoundStart((game, round, players) => {
     if (chain.numberOfValidSolutions === 0) {
       // load initial solution
       const machineSolution = Meteor.call("fetchMachineSolution", {
-        modelName: treatment.startingSolutionModelName,
+        modelName: chainFactors.startingSolutionModelName,
         environment,
         previousSolution: null
       });
@@ -71,7 +76,8 @@ Empirica.onRoundStart((game, round, players) => {
       const machineSolutionId = saveMachineSolution(
         machineSolution,
         batchId,
-        treatment,
+        globalFactors,
+        chainFactors,
         chain._id,
         experimentName,
         null // previousSolutionId
@@ -96,7 +102,9 @@ Empirica.onRoundStart((game, round, players) => {
 
 Empirica.onRoundEnd((game, round, players) => {
   const experimentName = game.get("experimentName");
-  const { batchId, treatment } = game;
+  const globalFactors = game.get("globalFactors");
+
+  const { batchId } = game;
   for (const player of players) {
     const environment = player.round.get("environment");
     if (!environment) {
@@ -115,10 +123,11 @@ Empirica.onRoundEnd((game, round, players) => {
     );
     const solution = player.round.get("solution") || {};
     const chain = player.round.get("chain");
+    const chainFactors = pickChainFactorsFromChain(chain);
     Solutions.create({
       ...solution,
       batchId,
-      treatment,
+      treatment: createTreatmentForSolution(globalFactors, chainFactors),
       isMachineSolution: false,
       playerId: player._id
     });
@@ -135,7 +144,7 @@ Empirica.onRoundEnd((game, round, players) => {
     ) {
       const previousSolution = loadPreviousValidSolution(chain._id);
       const machineSolution = Meteor.call("fetchMachineSolution", {
-        modelName: treatment.machineSolutionModelName,
+        modelName: chainFactors.machineSolutionModelName,
         environment,
         previousSolution
       });
@@ -143,7 +152,8 @@ Empirica.onRoundEnd((game, round, players) => {
       saveMachineSolution(
         machineSolution,
         batchId,
-        treatment,
+        globalFactors,
+        chainFactors,
         chain._id,
         experimentName,
         previousSolution._id

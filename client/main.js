@@ -23,11 +23,8 @@ Empirica.about(About);
 // Set the Consent Component you want to present players (optional).
 Empirica.consent(Consent);
 
-// Introduction pages to show before they play the game (optional).
-// At this point they have been assigned a treatment. You can return
-// different instruction steps depending on the assigned treatment.
-Empirica.introSteps((game, treatment) => {
-  if (treatment.debug) {
+Empirica.introSteps(game => {
+  if (game.treatment.debug) {
     return [InstructionShort];
   } else {
     const steps = [

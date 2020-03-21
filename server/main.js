@@ -23,7 +23,8 @@ function initializeChains(
   numberOfChainsPerEnvironment,
   positionOfMachineSolution,
   hasMachineSolution,
-  batchId
+  batchId,
+  startingSolutionModelName
 ) {
   console.log(
     `Initializing chains for experiment ${experimentName}, Number of chains per env: ${numberOfChainsPerEnvironment}`
@@ -33,10 +34,11 @@ function initializeChains(
   for (const experimentEnvironment of experimentEnvironments) {
     [...Array(numberOfChainsPerEnvironment).keys()].map(i => {
       const chain = {
+        batchId,
         experimentName,
         hasMachineSolution,
         lengthOfChain,
-        batchId,
+        startingSolutionModelName,
         randomNumberForSorting: Math.random(), // this value is updated every 30 seconds
         experimentEnvironmentId: experimentEnvironment._id,
         positionOfMachineSolution: hasMachineSolution
@@ -89,19 +91,24 @@ Empirica.batchInit((batch, treatments) => {
       treatment.numberOfChainsPerEnvironment,
       treatment.positionOfMachineSolution,
       treatment.chainsHaveMachineSolution,
-      batch._id
+      batch._id,
+      treatment.startingSolutionModelName
     );
   }
 });
 
 Empirica.gameInit((game, treatment, players) => {
   console.log(`Game Init: treatments: ${JSON.stringify(treatment)}`);
+
   const {
+    debug,
     experimentName,
+    lengthOfChain,
     numberOfRounds,
+    numberOfChainsPerEnvironment,
     planningStageDurationInSeconds,
-    responseStageDurationInSeconds,
-    debug
+    playerCount,
+    responseStageDurationInSeconds
   } = treatment;
 
   game.players.forEach(player => {
@@ -109,18 +116,23 @@ Empirica.gameInit((game, treatment, players) => {
     player.set("score", 0);
   });
 
-  game.set("experimentName", experimentName);
-
   const reviewStageDurationInSeconds = 5;
 
-  _.times(numberOfRounds, i => {
-    const round = game.addRound();
+  game.set("experimentName", experimentName);
+  game.set("globalFactors", {
+    debug,
+    experimentName,
+    lengthOfChain,
+    numberOfChainsPerEnvironment,
+    numberOfRounds,
+    planningStageDurationInSeconds,
+    playerCount,
+    responseStageDurationInSeconds,
+    reviewStageDurationInSeconds
+  });
 
-    round.set("environment", {
-      planningStageDurationInSeconds,
-      responseStageDurationInSeconds,
-      reviewStageDurationInSeconds
-    });
+  _.times(numberOfRounds, () => {
+    const round = game.addRound();
 
     // The player can view the environment and plan their solution
     round.addStage({

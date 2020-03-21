@@ -26,7 +26,7 @@ const count = () => {
 };
 
 const create = solution => {
-  console.log("Saving solution...", solution);
+  // console.log("Saving solution...", solution);
   return Solutions.insert({
     ...solution,
     createdAt: new Date(),

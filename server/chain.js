@@ -11,10 +11,8 @@ export const Chains = new Mongo.Collection("chains");
  *   lengthOfChain: number;
  *   lockedByPlayerId: string;
  *   numberOfValidSolutions: number;
- *   planningStageDurationInSeconds: number;
  *   positionOfMachineSolution: number | null;
  *   randomNumberForSorting: number;
- *   responseStageDurationInSeconds: number;
  *   startingSolutionModelName: string;
  *   ...
  * }

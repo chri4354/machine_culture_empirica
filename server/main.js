@@ -83,7 +83,7 @@ Empirica.batchInit((batch, treatments) => {
       treatment.experimentName,
       /**
        * The length of the chain is increased by one because the starting machine
-       * solution has to be saved in the chain
+       * solution, which is fetched from an external API, has to be saved in the chain
        */
       treatment.lengthOfChain + 1,
       treatment.numberOfChainsPerEnvironment,

@@ -5,13 +5,13 @@ export const Chains = new Mongo.Collection("chains");
 /*
  * Chain Schema
  * {
- *   batchId: number;
+ *   batchId: string;
  *   experimentName: string;
  *   hasMachineSolution: boolean;
  *   lengthOfChain: number;
  *   lockedByPlayerId: string;
  *   numberOfValidSolutions: number;
- *   positionOfMachineSolution: boolean;
+ *   positionOfMachineSolution: number | null;
  *   randomNumberForSorting: number;
  *   ...
  * }

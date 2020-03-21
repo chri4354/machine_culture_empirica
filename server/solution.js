@@ -15,6 +15,7 @@ export const Solutions = new Mongo.Collection("solutions");
  *   playerId: string;
  *   actions: any[];
  *   isMachineSolution: boolean;
+ *   previousSolutionId: string | null;
  *   ...
  * }
  *
@@ -25,10 +26,11 @@ const count = () => {
 };
 
 const create = solution => {
+  // console.log("Saving solution...", solution);
   return Solutions.insert({
     ...solution,
     createdAt: new Date(),
-    experimentApplicationVersion: "2.0--2019-02-16"
+    experimentApplicationVersion: "2.0--2019-03-21"
   });
 };
 
@@ -48,6 +50,10 @@ const loadForPlayer = playerId => {
   return Solutions.find({ playerId }).fetch();
 };
 
+const loadById = _id => {
+  return Solutions.findOne({ _id });
+};
+
 const loadValidSolutionsForChain = chainId => {
   return Solutions.find(
     { chainId, isValid: true },
@@ -55,17 +61,10 @@ const loadValidSolutionsForChain = chainId => {
   ).fetch();
 };
 
-const loadLastValidSolutionForChain = chainId => {
-  return Solutions.findOne(
-    { chainId, isValid: true },
-    { sort: { createdAt: -1 } }
-  );
-};
-
 Solutions.count = count;
 Solutions.create = create;
 Solutions.deleteAll = deleteAll;
 Solutions.loadAll = loadAll;
-Solutions.loadLastValidSolutionForChain = loadLastValidSolutionForChain;
+Solutions.loadById = loadById;
 Solutions.loadValidSolutionsForChain = loadValidSolutionsForChain;
 Solutions.loadForPlayer = loadForPlayer;

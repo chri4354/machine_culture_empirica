@@ -168,6 +168,7 @@ class TaskStimulus extends React.Component {
       reviewStageDurationInSeconds
     } = this.getEnvironment();
     const chain = this.getChain();
+    const previousSolution = this.getPreviousSolutionInChain();
     const isValid = isSolutionValid(actions, requiredSolutionLength);
     const solution = {
       actions,
@@ -180,6 +181,7 @@ class TaskStimulus extends React.Component {
       responseStageDurationInSeconds,
       reviewStageDurationInSeconds,
       chainId: chain._id,
+      previousSolutionId: previousSolution._id,
       timeElapsedInSeconds: isValid
         ? this.props.stage.durationInSeconds - this.props.remainingSeconds
         : null,

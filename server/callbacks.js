@@ -11,11 +11,22 @@ Meteor.methods({
   }
 });
 
-const saveMachineSolution = (machineSolution, batchId, treatment) => {
-  Solutions.create({
+const saveMachineSolution = (
+  machineSolution,
+  batchId,
+  treatment,
+  chainId,
+  experimentName,
+  previousSolutionId
+) => {
+  return Solutions.create({
     ...machineSolution,
     batchId,
+    chainId,
+    experimentName,
+    previousSolutionId,
     treatment,
+    isValid: true,
     isMachineSolution: true,
     playerId: null
   });
@@ -50,14 +61,22 @@ Empirica.onRoundStart((game, round, players) => {
     let previousSolutionInChain;
     if (chain.numberOfValidSolutions === 0) {
       // load initial solution
-      previousSolutionInChain = Meteor.call("fetchMachineSolution", {
+      const machineSolution = Meteor.call("fetchMachineSolution", {
         modelName: treatment.startingSolutionModelName,
         environment,
         previousSolution: null
       });
 
       // The machine solution is saved into the chain
-      saveMachineSolution(previousSolutionInChain, batchId, treatment);
+      const machineSolutionId = saveMachineSolution(
+        machineSolution,
+        batchId,
+        treatment,
+        chain._id,
+        experimentName,
+        null // previousSolutionId
+      );
+      previousSolutionInChain = Solutions.loadById(machineSolutionId);
     } else {
       previousSolutionInChain = loadPreviousValidSolution(chain._id);
     }
@@ -76,6 +95,7 @@ Empirica.onRoundStart((game, round, players) => {
 });
 
 Empirica.onRoundEnd((game, round, players) => {
+  const experimentName = game.get("experimentName");
   const { batchId, treatment } = game;
   for (const player of players) {
     const environment = player.round.get("environment");
@@ -120,7 +140,14 @@ Empirica.onRoundEnd((game, round, players) => {
         previousSolution
       });
 
-      saveMachineSolution(machineSolution, batchId, treatment);
+      saveMachineSolution(
+        machineSolution,
+        batchId,
+        treatment,
+        chain._id,
+        experimentName,
+        previousSolution._id
+      );
       numberOfValidSolutions++;
     }
 

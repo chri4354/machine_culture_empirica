@@ -82,6 +82,7 @@ Empirica.onRoundStart((game, round, players) => {
         experimentName,
         null // previousSolutionId
       );
+      Chains.updateChainAfterRound(chain._id, null, 1);
       previousSolutionInChain = Solutions.loadById(machineSolutionId);
     } else {
       previousSolutionInChain = loadPreviousValidSolution(chain._id);
@@ -140,7 +141,7 @@ Empirica.onRoundEnd((game, round, players) => {
     // add machine solution to the chain
     if (
       chain.hasMachineSolution &&
-      chain.positionOfMachineSolution === numberOfValidSolutions
+      chain.positionOfMachineSolution === numberOfValidSolutions - 1
     ) {
       const previousSolution = loadPreviousValidSolution(chain._id);
       const machineSolution = Meteor.call("fetchMachineSolution", {

@@ -13,14 +13,14 @@ export const createTreatmentForSolution = (globalFactors, chainFactors) => {
  */
 export const pickChainFactorsFromChain = chainOrTreatment => {
   const {
-    chainsHaveMachineSolution,
+    hasMachineSolution,
     machineSolutionModelName,
     positionOfMachineSolution,
     startingSolutionModelName
   } = chainOrTreatment;
 
   return {
-    chainsHaveMachineSolution,
+    hasMachineSolution,
     machineSolutionModelName,
     positionOfMachineSolution,
     startingSolutionModelName

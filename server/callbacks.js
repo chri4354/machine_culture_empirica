@@ -140,7 +140,7 @@ Empirica.onRoundEnd((game, round, players) => {
     // add machine solution to the chain
     if (
       chain.hasMachineSolution &&
-      chain.positionOfMachineSolution === numberOfValidSolutions - 1
+      chain.positionOfMachineSolution === numberOfValidSolutions
     ) {
       const previousSolution = loadPreviousValidSolution(chain._id);
       const machineSolution = Meteor.call("fetchMachineSolution", {

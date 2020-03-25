@@ -82,7 +82,6 @@ Empirica.onRoundStart((game, round, players) => {
         experimentName,
         null // previousSolutionId
       );
-      Chains.updateChainAfterRound(chain._id, null, 1);
       previousSolutionInChain = Solutions.loadById(machineSolutionId);
     } else {
       previousSolutionInChain = loadPreviousValidSolution(chain._id);

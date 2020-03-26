@@ -90,7 +90,7 @@ const lockChainForPlayer = (
       _id: { $nin: playerSolutionChainIds },
       batchId,
       environmentId: { $nin: playerSolutionEnvironmentIds },
-      $expr: { $ne: ["lengthOfChain", "numberOfValidSolutions"] }, // the chain is not complete
+      $expr: { $gt: ["$lengthOfChain", "$numberOfValidSolutions"] }, // the chain is not complete
       lockedByPlayerId: null
     },
     sort: {

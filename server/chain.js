@@ -44,13 +44,13 @@ const loadNextChainForPlayer = (playerId, batchId) => {
   const playerSoltutionChainIds = playerSolutions.map(
     solution => solution.chainId
   );
-  const playerSolutionNetworkIds = playerSolutions.map(
-    solution => solution.networkId
+  const playerSolutionEnvironmentIds = playerSolutions.map(
+    solution => solution.environmentId
   );
   const chain = Chains.lockChainForPlayer(
     playerId,
     playerSoltutionChainIds,
-    playerSolutionNetworkIds,
+    playerSolutionEnvironmentIds,
     batchId
   );
   return chain;
@@ -81,7 +81,7 @@ const updateRandomNumbersForSorting = () => {
 const lockChainForPlayer = (
   playerId,
   playerSolutionChainIds,
-  playerSolutionNetworkIds,
+  playerSolutionEnvironmentIds,
   batchId
 ) => {
   // findAndModify updates one document
@@ -89,7 +89,7 @@ const lockChainForPlayer = (
     query: {
       _id: { $nin: playerSolutionChainIds },
       batchId,
-      networkId: { $nin: playerSolutionNetworkIds },
+      environmentId: { $nin: playerSolutionEnvironmentIds },
       $expr: { $ne: ["lengthOfChain", "numberOfValidSolutions"] }, // the chain is not complete
       lockedByPlayerId: null
     },

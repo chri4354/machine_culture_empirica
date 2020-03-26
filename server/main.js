@@ -43,6 +43,7 @@ function initializeChains(
         machineSolutionModelName,
         randomNumberForSorting: Math.random(), // this value is updated every 30 seconds
         experimentEnvironmentId: experimentEnvironment._id,
+        environmentId: experimentEnvironment.environmentId,
         positionOfMachineSolution: hasMachineSolution
           ? positionOfMachineSolution
           : null

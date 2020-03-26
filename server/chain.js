@@ -94,7 +94,7 @@ const lockChainForPlayer = (
       lockedByPlayerId: null
     },
     sort: {
-      numberOfValidSolutions: 1,
+      // numberOfValidSolutions: 1,
       randomNumberForSorting: 1 // selects a random chain
     },
     update: { $set: { lockedByPlayerId: playerId } },

@@ -49,7 +49,7 @@ Empirica.onRoundStart((game, round, players) => {
       `Loading ExperimentEnvironments for playerId: ${player._id}, experimentName: ${experimentName}, batchId: ${batchId}`
     );
 
-    const chain = Chains.loadNextChainForPlayer(player._id, batchId);
+    let chain = Chains.loadNextChainForPlayer(player._id, batchId);
 
     if (!chain) {
       // There are no available chains for the player
@@ -82,6 +82,8 @@ Empirica.onRoundStart((game, round, players) => {
         experimentName,
         null // previousSolutionId
       );
+      Chains.incrementNumberOfValidSolutions(chain._id);
+      chain = Chains.loadById(chain._id);
       previousSolutionInChain = Solutions.loadById(machineSolutionId);
     } else {
       previousSolutionInChain = loadPreviousValidSolution(chain._id);
@@ -137,7 +139,8 @@ Empirica.onRoundEnd((game, round, players) => {
       ? chain.numberOfValidSolutions + 1
       : chain.numberOfValidSolutions;
 
-    // add machine solution to the chain
+    // Add machine solution to the chain.
+    // When positionOfMachineSolution == 2, we want: Starting Solution > First Human > Machine Solution > Second Human > ...
     if (
       chain.hasMachineSolution &&
       chain.positionOfMachineSolution === numberOfValidSolutions

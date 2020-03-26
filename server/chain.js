@@ -114,10 +114,23 @@ const updateChainAfterRound = (chainId, playerId, numberOfValidSolutions) => {
   });
 };
 
+const incrementNumberOfValidSolutions = chainId => {
+  return Chains.update(
+    { _id: chainId },
+    { $inc: { numberOfValidSolutions: 1 } }
+  );
+};
+
+const loadById = _id => {
+  return Chains.findOne({ _id });
+};
+
 Chains.count = count;
 Chains.create = create;
 Chains.deleteAll = deleteAll;
+Chains.incrementNumberOfValidSolutions = incrementNumberOfValidSolutions;
 Chains.loadAll = loadAll;
+Chains.loadById = loadById;
 Chains.loadNextChainForPlayer = loadNextChainForPlayer;
 Chains.lockChainForPlayer = lockChainForPlayer;
 Chains.updateChainAfterRound = updateChainAfterRound;

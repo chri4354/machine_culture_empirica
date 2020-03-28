@@ -74,6 +74,23 @@ const updateRandomNumbersForSorting = () => {
 };
 
 /**
+ *
+ * @returns {chain | null}
+ */
+const loadRandomChain = batchId => {
+  return Chains.findOne(
+    {
+      batchId
+    },
+    {
+      sort: {
+        randomNumberForSorting: 1 // selects a random chain
+      }
+    }
+  );
+};
+
+/**
  * A player must obtain a lock on a chain in order to play that chain/environment
  *
  * @returns {chain | null}
@@ -133,5 +150,6 @@ Chains.loadAll = loadAll;
 Chains.loadById = loadById;
 Chains.loadNextChainForPlayer = loadNextChainForPlayer;
 Chains.lockChainForPlayer = lockChainForPlayer;
+Chains.loadRandomChain = loadRandomChain;
 Chains.updateChainAfterRound = updateChainAfterRound;
 Chains.updateRandomNumbersForSorting = updateRandomNumbersForSorting;

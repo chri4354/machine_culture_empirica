@@ -42,6 +42,7 @@ const loadPreviousValidSolution = chainId => {
 Empirica.onRoundStart((game, round, players) => {
   const experimentName = game.get("experimentName");
   const globalFactors = game.get("globalFactors");
+  const isPractice = round.get("isPractice");
   const { batchId } = game;
 
   for (const player of players) {
@@ -49,7 +50,12 @@ Empirica.onRoundStart((game, round, players) => {
       `Loading ExperimentEnvironments for playerId: ${player._id}, experimentName: ${experimentName}, batchId: ${batchId}`
     );
 
-    let chain = Chains.loadNextChainForPlayer(player._id, batchId);
+    /**
+     * For practice rounds, load a random chain without locking it.
+     */
+    let chain = isPractice
+      ? Chains.loadRandomChain(batchId)
+      : Chains.loadNextChainForPlayer(player._id, batchId);
 
     if (!chain) {
       // There are no available chains for the player
@@ -64,27 +70,34 @@ Empirica.onRoundStart((game, round, players) => {
       chain.experimentEnvironmentId
     );
     let previousSolutionInChain;
-    if (chain.numberOfValidSolutions === 0) {
-      // load initial solution
+    if (isPractice || chain.numberOfValidSolutions === 0) {
+      /**
+       * Load the initial solution.
+       * Practice rounds always use the machineStartingSolution as the previous solution.
+       */
       const machineSolution = Meteor.call("fetchMachineSolution", {
         modelName: chainFactors.startingSolutionModelName,
         environment,
         previousSolution: null
       });
 
-      // The machine solution is saved into the chain
-      const machineSolutionId = saveMachineSolution(
-        machineSolution,
-        batchId,
-        globalFactors,
-        chainFactors,
-        chain._id,
-        experimentName,
-        null // previousSolutionId
-      );
-      Chains.incrementNumberOfValidSolutions(chain._id);
-      chain = Chains.loadById(chain._id);
-      previousSolutionInChain = Solutions.loadById(machineSolutionId);
+      if (isPractice) {
+        previousSolutionInChain = machineSolution;
+      } else {
+        // The machine solution is saved into the chain
+        const machineSolutionId = saveMachineSolution(
+          machineSolution,
+          batchId,
+          globalFactors,
+          chainFactors,
+          chain._id,
+          experimentName,
+          null // previousSolutionId
+        );
+        Chains.incrementNumberOfValidSolutions(chain._id);
+        chain = Chains.loadById(chain._id);
+        previousSolutionInChain = Solutions.loadById(machineSolutionId);
+      }
     } else {
       previousSolutionInChain = loadPreviousValidSolution(chain._id);
     }
@@ -103,8 +116,14 @@ Empirica.onRoundStart((game, round, players) => {
 });
 
 Empirica.onRoundEnd((game, round, players) => {
+  const isPractice = round.get("isPractice");
   const experimentName = game.get("experimentName");
   const globalFactors = game.get("globalFactors");
+
+  if (isPractice) {
+    // practice solutions do not get saved
+    return;
+  }
 
   const { batchId } = game;
   for (const player of players) {
@@ -117,9 +136,6 @@ Empirica.onRoundEnd((game, round, players) => {
       return;
     }
 
-    if (environment.experimentName === "practice") {
-      return;
-    }
     console.log(
       `Saving solution game: ${game._id} player: ${player._id} round: ${round._id}`
     );

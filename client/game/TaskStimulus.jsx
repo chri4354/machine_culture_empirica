@@ -33,6 +33,10 @@ class TaskStimulus extends React.Component {
     return this.getStageName() === "plan";
   }
 
+  isPractice() {
+    return this.props.round.get("isPractice");
+  }
+
   isReviewStage() {
     return this.getStageName() === "review";
   }
@@ -233,7 +237,6 @@ class TaskStimulus extends React.Component {
     const playerSolution = player.round.get("solution");
     const {
       actions,
-      experimentName,
       missingSolutionPenalty,
       nodes,
       version,
@@ -242,11 +245,8 @@ class TaskStimulus extends React.Component {
     return (
       <div className="task-stimulus">
         <h1 style={{ color: "green" }}>{this.getStageDisplayName()}</h1>
-        {experimentName === "practice" && !this.isReviewStage() && (
-          <h2 style={{ color: "red" }}>
-            This is a trial round. You will have more time to complete this
-            round.
-          </h2>
+        {this.isPractice() && !this.isReviewStage() && (
+          <h2 style={{ color: "red" }}>This is a trial round.</h2>
         )}
         {this.isReviewStage() && (
           <div>

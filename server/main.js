@@ -135,8 +135,13 @@ Empirica.gameInit((game, treatment, players) => {
     reviewStageDurationInSeconds
   });
 
-  _.times(numberOfRounds, () => {
+  const numberOfPracticeRounds = 2;
+
+  _.times(numberOfRounds + numberOfPracticeRounds, index => {
     const round = game.addRound();
+
+    const isPractice = index < numberOfPracticeRounds;
+    round.set("isPractice", isPractice);
 
     // The player can view the environment and plan their solution
     round.addStage({

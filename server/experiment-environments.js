@@ -30,7 +30,7 @@ const loadById = _id => {
 };
 
 const loadPracticeExperimentEnvironments = () => {
-  return ExperimentEnvironments.find({ experimentName: "practice" });
+  return ExperimentEnvironments.find({ experimentName: "practice" }).fetch();
 };
 
 ExperimentEnvironments.count = count;

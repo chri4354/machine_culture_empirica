@@ -40,9 +40,9 @@ const loadPreviousValidSolution = chainId => {
 };
 
 Empirica.onRoundStart((game, round, players) => {
-  const experimentName = game.get("experimentName");
   const globalFactors = game.get("globalFactors");
   const isPractice = round.get("isPractice");
+  const experimentName = isPractice ? "practice" : game.get("experimentName");
   const { batchId } = game;
 
   for (const player of players) {
@@ -66,9 +66,9 @@ Empirica.onRoundStart((game, round, players) => {
     }
 
     const chainFactors = pickChainFactorsFromChain(chain);
-    const environment = ExperimentEnvironments.loadById(
-      chain.experimentEnvironmentId
-    );
+    const environment = isPractice
+      ? ExperimentEnvironments.loadPracticeExperimentEnvironments()[round.index]
+      : ExperimentEnvironments.loadById(chain.experimentEnvironmentId);
     let previousSolutionInChain;
     if (isPractice || chain.numberOfValidSolutions === 0) {
       /**

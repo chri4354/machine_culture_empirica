@@ -16,7 +16,7 @@ export default class InstructionStepTwo extends React.Component {
           </p>
 
           <p>
-            You will see a starting node (marked in grey). Your task is to move
+            You will see a starting node (marked in purple). Your task is to move
             from one node to connected ones to try to collect as many points as
             possible.
           </p>

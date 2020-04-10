@@ -25,7 +25,8 @@ function initializeChains(
   hasMachineSolution,
   batchId,
   startingSolutionModelName,
-  machineSolutionModelName
+  machineSolutionModelName,
+  previousSolutionAnimationDurationInSeconds
 ) {
   console.log(
     `Initializing chains for experiment ${experimentName}, Number of chains per env: ${numberOfChainsPerEnvironment}`
@@ -41,6 +42,7 @@ function initializeChains(
         lengthOfChain,
         startingSolutionModelName,
         machineSolutionModelName,
+        previousSolutionAnimationDurationInSeconds,
         randomNumberForSorting: Math.random(), // this value is updated every 30 seconds
         experimentEnvironmentId: experimentEnvironment._id,
         environmentId: experimentEnvironment.environmentId,
@@ -96,7 +98,8 @@ Empirica.batchInit((batch, treatments) => {
       treatment.chainsHaveMachineSolution,
       batch._id,
       treatment.startingSolutionModelName,
-      treatment.machineSolutionModelName
+      treatment.machineSolutionModelName,
+      treatment.previousSolutionAnimationDurationInSeconds
     );
   }
 });

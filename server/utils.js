@@ -16,6 +16,7 @@ export const pickChainFactorsFromChain = chainOrTreatment => {
     hasMachineSolution,
     machineSolutionModelName,
     positionOfMachineSolution,
+    previousSolutionAnimationDurationInSeconds,
     startingSolutionModelName
   } = chainOrTreatment;
 
@@ -23,6 +24,7 @@ export const pickChainFactorsFromChain = chainOrTreatment => {
     hasMachineSolution,
     machineSolutionModelName,
     positionOfMachineSolution,
+    previousSolutionAnimationDurationInSeconds,
     startingSolutionModelName
   };
 };

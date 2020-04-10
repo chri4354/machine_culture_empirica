@@ -49,6 +49,10 @@ class TaskStimulus extends React.Component {
     return this.props.player.round.get("chain");
   }
 
+  getPreviousSolutionAnimationDurationInSeconds() {
+    return this.getChain().previousSolutionAnimationDurationInSeconds;
+  }
+
   getEnvironment() {
     return this.props.player.round.get("environment");
   }
@@ -101,6 +105,13 @@ class TaskStimulus extends React.Component {
       });
 
       for (const action of actions) {
+        const durationOfIterationMs =
+          (this.getPreviousSolutionAnimationDurationInSeconds() /
+            actions.length) *
+          1000;
+        const numberOfAnimationsStepsPerIteration = 4;
+        const durationOfAnimationStepMs =
+          durationOfIterationMs / numberOfAnimationsStepsPerIteration;
         await new Promise(function(resolve) {
           setTimeout(() => {
             that.setState({
@@ -111,7 +122,7 @@ class TaskStimulus extends React.Component {
               animationSource: true
             });
             resolve();
-          }, 0.1 * 1000);
+          }, 0.1 * durationOfAnimationStepMs);
         });
         await new Promise(function(resolve) {
           setTimeout(() => {
@@ -119,7 +130,7 @@ class TaskStimulus extends React.Component {
               animationTarget: true
             });
             resolve();
-          }, 0.1 * 1000);
+          }, 0.1 * durationOfAnimationStepMs);
         });
         await new Promise(function(resolve) {
           setTimeout(() => {
@@ -128,7 +139,7 @@ class TaskStimulus extends React.Component {
               animationSource: false
             });
             resolve();
-          }, 0.1 * 1000);
+          }, 0.1 * durationOfAnimationStepMs);
         });
         await new Promise(function(resolve) {
           setTimeout(() => {
@@ -138,7 +149,7 @@ class TaskStimulus extends React.Component {
               numberOfActionsTaken: prevState.numberOfActionsTaken + 1
             }));
             resolve();
-          }, 1 * 1000);
+          }, 1 * durationOfAnimationStepMs);
         });
       }
       that.setState({

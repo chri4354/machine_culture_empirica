@@ -15,8 +15,8 @@ export default class Thanks extends React.Component {
           </p>
           <p>Please click on the link below to confirm your submission:</p>
           <p>
-            <a href="https://app.prolific.co/submissions/complete?cc=72740B85">
-              https://app.prolific.co/submissions/complete?cc=72740B85
+            <a href="https://app.prolific.co/submissions/complete?cc=11609A30">
+              https://app.prolific.co/submissions/complete?cc=11609A30
             </a>
           </p>
         </div>

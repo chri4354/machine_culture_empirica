@@ -1,5 +1,6 @@
 node_modules/
 packages/
+.vscode/
 settings.json
 production.json
 prod.json

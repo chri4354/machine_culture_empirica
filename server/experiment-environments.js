@@ -1,6 +1,4 @@
-export const ExperimentEnvironments = new Mongo.Collection(
-  "experimentEnvironments"
-);
+export const ExperimentEnvironments = new Mongo.Collection('experimentEnvironments');
 
 const count = () => {
   return ExperimentEnvironments.find({}).count();
@@ -9,7 +7,7 @@ const count = () => {
 const create = experimentEnvironment => {
   return ExperimentEnvironments.insert({
     ...experimentEnvironment,
-    createdAt: new Date()
+    createdAt: new Date(),
   });
 };
 
@@ -30,7 +28,7 @@ const loadById = _id => {
 };
 
 const loadPracticeExperimentEnvironments = () => {
-  return ExperimentEnvironments.find({ experimentName: "practice" }).fetch();
+  return ExperimentEnvironments.find({ experimentName: 'practice' }).fetch();
 };
 
 ExperimentEnvironments.count = count;

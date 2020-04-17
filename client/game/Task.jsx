@@ -1,15 +1,13 @@
-import React from "react";
+import React from 'react';
 
-import TaskResponse from "./TaskResponse";
-import TaskStimulus from "./TaskStimulus";
+import TaskResponse from './TaskResponse';
+import TaskStimulus from './TaskStimulus';
 
-export default class Task extends React.Component {
-  render() {
-    return (
-      <div className="task">
-        <TaskStimulus {...this.props} />
-        <TaskResponse {...this.props} />
-      </div>
-    );
-  }
-}
+const Task = props => (
+  <div className="task">
+    <TaskStimulus {...props} />
+    <TaskResponse {...props} />
+  </div>
+);
+
+export default Task;

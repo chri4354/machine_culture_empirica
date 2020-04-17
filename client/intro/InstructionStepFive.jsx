@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Centered } from "meteor/empirica:core";
+import { Centered } from 'meteor/empirica:core';
 
 export default class InstructionStepFour extends React.Component {
   render() {
@@ -10,13 +10,13 @@ export default class InstructionStepFour extends React.Component {
         <div className="instructions">
           <h1> Instructions 5 </h1>
           <p>
-            On the top you will see the number of steps remaining for each round
-            and your current round score:
+            On the top you will see the number of steps remaining for each round and your current
+            round score:
           </p>
 
           <p>
             <img
-              style={{ width: "500px", padding: "30px" }}
+              style={{ width: '500px', padding: '30px' }}
               src="images/instructions/round-stats.jpg"
             />
           </p>

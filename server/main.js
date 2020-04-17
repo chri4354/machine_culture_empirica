@@ -1,10 +1,10 @@
-import Empirica from "meteor/empirica:core";
+import Empirica from 'meteor/empirica:core';
 
-import "./callbacks.js";
-import { ExperimentEnvironments } from "./experiment-environments";
-import { Solutions } from "./solution";
-import experimentEnvironmentsJson from "./experimentEnvironments.json";
-import { Chains } from "./chain";
+import './callbacks.js';
+import { ExperimentEnvironments } from './experiment-environments';
+import { Solutions } from './solution';
+import experimentEnvironmentsJson from './experimentEnvironments.json';
+import { Chains } from './chain';
 
 /**
  * Updates the chain.randomNumberForSorting value every 30 seconds
@@ -46,9 +46,7 @@ function initializeChains(
         randomNumberForSorting: Math.random(), // this value is updated every 30 seconds
         experimentEnvironmentId: experimentEnvironment._id,
         environmentId: experimentEnvironment.environmentId,
-        positionOfMachineSolution: hasMachineSolution
-          ? positionOfMachineSolution
-          : null
+        positionOfMachineSolution: hasMachineSolution ? positionOfMachineSolution : null,
       };
       Chains.create(chain);
     });
@@ -61,24 +59,24 @@ const printDatabaseStatistics = () => {
   const numberOfChains = Chains.count();
 
   console.log(
-    "Current Database stats: ",
+    'Current Database stats: ',
     JSON.stringify({
       numberOfExperimentEnvironments,
       numberOfSolutions,
-      numberOfChains
+      numberOfChains,
     })
   );
 };
 
 const resetDatabase = () => {
-  console.log("resetting database...");
+  console.log('resetting database...');
   ExperimentEnvironments.deleteAll();
   Solutions.deleteAll();
   Chains.deleteAll();
 };
 
 const initializeDatabase = () => {
-  console.log("initializing the experimentEnvironments...");
+  console.log('initializing the experimentEnvironments...');
   for (const experimentEnvironments of experimentEnvironmentsJson) {
     ExperimentEnvironments.create(experimentEnvironments);
   }
@@ -115,18 +113,18 @@ Empirica.gameInit((game, treatment, players) => {
     numberOfChainsPerEnvironment,
     planningStageDurationInSeconds,
     playerCount,
-    responseStageDurationInSeconds
+    responseStageDurationInSeconds,
   } = treatment;
 
   game.players.forEach(player => {
-    player.set("avatar", `/avatars/jdenticon/${player._id}`);
-    player.set("score", 0);
+    player.set('avatar', `/avatars/jdenticon/${player._id}`);
+    player.set('score', 0);
   });
 
   const reviewStageDurationInSeconds = 5;
 
-  game.set("experimentName", experimentName);
-  game.set("globalFactors", {
+  game.set('experimentName', experimentName);
+  game.set('globalFactors', {
     debug,
     experimentName,
     lengthOfChain,
@@ -135,7 +133,7 @@ Empirica.gameInit((game, treatment, players) => {
     planningStageDurationInSeconds,
     playerCount,
     responseStageDurationInSeconds,
-    reviewStageDurationInSeconds
+    reviewStageDurationInSeconds,
   });
 
   const numberOfPracticeRounds = 2;
@@ -144,27 +142,27 @@ Empirica.gameInit((game, treatment, players) => {
     const round = game.addRound();
 
     const isPractice = index < numberOfPracticeRounds;
-    round.set("isPractice", isPractice);
+    round.set('isPractice', isPractice);
 
     // The player can view the environment and plan their solution
     round.addStage({
-      name: "plan",
-      displayName: "Watch previous player",
-      durationInSeconds: planningStageDurationInSeconds
+      name: 'plan',
+      displayName: 'Watch previous player',
+      durationInSeconds: planningStageDurationInSeconds,
     });
 
     // The player can select their solution
     round.addStage({
-      name: "response",
-      displayName: "Play yourself",
-      durationInSeconds: responseStageDurationInSeconds
+      name: 'response',
+      displayName: 'Play yourself',
+      durationInSeconds: responseStageDurationInSeconds,
     });
 
     // The player can review their score
     round.addStage({
-      name: "review",
-      displayName: "Review results",
-      durationInSeconds: reviewStageDurationInSeconds
+      name: 'review',
+      displayName: 'Review results',
+      durationInSeconds: reviewStageDurationInSeconds,
     });
   });
 });

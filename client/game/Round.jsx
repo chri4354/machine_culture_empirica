@@ -1,20 +1,17 @@
-import React from "react";
+import React from 'react';
 
-import PlayerProfile from "./PlayerProfile.jsx";
-import SocialExposure from "./SocialExposure.jsx";
-import Task from "./Task.jsx";
+import PlayerProfile from './PlayerProfile';
+import SocialExposure from './SocialExposure';
+import Task from './Task';
 
-export default class Round extends React.Component {
-  render() {
-    const { round, stage, player, game } = this.props;
-    return (
-      <div className="round">
-        <div className="content">
-          <PlayerProfile player={player} stage={stage} game={game} />
-          <Task game={game} round={round} stage={stage} player={player} />
-          <SocialExposure stage={stage} player={player} game={game} />
-        </div>
-      </div>
-    );
-  }
-}
+const Round = ({ round, stage, player, game }) => (
+  <div className="round">
+    <div className="content">
+      <PlayerProfile player={player} stage={stage} game={game} />
+      <Task game={game} round={round} stage={stage} player={player} />
+      <SocialExposure stage={stage} player={player} game={game} />
+    </div>
+  </div>
+);
+
+export default Round;

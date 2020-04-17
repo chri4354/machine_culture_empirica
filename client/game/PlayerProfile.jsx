@@ -1,37 +1,29 @@
-import React from "react";
+import React from 'react';
 
-import Timer from "./Timer.jsx";
+import Timer from './Timer';
 
-export default class PlayerProfile extends React.Component {
-  renderProfile() {
-    const { player } = this.props;
-    return (
-      <div className="profile-score">
-        <h3>Your Profile</h3>
-        <img src={player.get("avatar")} className="profile-avatar" />
-      </div>
-    );
-  }
+const PlayerProfile = ({ player, stage }) => {
+  const renderProfile = () => (
+    <div className="profile-score">
+      <h3>Your Profile</h3>
+      <img src={player.get('avatar')} className="profile-avatar" alt="avatar" />
+    </div>
+  );
 
-  renderScore() {
-    const { player } = this.props;
-    return (
-      <div className="profile-score">
-        <h4>Total score</h4>
-        <span>{(player.get("score") || 0).toFixed(2)}</span>
-      </div>
-    );
-  }
+  const renderScore = () => (
+    <div className="profile-score">
+      <h4>Total score</h4>
+      <span>{(player.get('score') || 0).toFixed(2)}</span>
+    </div>
+  );
 
-  render() {
-    const { stage } = this.props;
+  return (
+    <aside className="player-profile">
+      {renderProfile()}
+      {renderScore()}
+      <Timer stage={stage} />
+    </aside>
+  );
+};
 
-    return (
-      <aside className="player-profile">
-        {this.renderProfile()}
-        {this.renderScore()}
-        <Timer stage={stage} />
-      </aside>
-    );
-  }
-}
+export default PlayerProfile;

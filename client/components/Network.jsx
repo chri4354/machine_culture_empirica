@@ -1,44 +1,24 @@
-import React from "react";
-import _ from "lodash";
+import React from 'react';
+import _ from 'lodash';
 
-const Node = ({
-  x,
-  y,
-  text,
-  r,
-  isActive,
-  id,
-  onClick,
-  isDisabled,
-  isInvalidClick
-}) => {
+const Node = ({ x, y, text, r, isActive, id, onClick, isDisabled, isInvalidClick }) => {
   return (
-    <g
-      className={"node"}
-      style={{ cursor: !isDisabled && "pointer" }}
-      onClick={() => onClick(id)}
-    >
+    <g className={'node'} style={{ cursor: !isDisabled && 'pointer' }} onClick={() => onClick(id)}>
       <circle
         cx={x}
         cy={y}
         r={r}
         className={
-          isActive
-            ? "active"
-            : isDisabled
-            ? "disabled"
-            : isInvalidClick
-            ? "invalid-click"
-            : ""
+          isActive ? 'active' : isDisabled ? 'disabled' : isInvalidClick ? 'invalid-click' : ''
         }
-        key={"circle"}
+        key={'circle'}
       />
       <text
         x={x}
         y={y + r * 0.3}
         textAnchor="middle"
-        style={{ fontSize: "30px" }}
-        key={"state-name"}
+        style={{ fontSize: '30px' }}
+        key={'state-name'}
       >
         {text}
       </text>
@@ -74,22 +54,12 @@ const Link = ({ source, target, reward, rewardName, id }) => {
         markerUnits="userSpaceOnUse"
         d={d}
       ></path>
-      <text
-        id={"link-text-bg-" + id}
-        className="link-text link-text-bg"
-        x={textx}
-        dy={5}
-      >
+      <text id={'link-text-bg-' + id} className="link-text link-text-bg" x={textx} dy={5}>
         <textPath alignmentBaseline="text-bottom" xlinkHref={`#${id}`}>
           {reward}
         </textPath>
       </text>
-      <text
-        id={"link-text-" + id}
-        className="link-text colored-fill"
-        x={textx}
-        dy={5}
-      >
+      <text id={'link-text-' + id} className="link-text colored-fill" x={textx} dy={5}>
         <textPath alignmentBaseline="text-bottom" xlinkHref={`#${id}`}>
           {reward}
         </textPath>
@@ -100,12 +70,7 @@ const Link = ({ source, target, reward, rewardName, id }) => {
 
 // we need to define a link marker for each link color
 
-const rewardNames = [
-  "large-negative",
-  "negative",
-  "positive",
-  "large-positive"
-];
+const rewardNames = ['large-negative', 'negative', 'positive', 'large-positive'];
 
 const Marker = ({ size, orient, prefix, name }) => (
   <marker
@@ -127,7 +92,7 @@ const LinkMarker = ({ size }) => (
     {[
       ...rewardNames.map((name, idx) => (
         <Marker
-          key={"marker-" + idx}
+          key={'marker-' + idx}
           orient="auto"
           prefix="marker-arrow-end"
           name={name}
@@ -136,35 +101,24 @@ const LinkMarker = ({ size }) => (
       )),
       ...rewardNames.map((name, idx) => (
         <Marker
-          key={"marker-reverse" + idx}
+          key={'marker-reverse' + idx}
           orient="auto-start-reverse"
           prefix="marker-arrow-start"
           name={name}
           size={size}
         />
-      ))
+      )),
     ]}
   </defs>
 );
 
 class Network extends React.Component {
   render() {
-    const {
-      activeNodeId,
-      actions,
-      invalidClickNodeId,
-      nodes,
-      onNodeClick,
-      version
-    } = this.props;
+    const { activeNodeId, actions, invalidClickNodeId, nodes, onNodeClick, version } = this.props;
     const size = { width: 700, height: 700 };
-    const nodesById = _.keyBy(nodes, "id");
+    const nodesById = _.keyBy(nodes, 'id');
     return (
-      <svg
-        className={`network-game ${version}`}
-        width={size.height}
-        height={size.height}
-      >
+      <svg className={`network-game ${version}`} width={size.height} height={size.height}>
         <LinkMarker size={size} />
         <g>
           {actions.map(({ sourceId, targetId, reward, rewardName }, idx) => (
@@ -175,13 +129,13 @@ class Network extends React.Component {
               id={`${sourceId}_${targetId}`}
               source={{
                 x: size.width * nodesById[sourceId].x,
-                y: size.height * nodesById[sourceId].y
+                y: size.height * nodesById[sourceId].y,
               }}
               target={{
                 x: size.width * nodesById[targetId].x,
-                y: size.height * nodesById[targetId].y
+                y: size.height * nodesById[targetId].y,
               }}
-              key={"link-" + idx}
+              key={'link-' + idx}
             />
           ))}
         </g>
@@ -197,21 +151,15 @@ class Network extends React.Component {
               text={displayName}
               onClick={onNodeClick}
               id={id}
-              key={"point-" + idx}
+              key={'point-' + idx}
             />
           ))}
         </g>
         {/* to bring the link describtion (rewards) to the front */}
         <g>
           {actions.map(({ sourceId, targetId }, idx) => [
-            <use
-              key={"use-bg-" + idx}
-              xlinkHref={`#link-text-bg-${sourceId}_${targetId}`}
-            />,
-            <use
-              key={"use-" + idx}
-              xlinkHref={`#link-text-${sourceId}_${targetId}`}
-            />
+            <use key={'use-bg-' + idx} xlinkHref={`#link-text-bg-${sourceId}_${targetId}`} />,
+            <use key={'use-' + idx} xlinkHref={`#link-text-${sourceId}_${targetId}`} />,
           ])}
         </g>
       </svg>

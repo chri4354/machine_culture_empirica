@@ -4,7 +4,7 @@
 export const createTreatmentForSolution = (globalFactors, chainFactors) => {
   return {
     ...globalFactors,
-    ...chainFactors
+    ...chainFactors,
   };
 };
 
@@ -17,7 +17,7 @@ export const pickChainFactorsFromChain = chainOrTreatment => {
     machineSolutionModelName,
     positionOfMachineSolution,
     previousSolutionAnimationDurationInSeconds,
-    startingSolutionModelName
+    startingSolutionModelName,
   } = chainOrTreatment;
 
   return {
@@ -25,6 +25,6 @@ export const pickChainFactorsFromChain = chainOrTreatment => {
     machineSolutionModelName,
     positionOfMachineSolution,
     previousSolutionAnimationDurationInSeconds,
-    startingSolutionModelName
+    startingSolutionModelName,
   };
 };

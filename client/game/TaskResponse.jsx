@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-export default class TaskResponse extends React.Component {
-  handleSubmit = event => {
+const TaskResponse = ({ player }) => {
+  const handleSubmit = event => {
     event.preventDefault();
-    this.props.player.stage.submit();
+    player.stage.submit();
   };
 
-  renderSubmitted() {
+  const renderSubmitted = () => {
     return (
       <div className="task-response">
         <div className="response-submitted">
@@ -15,22 +15,20 @@ export default class TaskResponse extends React.Component {
         </div>
       </div>
     );
+  };
+
+  // If the player already submitted, don't show the slider or submit button
+  if (player.stage.submitted) {
+    return renderSubmitted();
   }
 
-  render() {
-    const { player } = this.props;
+  return (
+    <div className="task-response">
+      <form style={{ textAlign: 'right' }} onSubmit={handleSubmit}>
+        {/* <button type="submit">Submit</button> */}
+      </form>
+    </div>
+  );
+};
 
-    // If the player already submitted, don't show the slider or submit button
-    if (player.stage.submitted) {
-      return this.renderSubmitted();
-    }
-
-    return (
-      <div className="task-response">
-        <form style={{ textAlign: "right" }} onSubmit={this.handleSubmit}>
-          {/*<button type="submit">Submit</button> */}
-        </form>
-      </div>
-    );
-  }
-}
+export default TaskResponse;

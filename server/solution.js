@@ -1,4 +1,4 @@
-export const Solutions = new Mongo.Collection("solutions");
+export const Solutions = new Mongo.Collection('solutions');
 
 /*
  * Solution Schema
@@ -30,7 +30,7 @@ const create = solution => {
   return Solutions.insert({
     ...solution,
     createdAt: new Date(),
-    experimentApplicationVersion: "2.0--2019-03-21"
+    experimentApplicationVersion: '2.0--2019-03-21',
   });
 };
 
@@ -55,10 +55,7 @@ const loadById = _id => {
 };
 
 const loadValidSolutionsForChain = chainId => {
-  return Solutions.find(
-    { chainId, isValid: true },
-    { sort: { createdAt: 1 } }
-  ).fetch();
+  return Solutions.find({ chainId, isValid: true }, { sort: { createdAt: 1 } }).fetch();
 };
 
 Solutions.count = count;

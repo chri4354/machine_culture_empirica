@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Centered } from "meteor/empirica:core";
+import { Centered } from 'meteor/empirica:core';
 
 const Radio = ({ selected, name, value, label, onChange }) => (
   <label>
@@ -15,11 +15,11 @@ const Radio = ({ selected, name, value, label, onChange }) => (
   </label>
 );
 
-const trueValue = "true";
-const falseValue = "false";
+const trueValue = 'true';
+const falseValue = 'false';
 
 export default class Quiz extends React.Component {
-  state = { question1: "", question2: "", question3: "", question4: "" };
+  state = { question1: '', question2: '', question3: '', question4: '' };
 
   handleChange = event => {
     const el = event.currentTarget;
@@ -35,7 +35,7 @@ export default class Quiz extends React.Component {
       this.state.question3 !== falseValue ||
       this.state.question4 !== trueValue
     ) {
-      alert("Incorrect! Read the instructions, and please try again.");
+      alert('Incorrect! Read the instructions, and please try again.');
     } else {
       this.props.onNext();
     }
@@ -50,9 +50,7 @@ export default class Quiz extends React.Component {
           <h1> Quiz </h1>
           <form onSubmit={this.handleSubmit}>
             <div className="question-group">
-              <label>
-                I will have unlimited time to submit my answer in each round:
-              </label>
+              <label>I will have unlimited time to submit my answer in each round:</label>
               <div>
                 <Radio
                   selected={question1}
@@ -71,10 +69,7 @@ export default class Quiz extends React.Component {
               </div>
             </div>
             <div className="question-group">
-              <label>
-                It is better to finish on time even if it is only a random
-                solution:
-              </label>
+              <label>It is better to finish on time even if it is only a random solution:</label>
               <div>
                 <Radio
                   selected={question2}
@@ -113,8 +108,7 @@ export default class Quiz extends React.Component {
             </div>
             <div className="question-group">
               <label>
-                The sum of the points between the circles I choose is my total
-                score for the round:
+                The sum of the points between the circles I choose is my total score for the round:
               </label>
               <div>
                 <Radio

@@ -1,6 +1,6 @@
-import { Solutions } from "./solution";
+import { Solutions } from './solution';
 
-export const Chains = new Mongo.Collection("chains");
+export const Chains = new Mongo.Collection('chains');
 
 /*
  * Chain Schema
@@ -27,7 +27,7 @@ const create = chain => {
     ...chain,
     lockedByPlayerId: null,
     numberOfValidSolutions: 0,
-    createdAt: new Date()
+    createdAt: new Date(),
   });
 };
 
@@ -41,12 +41,8 @@ const deleteAll = () => {
  */
 const loadNextChainForPlayer = (playerId, batchId) => {
   const playerSolutions = Solutions.loadForPlayer(playerId);
-  const playerSoltutionChainIds = playerSolutions.map(
-    solution => solution.chainId
-  );
-  const playerSolutionEnvironmentIds = playerSolutions.map(
-    solution => solution.environmentId
-  );
+  const playerSoltutionChainIds = playerSolutions.map(solution => solution.chainId);
+  const playerSolutionEnvironmentIds = playerSolutions.map(solution => solution.environmentId);
   const chain = Chains.lockChainForPlayer(
     playerId,
     playerSoltutionChainIds,
@@ -66,10 +62,7 @@ const loadAll = experimentName => {
 
 const updateRandomNumbersForSorting = () => {
   return Chains.find({}).forEach(function(chain) {
-    Chains.update(
-      { _id: chain._id },
-      { $set: { randomNumberForSorting: Math.random() } }
-    );
+    Chains.update({ _id: chain._id }, { $set: { randomNumberForSorting: Math.random() } });
   });
 };
 
@@ -80,12 +73,12 @@ const updateRandomNumbersForSorting = () => {
 const loadRandomChain = batchId => {
   return Chains.findOne(
     {
-      batchId
+      batchId,
     },
     {
       sort: {
-        randomNumberForSorting: 1 // selects a random chain
-      }
+        randomNumberForSorting: 1, // selects a random chain
+      },
     }
   );
 };
@@ -107,15 +100,15 @@ const lockChainForPlayer = (
       _id: { $nin: playerSolutionChainIds },
       batchId,
       environmentId: { $nin: playerSolutionEnvironmentIds },
-      $expr: { $gt: ["$lengthOfChain", "$numberOfValidSolutions"] }, // the chain is not complete
-      lockedByPlayerId: null
+      $expr: { $gt: ['$lengthOfChain', '$numberOfValidSolutions'] }, // the chain is not complete
+      lockedByPlayerId: null,
     },
     sort: {
       // numberOfValidSolutions: 1,
-      randomNumberForSorting: 1 // selects a random chain
+      randomNumberForSorting: 1, // selects a random chain
     },
     update: { $set: { lockedByPlayerId: playerId } },
-    new: true
+    new: true,
   });
 };
 
@@ -125,17 +118,14 @@ const updateChainAfterRound = (chainId, playerId, numberOfValidSolutions) => {
     update: {
       $set: {
         numberOfValidSolutions,
-        lockedByPlayerId: null // release the lock
-      }
-    }
+        lockedByPlayerId: null, // release the lock
+      },
+    },
   });
 };
 
 const incrementNumberOfValidSolutions = chainId => {
-  return Chains.update(
-    { _id: chainId },
-    { $inc: { numberOfValidSolutions: 1 } }
-  );
+  return Chains.update({ _id: chainId }, { $inc: { numberOfValidSolutions: 1 } });
 };
 
 const loadById = _id => {

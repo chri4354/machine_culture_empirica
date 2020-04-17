@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Centered } from "meteor/empirica:core";
+import { Centered } from 'meteor/empirica:core';
 
 export default class InstructionStepFour extends React.Component {
   render() {
@@ -9,13 +9,11 @@ export default class InstructionStepFour extends React.Component {
       <Centered>
         <div className="instructions">
           <h1> Instructions 4 </h1>
-          <p>
-            You will see the remaining time and your total score on the left:
-          </p>
+          <p>You will see the remaining time and your total score on the left:</p>
 
           <p>
             <img
-              style={{ width: "500px", padding: "30px" }}
+              style={{ width: '500px', padding: '30px' }}
               src="images/instructions/timer-and-score.jpg"
             />
           </p>

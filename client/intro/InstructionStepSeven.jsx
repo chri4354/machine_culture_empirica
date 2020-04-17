@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Centered } from "meteor/empirica:core";
+import { Centered } from 'meteor/empirica:core';
 
 export default class InstructionStepFour extends React.Component {
   render() {
@@ -10,13 +10,13 @@ export default class InstructionStepFour extends React.Component {
         <div className="instructions">
           <h1> Instructions 7 </h1>
           <p>
-            You will now have two practice rounds to try it out! The actual game
-            will follow afterwards and has a total of <b>82 rounds</b>.
+            You will now have two practice rounds to try it out! The actual game will follow
+            afterwards and has a total of <b>82 rounds</b>.
           </p>
           <p>
             In addition to your base payment you will be compensated with
-            <b>1 pence per 100 points</b>. Most players got a bonus payment of
-            around 2 - 4 pounds in total. Let's see if you can beat the average!
+            <b>1 pence per 100 points</b>. Most players got a bonus payment of around 2 - 4 pounds
+            in total. Let's see if you can beat the average!
           </p>
           <p>
             <button type="button" onClick={onPrev} disabled={!hasPrev}>

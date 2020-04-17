@@ -1,21 +1,21 @@
-import Empirica from "meteor/empirica:core";
-import { render } from "react-dom";
+import Empirica from 'meteor/empirica:core';
+import { render } from 'react-dom';
 
-import ExitSurvey from "./exit/ExitSurvey";
-import ExitSurveyShort from "./exit/ExitSurveyShort";
-import Thanks from "./exit/Thanks";
-import About from "./game/About";
-import Round from "./game/Round";
-import Consent from "./intro/Consent";
-import InstructionShort from "./intro/InstructionShort";
-import InstructionStepOne from "./intro/InstructionStepOne";
-import InstructionStepTwo from "./intro/InstructionStepTwo";
-import InstructionStepThree from "./intro/InstructionStepThree";
-import InstructionStepFour from "./intro/InstructionStepFour";
-import InstructionStepFive from "./intro/InstructionStepFive";
-import InstructionStepSix from "./intro/InstructionStepSix";
-import InstructionStepSeven from "./intro/InstructionStepSeven";
-import Quiz from "./intro/Quiz";
+import ExitSurvey from './exit/ExitSurvey';
+import ExitSurveyShort from './exit/ExitSurveyShort';
+import Thanks from './exit/Thanks';
+import About from './game/About';
+import Round from './game/Round';
+import Consent from './intro/Consent';
+import InstructionShort from './intro/InstructionShort';
+import InstructionStepOne from './intro/InstructionStepOne';
+import InstructionStepTwo from './intro/InstructionStepTwo';
+import InstructionStepThree from './intro/InstructionStepThree';
+import InstructionStepFour from './intro/InstructionStepFour';
+import InstructionStepFive from './intro/InstructionStepFive';
+import InstructionStepSix from './intro/InstructionStepSix';
+import InstructionStepSeven from './intro/InstructionStepSeven';
+import Quiz from './intro/Quiz';
 
 // Set the About Component you want to use for the About dialog (optional).
 Empirica.about(About);
@@ -34,7 +34,7 @@ Empirica.introSteps(game => {
       InstructionStepFour,
       InstructionStepFive,
       InstructionStepSix,
-      InstructionStepSeven
+      InstructionStepSeven,
     ];
     steps.push(Quiz);
     return steps;
@@ -67,5 +67,5 @@ Empirica.exitSteps((game, player) => {
 // Empirica.introSteps(), ...).
 // It is required and usually does not need changing.
 Meteor.startup(() => {
-  render(Empirica.routes(), document.getElementById("app"));
+  render(Empirica.routes(), document.getElementById('app'));
 });

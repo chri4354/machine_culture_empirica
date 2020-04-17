@@ -15,9 +15,7 @@ export const isSolutionValid = (actions, requiredSolutionLength) => {
 };
 
 export const findAction = (sourceId, targetId, actions) => {
-  return actions.find(
-    action => action.sourceId === sourceId && action.targetId === targetId
-  );
+  return actions.find(action => action.sourceId === sourceId && action.targetId === targetId);
 };
 
 export const isPlayerBot = player => {

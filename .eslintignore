@@ -1,0 +1,5 @@
+.meteor/
+.vscode/
+deploy/
+node_modules/
+packages/

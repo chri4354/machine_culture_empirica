@@ -1,7 +1,5 @@
-import React from "react";
+import React from 'react';
 
-export default class About extends React.Component {
-  render() {
-    return <div>Here be the presentation of the experiement(ers).</div>;
-  }
-}
+const About = () => <div>Here be the presentation of the experiement(ers).</div>;
+
+export default About;

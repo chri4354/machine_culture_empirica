@@ -1,13 +1,13 @@
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 export const fetchMachineSolution = async data => {
   return axios({
-    method: "POST",
+    method: 'POST',
     headers: {
-      "content-type": "application/json"
+      'content-type': 'application/json',
     },
     data: { data, requestId: uuidv4() },
-    url: Meteor.settings.machineBackendUrl
+    url: Meteor.settings.machineBackendUrl,
   }).then(res => res.data.data);
 };

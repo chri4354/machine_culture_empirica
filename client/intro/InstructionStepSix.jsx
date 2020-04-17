@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Centered } from "meteor/empirica:core";
+import { Centered } from 'meteor/empirica:core';
 
 export default class InstructionStepFour extends React.Component {
   render() {
@@ -11,8 +11,8 @@ export default class InstructionStepFour extends React.Component {
           <h1> Instructions 6 </h1>
           <p>Each round will last 35 seconds and will contain two phases.</p>
           <p>
-            In the first phase you can <b>watch</b> the path of the <b>previous player</b> and the number of points they scored. You can 
-            also use this phase to plan your own path.
+            In the first phase you can <b>watch</b> the path of the <b>previous player</b> and the
+            number of points they scored. You can also use this phase to plan your own path.
           </p>
           <p>
             In the second phase, you can <b>play yourself</b>.

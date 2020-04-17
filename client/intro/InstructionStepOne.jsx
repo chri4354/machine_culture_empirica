@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Centered } from "meteor/empirica:core";
+import { Centered } from 'meteor/empirica:core';
 
 export default class InstructionStepOne extends React.Component {
   render() {
@@ -13,8 +13,8 @@ export default class InstructionStepOne extends React.Component {
           <p>Hi!</p>
           <p>Thank you for participating in our experiment.</p>
           <p>
-            On the following pages, you will see the instructions. Please make
-            sure you <b>read them carefully</b>.
+            On the following pages, you will see the instructions. Please make sure you{' '}
+            <b>read them carefully</b>.
           </p>
           <p>Good luck!</p>
           <p>

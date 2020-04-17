@@ -1,18 +1,18 @@
-import React from "react";
+import React from 'react';
 
-import { Centered } from "meteor/empirica:core";
+import { Centered } from 'meteor/empirica:core';
 
 export default class ExitSurvey extends React.Component {
-  static stepName = "ExitSurvey";
+  static stepName = 'ExitSurvey';
   state = {
-    question1: "",
-    question2: "",
-    question3: "",
-    question4: "",
-    question5: "",
-    question6: "",
-    question7: "",
-    question8: ""
+    question1: '',
+    question2: '',
+    question3: '',
+    question4: '',
+    question5: '',
+    question6: '',
+    question7: '',
+    question8: '',
   };
 
   handleChange = event => {
@@ -35,7 +35,7 @@ export default class ExitSurvey extends React.Component {
       question5,
       question6,
       question7,
-      question8
+      question8,
     } = this.state;
 
     return (
@@ -44,9 +44,7 @@ export default class ExitSurvey extends React.Component {
           <h1> Exit Survey </h1>
           <p>Please help us to improve the study.</p>
           <form onSubmit={this.handleSubmit}>
-            <label htmlFor="question1">
-              Did you notice any irregularities in the interface?
-            </label>
+            <label htmlFor="question1">Did you notice any irregularities in the interface?</label>
             <div>
               <textarea
                 dir="auto"
@@ -58,8 +56,7 @@ export default class ExitSurvey extends React.Component {
             </div>
 
             <label htmlFor="question2">
-              Could you make use of the solution provided by the previous
-              player?
+              Could you make use of the solution provided by the previous player?
             </label>
             <div>
               <textarea
@@ -72,8 +69,7 @@ export default class ExitSurvey extends React.Component {
             </div>
 
             <label htmlFor="question3">
-              Please rate the difficulty of the task from 1 (very easy) to 10
-              (very hard).
+              Please rate the difficulty of the task from 1 (very easy) to 10 (very hard).
             </label>
             <div>
               <textarea

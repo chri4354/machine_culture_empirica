@@ -312,23 +312,21 @@ class TaskStimulus extends React.Component {
           </>
         )}
         {((this.isPlanStage() && isDisplayNetworkForPlanningStage) || this.isResponseStage()) && (
-          <>
-            <Network
-              nodes={nodes}
-              version={version}
-              planningAnimationTargetNodeId={planningAnimationTargetNodeId}
-              animationLink={animationLink}
-              animationTarget={animationTarget}
-              animationSource={animationSource}
-              activeNodeId={activeNodeId}
-              isDisabled={this.isPlanStage()}
-              startingNodeId={startingNodeId}
-              invalidClickNodeId={invalidClickNodeId}
-              numberOfActionsTaken={numberOfActionsTaken}
-              onNodeClick={targetId => this.onNodeClick(targetId)}
-              actions={actions}
-            />
-          </>
+          <Network
+            nodes={nodes}
+            version={version}
+            planningAnimationTargetNodeId={planningAnimationTargetNodeId}
+            animationLink={animationLink}
+            animationTarget={animationTarget}
+            animationSource={animationSource}
+            activeNodeId={activeNodeId}
+            isDisabled={this.isPlanStage()}
+            startingNodeId={startingNodeId}
+            invalidClickNodeId={invalidClickNodeId}
+            numberOfActionsTaken={numberOfActionsTaken}
+            onNodeClick={targetId => this.onNodeClick(targetId)}
+            actions={actions}
+          />
         )}
       </div>
     );

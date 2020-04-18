@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import Empirica from 'meteor/empirica:core';
 import { render } from 'react-dom';
 
@@ -26,19 +27,18 @@ Empirica.consent(Consent);
 Empirica.introSteps(game => {
   if (game.treatment.debug) {
     return [InstructionShort];
-  } else {
-    const steps = [
-      InstructionStepOne,
-      InstructionStepTwo,
-      InstructionStepThree,
-      InstructionStepFour,
-      InstructionStepFive,
-      InstructionStepSix,
-      InstructionStepSeven,
-    ];
-    steps.push(Quiz);
-    return steps;
   }
+  const steps = [
+    InstructionStepOne,
+    InstructionStepTwo,
+    InstructionStepThree,
+    InstructionStepFour,
+    InstructionStepFive,
+    InstructionStepSix,
+    InstructionStepSeven,
+  ];
+  steps.push(Quiz);
+  return steps;
 });
 
 // The Round component containing the game UI logic.
@@ -54,12 +54,11 @@ Empirica.round(Round);
 // user if they come back to the website.
 // If you don't return anything, or do not define this function, a default
 // exit screen will be shown.
-Empirica.exitSteps((game, player) => {
+Empirica.exitSteps(game => {
   if (game.treatment.debug) {
     return [ExitSurveyShort, Thanks];
-  } else {
-    return [ExitSurvey, Thanks];
   }
+  return [ExitSurvey, Thanks];
 });
 
 // Start the app render tree.

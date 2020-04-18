@@ -1,28 +1,33 @@
+/* eslint-disable react/sort-comp */
+/* eslint-disable no-await-in-loop */
 import React from 'react';
-import _ from 'lodash';
 
 import Network from '../components/Network2';
 import { calculateScore, findAction, isSolutionValid } from '../../imports/utils';
 
 class TaskStimulus extends React.Component {
-  state = {
-    planningAnimationTargetNodeId: null,
-    animationTarget: false,
-    animationLink: false,
-    animationSource: true,
-    numberOfActionsTaken: 0,
-  };
+  planningDelayBeforeAnimationMs = 1.5 * 1000;
 
-  getPlanningDelayBeforeAnimationMs() {
-    return 1.5 * 1000;
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      planningAnimationTargetNodeId: null,
+      animationTarget: false,
+      animationLink: false,
+      animationSource: true,
+      numberOfActionsTaken: 0,
+    };
   }
 
   getStageName() {
-    return this.props.stage.name;
+    const { stage } = this.props;
+    return stage.name;
   }
 
   getStageDisplayName() {
-    return this.props.stage.displayName;
+    const { stage } = this.props;
+    return stage.displayName;
   }
 
   isPlanStage() {
@@ -30,7 +35,8 @@ class TaskStimulus extends React.Component {
   }
 
   isPractice() {
-    return this.props.round.get('isPractice');
+    const { round } = this.props;
+    return round.get('isPractice');
   }
 
   isReviewStage() {
@@ -42,7 +48,8 @@ class TaskStimulus extends React.Component {
   }
 
   getChain() {
-    return this.props.player.round.get('chain');
+    const { player } = this.props;
+    return player.round.get('chain');
   }
 
   getPreviousSolutionAnimationDurationInSeconds() {
@@ -50,11 +57,13 @@ class TaskStimulus extends React.Component {
   }
 
   getEnvironment() {
-    return this.props.player.round.get('environment');
+    const { player } = this.props;
+    return player.round.get('environment');
   }
 
   getPreviousSolutionInChain() {
-    return this.props.player.round.get('previousSolutionInChain');
+    const { player } = this.props;
+    return player.round.get('previousSolutionInChain');
   }
 
   getPreviousSolutionInChainScore() {
@@ -86,27 +95,28 @@ class TaskStimulus extends React.Component {
       }
 
       const that = this;
-      await new Promise(function(resolve) {
+      await new Promise(resolve => {
         setTimeout(() => {
           that.setState({
             isDisplayNetworkForPlanningStage: true,
           });
           resolve();
-        }, that.getPlanningDelayBeforeAnimationMs());
+        }, that.planningDelayBeforeAnimationMs);
       });
-      await new Promise(function(resolve) {
+      await new Promise(resolve => {
         setTimeout(() => {
           resolve();
         }, 1 * 1000);
       });
 
+      // eslint-disable-next-line no-restricted-syntax
       for (const action of actions) {
         const durationOfIterationMs =
           (this.getPreviousSolutionAnimationDurationInSeconds() / actions.length) * 1000;
         const numberOfAnimationsStepsPerIteration = 4;
         const durationOfAnimationStepMs =
           durationOfIterationMs / numberOfAnimationsStepsPerIteration;
-        await new Promise(function(resolve) {
+        await new Promise(resolve => {
           setTimeout(() => {
             that.setState({
               activeNodeId: action.sourceId,
@@ -118,7 +128,7 @@ class TaskStimulus extends React.Component {
             resolve();
           }, 0.1 * durationOfAnimationStepMs);
         });
-        await new Promise(function(resolve) {
+        await new Promise(resolve => {
           setTimeout(() => {
             that.setState({
               animationTarget: true,
@@ -126,7 +136,7 @@ class TaskStimulus extends React.Component {
             resolve();
           }, 0.1 * durationOfAnimationStepMs);
         });
-        await new Promise(function(resolve) {
+        await new Promise(resolve => {
           setTimeout(() => {
             that.setState({
               animationLink: true,
@@ -135,7 +145,7 @@ class TaskStimulus extends React.Component {
             resolve();
           }, 0.1 * durationOfAnimationStepMs);
         });
-        await new Promise(function(resolve) {
+        await new Promise(resolve => {
           setTimeout(() => {
             that.setState(prevState => ({
               animationLink: false,
@@ -150,7 +160,7 @@ class TaskStimulus extends React.Component {
         activeNodeId: null,
         planningAnimationTargetNodeId: null,
       });
-      await new Promise(function(resolve) {
+      await new Promise(resolve => {
         setTimeout(() => {
           that.setState({
             activeNodeId: startingNodeId,
@@ -166,6 +176,7 @@ class TaskStimulus extends React.Component {
   }
 
   updateSolution(actions, requiredSolutionLength) {
+    const { stage, remainingSeconds, player } = this.props;
     const {
       environmentId,
       experimentName,
@@ -185,26 +196,25 @@ class TaskStimulus extends React.Component {
       networkId,
       chainId: chain._id,
       previousSolutionId: previousSolution._id,
-      timeElapsedInSeconds: isValid
-        ? this.props.stage.durationInSeconds - this.props.remainingSeconds
-        : null,
+      timeElapsedInSeconds: isValid ? stage.durationInSeconds - remainingSeconds : null,
       totalReward: isValid ? calculateScore(actions) : missingSolutionPenalty,
     };
-    this.props.player.round.set('solution', solution);
+    player.round.set('solution', solution);
     return solution;
   }
 
   onNodeClick(targetId) {
+    const { numberOfActionsRemaining, activeNodeId } = this.state;
     const { player } = this.props;
     if (player.stage.submitted) {
       // prevents the user from double clicking on the final node and recording an extra action
       return;
     }
     const { actions, requiredSolutionLength } = this.getEnvironment();
-    if (!this.isResponseStage() || this.state.numberOfActionsRemaining === 0) {
+    if (!this.isResponseStage() || numberOfActionsRemaining === 0) {
       return;
     }
-    const action = findAction(this.state.activeNodeId, targetId, actions);
+    const action = findAction(activeNodeId, targetId, actions);
     if (!action) {
       this.setState({
         invalidClickNodeId: targetId,
@@ -234,6 +244,19 @@ class TaskStimulus extends React.Component {
   }
 
   render() {
+    const {
+      numberOfActionsRemaining,
+      roundScore,
+      lastScoreReceived,
+      isDisplayNetworkForPlanningStage,
+      planningAnimationTargetNodeId,
+      animationLink,
+      animationTarget,
+      animationSource,
+      activeNodeId,
+      invalidClickNodeId,
+      numberOfActionsTaken,
+    } = this.state;
     const { player } = this.props;
 
     const playerSolution = player.round.get('solution');
@@ -267,15 +290,15 @@ class TaskStimulus extends React.Component {
             <div>
               <div className="round-stat">
                 <h4>Number of steps remaining: </h4>
-                <span className="round-stat-value">{this.state.numberOfActionsRemaining}</span>
+                <span className="round-stat-value">{numberOfActionsRemaining}</span>
               </div>
               <div className="round-stat">
                 <h4>Round Score: </h4>
-                <span className="round-stat-value">{this.state.roundScore}</span>
+                <span className="round-stat-value">{roundScore}</span>
               </div>
               <div className="round-stat">
                 <h4>Last Score Received: </h4>
-                <span className="round-stat-value">{this.state.lastScoreReceived || '--'}</span>
+                <span className="round-stat-value">{lastScoreReceived || '--'}</span>
               </div>
             </div>
           </>
@@ -288,21 +311,20 @@ class TaskStimulus extends React.Component {
             </h2>
           </>
         )}
-        {((this.isPlanStage() && this.state.isDisplayNetworkForPlanningStage) ||
-          this.isResponseStage()) && (
+        {((this.isPlanStage() && isDisplayNetworkForPlanningStage) || this.isResponseStage()) && (
           <>
             <Network
               nodes={nodes}
               version={version}
-              planningAnimationTargetNodeId={this.state.planningAnimationTargetNodeId}
-              animationLink={this.state.animationLink}
-              animationTarget={this.state.animationTarget}
-              animationSource={this.state.animationSource}
-              activeNodeId={this.state.activeNodeId}
+              planningAnimationTargetNodeId={planningAnimationTargetNodeId}
+              animationLink={animationLink}
+              animationTarget={animationTarget}
+              animationSource={animationSource}
+              activeNodeId={activeNodeId}
               isDisabled={this.isPlanStage()}
               startingNodeId={startingNodeId}
-              invalidClickNodeId={this.state.invalidClickNodeId}
-              numberOfActionsTaken={this.state.numberOfActionsTaken}
+              invalidClickNodeId={invalidClickNodeId}
+              numberOfActionsTaken={numberOfActionsTaken}
               onNodeClick={targetId => this.onNodeClick(targetId)}
               actions={actions}
             />

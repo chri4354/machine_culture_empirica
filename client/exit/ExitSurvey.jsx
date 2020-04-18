@@ -1,19 +1,25 @@
 import React from 'react';
 
+// eslint-disable-next-line import/no-unresolved
 import { Centered } from 'meteor/empirica:core';
 
 export default class ExitSurvey extends React.Component {
   static stepName = 'ExitSurvey';
-  state = {
-    question1: '',
-    question2: '',
-    question3: '',
-    question4: '',
-    question5: '',
-    question6: '',
-    question7: '',
-    question8: '',
-  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      question1: '',
+      question2: '',
+      question3: '',
+      question4: '',
+      question5: '',
+      question6: '',
+      question7: '',
+      question8: '',
+    };
+  }
 
   handleChange = event => {
     const el = event.currentTarget;
@@ -21,12 +27,12 @@ export default class ExitSurvey extends React.Component {
   };
 
   handleSubmit = event => {
+    const { onSubmit } = this.props;
     event.preventDefault();
-    this.props.onSubmit(this.state);
+    onSubmit(this.state);
   };
 
   render() {
-    const { player } = this.props;
     const {
       question1,
       question2,

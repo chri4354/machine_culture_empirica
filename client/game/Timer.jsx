@@ -1,9 +1,11 @@
+// eslint-disable-next-line import/no-unresolved
 import { StageTimeWrapper } from 'meteor/empirica:core';
 import React from 'react';
 
-class timer extends React.Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.remainingSeconds != this.props.remainingSeconds;
+class Timer extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    const { remainingSeconds } = this.props;
+    return nextProps.remainingSeconds !== remainingSeconds;
   }
 
   render() {
@@ -25,4 +27,4 @@ class timer extends React.Component {
   }
 }
 
-export default Timer = StageTimeWrapper(timer);
+export default StageTimeWrapper(Timer);

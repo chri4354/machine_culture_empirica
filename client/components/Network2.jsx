@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import _ from 'lodash';
 import shortid from 'shortid';
@@ -14,32 +15,18 @@ const Node = ({
   isInvalidClick,
   isStartingNode,
 }) => {
+  const getCircleClass = () => {
+    if (isStartingNode) return 'starting';
+    if (isActive) return 'active';
+    if (isDisabled) return 'disabled';
+    if (isInvalidClick) return 'invalid-click';
+    return '';
+  };
+
   return (
-    <g className={'node'} style={{ cursor: !isDisabled && 'pointer' }} onClick={() => onClick(id)}>
-      <circle
-        cx={x}
-        cy={y}
-        r={r}
-        className={
-          isStartingNode
-            ? 'starting'
-            : isActive
-            ? 'active'
-            : isDisabled
-            ? 'disabled'
-            : isInvalidClick
-            ? 'invalid-click'
-            : ''
-        }
-        key={'circle'}
-      />
-      <text
-        x={x}
-        y={y + r * 0.3}
-        textAnchor="middle"
-        style={{ fontSize: '30px' }}
-        key={'state-name'}
-      >
+    <g className="node" style={{ cursor: !isDisabled && 'pointer' }} onClick={() => onClick(id)}>
+      <circle cx={x} cy={y} r={r} className={getCircleClass()} key="circle" />
+      <text x={x} y={y + r * 0.3} textAnchor="middle" style={{ fontSize: '30px' }} key="state-name">
         {text}
       </text>
     </g>
@@ -50,7 +37,10 @@ const Link = ({ isThickerLink, source, target, text, colorClass, id, size }) => 
   const dx = target.x - source.x;
   const dy = target.y - source.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
-  let markerEnd, markerStart, textx, d;
+  let markerEnd;
+  let markerStart;
+  let textx;
+  let d;
   const dr = dist * 2.5;
 
   // drawing direction must be adjusted, to keep text upright
@@ -64,27 +54,23 @@ const Link = ({ isThickerLink, source, target, text, colorClass, id, size }) => 
     textx = dist * 0.9 - 80;
   }
 
-  if (isThickerLink) {
-    size *= 2.5;
-  }
-
   return (
     <g className={colorClass}>
       <path
         id={id}
         className="link colored-stroke"
-        style={{ strokeWidth: `${size}px` }}
+        style={{ strokeWidth: `${isThickerLink ? size * 2.5 : size}px` }}
         markerEnd={markerEnd}
         markerStart={markerStart}
         markerUnits="userSpaceOnUse"
         d={d}
-      ></path>
-      <text id={'link-text-bg-' + id} className="link-text link-text-bg" x={textx} dy={5}>
+      />
+      <text id={`link-text-bg-${id}`} className="link-text link-text-bg" x={textx} dy={5}>
         <textPath alignmentBaseline="text-bottom" xlinkHref={`#${id}`}>
           {text}
         </textPath>
       </text>
-      <text id={'link-text-' + id} className="link-text colored-fill" x={textx} dy={5}>
+      <text id={`link-text-${id}`} className="link-text colored-fill" x={textx} dy={5}>
         <textPath alignmentBaseline="text-bottom" xlinkHref={`#${id}`}>
           {text}
         </textPath>
@@ -117,7 +103,7 @@ const LinkMarker = ({ size }) => (
     {[
       ...colorClasses.map((name, idx) => (
         <Marker
-          key={'marker-' + idx}
+          key={`marker-${idx}`}
           orient="auto"
           prefix="marker-arrow-end"
           name={name}
@@ -126,7 +112,7 @@ const LinkMarker = ({ size }) => (
       )),
       ...colorClasses.map((name, idx) => (
         <Marker
-          key={'marker-reverse' + idx}
+          key={`marker-reverse${idx}`}
           orient="auto-start-reverse"
           prefix="marker-arrow-start"
           name={name}
@@ -155,7 +141,7 @@ const Links = ({ actions, activeNodeId, planningAnimationTargetNodeId, nodeSize 
             id={id}
             source={source}
             target={target}
-            key={'link-' + idx}
+            key={`link-${idx}`}
           />
         );
       })}
@@ -163,7 +149,7 @@ const Links = ({ actions, activeNodeId, planningAnimationTargetNodeId, nodeSize 
     {/* to bring the link describtion (rewards) to the front */}
     <g>
       {actions.map(({ id, colorClass }, idx) => (
-        <g className={colorClass} key={'use-text-' + idx}>
+        <g className={colorClass} key={`use-text-${idx}`}>
           <use className="link-text link-text-bg" xlinkHref={`#link-text-bg-${id}`} />
           <use className="link-text colored-fill" xlinkHref={`#link-text-${id}`} />
         </g>
@@ -209,69 +195,66 @@ const parseActions = (actions, showRewards, linkSize, nodesById) =>
 //     }))
 //     .value();
 
-class Network extends React.Component {
-  render() {
-    const {
-      activeNodeId,
-      actions,
-      planningAnimationTargetNodeId,
-      animationLink,
-      animationTarget,
-      animationSource,
-      invalidClickNodeId,
-      nodes,
-      numberOfActionsTaken,
-      onNodeClick,
-      version,
-      solution,
-      startingNodeId,
-    } = this.props;
-    const size = { width: 600, height: 600 };
-    const nodeSize = size.width / 15;
-    const parsedNodes = parseNodes(nodes, size);
-    const nodesById = _.keyBy(parsedNodes, 'id');
-    const parsedActions = parseActions(actions, true, 3, nodesById);
-    // const parsedSolution = parseSolutions(solution, nodesById);
+const Network = ({
+  activeNodeId,
+  actions,
+  planningAnimationTargetNodeId,
+  animationLink,
+  animationTarget,
+  animationSource,
+  invalidClickNodeId,
+  isDisabled,
+  nodes,
+  numberOfActionsTaken,
+  onNodeClick,
+  version,
+  startingNodeId,
+}) => {
+  const size = { width: 600, height: 600 };
+  const nodeSize = size.width / 15;
+  const parsedNodes = parseNodes(nodes, size);
+  const nodesById = _.keyBy(parsedNodes, 'id');
+  const parsedActions = parseActions(actions, true, 3, nodesById);
+  // const parsedSolution = parseSolutions(solution, nodesById);
 
-    return (
-      <svg className={`network-game ${version}`} width={size.height} height={size.height}>
-        <LinkMarker size={size} />
-        <Links
-          activeNodeId={activeNodeId}
-          planningAnimationTargetNodeId={animationLink ? planningAnimationTargetNodeId : null}
-          actions={parsedActions}
-          nodeSize={nodeSize}
-        />
-        {/* <Links actions={parsedSolution} nodeSize={nodeSize} /> */}
-        <g>
-          {parsedNodes.map(({ x, y, displayName, id }, idx) => (
-            <Node
-              x={x}
-              y={y}
-              r={nodeSize}
-              isDisabled={this.props.isDisabled}
-              isStartingNode={
-                planningAnimationTargetNodeId == null
-                  ? numberOfActionsTaken === 0 && id === activeNodeId && id === startingNodeId
-                  : false
-              }
-              isInvalidClick={id === invalidClickNodeId}
-              isActive={
-                planningAnimationTargetNodeId == null
-                  ? id === activeNodeId
-                  : ((id === activeNodeId) & animationSource) |
-                    ((id === planningAnimationTargetNodeId) & animationTarget)
-              }
-              text={displayName}
-              onClick={onNodeClick}
-              id={id}
-              key={'point-' + idx}
-            />
-          ))}
-        </g>
-      </svg>
-    );
-  }
-}
+  return (
+    <svg className={`network-game ${version}`} width={size.height} height={size.height}>
+      <LinkMarker size={size} />
+      <Links
+        activeNodeId={activeNodeId}
+        planningAnimationTargetNodeId={animationLink ? planningAnimationTargetNodeId : null}
+        actions={parsedActions}
+        nodeSize={nodeSize}
+      />
+      {/* <Links actions={parsedSolution} nodeSize={nodeSize} /> */}
+      <g>
+        {parsedNodes.map(({ x, y, displayName, id }, idx) => (
+          <Node
+            x={x}
+            y={y}
+            r={nodeSize}
+            isDisabled={isDisabled}
+            isStartingNode={
+              planningAnimationTargetNodeId == null
+                ? numberOfActionsTaken === 0 && id === activeNodeId && id === startingNodeId
+                : false
+            }
+            isInvalidClick={id === invalidClickNodeId}
+            isActive={
+              planningAnimationTargetNodeId == null
+                ? id === activeNodeId
+                : (id === activeNodeId && animationSource) ||
+                  (id === planningAnimationTargetNodeId && animationTarget)
+            }
+            text={displayName}
+            onClick={onNodeClick}
+            id={id}
+            key={`point-${idx}`}
+          />
+        ))}
+      </g>
+    </svg>
+  );
+};
 
 export default Network;

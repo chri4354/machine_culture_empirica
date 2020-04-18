@@ -4,13 +4,16 @@
   "parser": "babel-eslint",
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "meteor": true
   },
   "rules": {
     "prettier/prettier": ["error"],
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "react/no-danger": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/label-has-associated-control": "off"
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 
+// eslint-disable-next-line import/no-unresolved
 import { Centered } from 'meteor/empirica:core';
 
 const Radio = ({ selected, name, value, label, onChange }) => (
@@ -19,7 +20,11 @@ const trueValue = 'true';
 const falseValue = 'false';
 
 export default class Quiz extends React.Component {
-  state = { question1: '', question2: '', question3: '', question4: '' };
+  constructor(props) {
+    super(props);
+
+    this.state = { question1: '', question2: '', question3: '', question4: '' };
+  }
 
   handleChange = event => {
     const el = event.currentTarget;
@@ -27,22 +32,24 @@ export default class Quiz extends React.Component {
   };
 
   handleSubmit = event => {
-    console.log(this.state);
+    const { onNext } = this.props;
+    const { question1, question2, question3, question4 } = this.state;
     event.preventDefault();
     if (
-      this.state.question1 !== falseValue ||
-      this.state.question2 !== trueValue ||
-      this.state.question3 !== falseValue ||
-      this.state.question4 !== trueValue
+      question1 !== falseValue ||
+      question2 !== trueValue ||
+      question3 !== falseValue ||
+      question4 !== trueValue
     ) {
+      // eslint-disable-next-line no-alert
       alert('Incorrect! Read the instructions, and please try again.');
     } else {
-      this.props.onNext();
+      onNext();
     }
   };
 
   render() {
-    const { hasPrev, hasNext, onNext, onPrev } = this.props;
+    const { hasPrev, onPrev } = this.props;
     const { question1, question2, question3, question4 } = this.state;
     return (
       <Centered>

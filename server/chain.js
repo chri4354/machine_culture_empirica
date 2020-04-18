@@ -61,7 +61,7 @@ const loadAll = experimentName => {
 };
 
 const updateRandomNumbersForSorting = () => {
-  return Chains.find({}).forEach(function(chain) {
+  return Chains.find({}).forEach(chain => {
     Chains.update({ _id: chain._id }, { $set: { randomNumberForSorting: Math.random() } });
   });
 };

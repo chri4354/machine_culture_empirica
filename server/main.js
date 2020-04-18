@@ -1,6 +1,6 @@
 import Empirica from 'meteor/empirica:core';
 
-import './callbacks.js';
+import './callbacks';
 import { ExperimentEnvironments } from './experiment-environments';
 import { Solutions } from './solution';
 import experimentEnvironmentsJson from './experimentEnvironments.json';
@@ -33,8 +33,8 @@ function initializeChains(
   );
 
   const experimentEnvironments = ExperimentEnvironments.loadAll(experimentName);
-  for (const experimentEnvironment of experimentEnvironments) {
-    [...Array(numberOfChainsPerEnvironment).keys()].map(i => {
+  experimentEnvironments.forEach(experimentEnvironment => {
+    [...Array(numberOfChainsPerEnvironment).keys()].forEach(() => {
       const chain = {
         batchId,
         experimentName,
@@ -50,40 +50,11 @@ function initializeChains(
       };
       Chains.create(chain);
     });
-  }
+  });
 }
 
-const printDatabaseStatistics = () => {
-  const numberOfExperimentEnvironments = ExperimentEnvironments.count();
-  const numberOfSolutions = Solutions.count();
-  const numberOfChains = Chains.count();
-
-  console.log(
-    'Current Database stats: ',
-    JSON.stringify({
-      numberOfExperimentEnvironments,
-      numberOfSolutions,
-      numberOfChains,
-    })
-  );
-};
-
-const resetDatabase = () => {
-  console.log('resetting database...');
-  ExperimentEnvironments.deleteAll();
-  Solutions.deleteAll();
-  Chains.deleteAll();
-};
-
-const initializeDatabase = () => {
-  console.log('initializing the experimentEnvironments...');
-  for (const experimentEnvironments of experimentEnvironmentsJson) {
-    ExperimentEnvironments.create(experimentEnvironments);
-  }
-};
-
 Empirica.batchInit((batch, treatments) => {
-  for (const treatment of treatments) {
+  treatments.forEach(treatment => {
     initializeChains(
       treatment.experimentName,
       /**
@@ -99,10 +70,10 @@ Empirica.batchInit((batch, treatments) => {
       treatment.machineSolutionModelName,
       treatment.previousSolutionAnimationDurationInSeconds
     );
-  }
+  });
 });
 
-Empirica.gameInit((game, treatment, players) => {
+Empirica.gameInit((game, treatment) => {
   console.log(`Game Init: treatments: ${JSON.stringify(treatment)}`);
 
   const {
@@ -167,7 +138,38 @@ Empirica.gameInit((game, treatment, players) => {
   });
 });
 
+// eslint-disable-next-line no-unused-vars
+const resetDatabase = () => {
+  console.log('resetting database...');
+  ExperimentEnvironments.deleteAll();
+  Solutions.deleteAll();
+  Chains.deleteAll();
+};
+
+// eslint-disable-next-line no-unused-vars
+const initializeDatabase = () => {
+  console.log('initializing the experimentEnvironments...');
+  experimentEnvironmentsJson.forEach(experimentEnvironments => {
+    ExperimentEnvironments.create(experimentEnvironments);
+  });
+};
+
+// eslint-disable-next-line no-unused-vars
+const printDatabaseStatistics = () => {
+  const numberOfExperimentEnvironments = ExperimentEnvironments.count();
+  const numberOfSolutions = Solutions.count();
+  const numberOfChains = Chains.count();
+
+  console.log(
+    'Current Database stats: ',
+    JSON.stringify({
+      numberOfExperimentEnvironments,
+      numberOfSolutions,
+      numberOfChains,
+    })
+  );
+};
+
 // resetDatabase();
-// printDatabaseStatistics();
 // initializeDatabase();
-printDatabaseStatistics();
+// printDatabaseStatistics();

@@ -14,6 +14,9 @@
     "react/no-danger": "off",
     "no-underscore-dangle": "off",
     "jsx-a11y/anchor-is-valid": "off",
-    "jsx-a11y/label-has-associated-control": "off"
+    "jsx-a11y/label-has-associated-control": "off",
+    "import/no-unresolved": [2, { "ignore": ["meteor/empirica:"] }],
+    "no-console": "off",
+    "import/prefer-default-export": "off"
   }
 }

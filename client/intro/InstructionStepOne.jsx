@@ -1,6 +1,5 @@
 import React from 'react';
 
-// eslint-disable-next-line import/no-unresolved
 import { Centered } from 'meteor/empirica:core';
 
 const InstructionStepOne = ({ hasPrev, hasNext, onNext, onPrev }) => (

@@ -1,6 +1,5 @@
 import React from 'react';
 
-// eslint-disable-next-line import/no-unresolved
 import { Centered } from 'meteor/empirica:core';
 
 export default class ExitSurvey extends React.Component {

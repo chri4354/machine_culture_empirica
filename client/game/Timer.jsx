@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 import { StageTimeWrapper } from 'meteor/empirica:core';
 import React from 'react';
 

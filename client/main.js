@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 import Empirica from 'meteor/empirica:core';
 import { render } from 'react-dom';
 

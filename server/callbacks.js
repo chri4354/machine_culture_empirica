@@ -7,7 +7,7 @@ import * as machineSolutionService from './machine-solution-service';
 import { createTreatmentForSolution, pickChainFactorsFromChain } from './utils';
 
 Meteor.methods({
-  fetchMachineSolution: function(params) {
+  fetchMachineSolution(params) {
     return machineSolutionService.fetchMachineSolution(params);
   },
 });
@@ -45,7 +45,7 @@ Empirica.onRoundStart((game, round, players) => {
   const experimentName = isPractice ? 'practice' : game.get('experimentName');
   const { batchId } = game;
 
-  for (const player of players) {
+  players.forEach(player => {
     console.log(
       `Loading ExperimentEnvironments for playerId: ${player._id}, experimentName: ${experimentName}, batchId: ${batchId}`
     );
@@ -109,7 +109,7 @@ Empirica.onRoundStart((game, round, players) => {
     player.round.set('environment', environment);
     player.round.set('chain', chain);
     player.round.set('previousSolutionInChain', previousSolutionInChain || { actions: [] });
-  }
+  });
 });
 
 Empirica.onRoundEnd((game, round, players) => {
@@ -123,7 +123,7 @@ Empirica.onRoundEnd((game, round, players) => {
   }
 
   const { batchId } = game;
-  for (const player of players) {
+  players.forEach(player => {
     const environment = player.round.get('environment');
     if (!environment) {
       // For some reason we are sometimes missing the environment.
@@ -169,14 +169,14 @@ Empirica.onRoundEnd((game, round, players) => {
         experimentName,
         previousSolution._id
       );
-      numberOfValidSolutions++;
+      numberOfValidSolutions += numberOfValidSolutions;
     }
 
     // releasing the chain lock
     Chains.updateChainAfterRound(chain._id, player._id, numberOfValidSolutions);
-  }
+  });
 });
 
 // onGameEnd is triggered when the game ends.
 // It receives the same options as onGameStart.
-Empirica.onGameEnd((game, players) => {});
+Empirica.onGameEnd(() => {});

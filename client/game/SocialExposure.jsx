@@ -1,6 +1,5 @@
 import React from 'react';
 import { reject } from 'lodash';
-// eslint-disable-next-line import/no-unresolved
 import Slider from 'meteor/empirica:slider';
 
 const SocialExposure = ({ game, player }) => {

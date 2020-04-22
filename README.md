@@ -34,7 +34,7 @@ The objective of this application is to study cultural evolution, expecially whe
 machines and humans co-develop.
 We study the play of different games. Within the games different actions do have
 different rewards. The objective of the player is to maximise his total reward.
-Each game can have different settings, which in general are random generated. 
+Each game can have different settings, which in general are randomly generated. 
 A specific setting is called `environment`.   
 
 To mimic cultural evolution, we are running series of game rounds, where in each 
@@ -117,6 +117,12 @@ All data from empirica, as well as our custom extension are stored in a mongo da
 ##### Setup
 
 Copy `machine-culture-2.pem` into `~/.ssh`.
+
+Set permissions for the .ssh key.
+
+```
+chmod 600 ~/.ssh/machine-culture-2.pem
+```
 
 Add to `~/.ssh/config` the following lines:
 

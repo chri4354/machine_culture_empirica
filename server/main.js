@@ -1,10 +1,11 @@
 import Empirica from 'meteor/empirica:core';
+import { times } from 'lodash';
 
 import './callbacks';
-import { ExperimentEnvironments } from './experiment-environments';
 import { Solutions } from './solution';
-import experimentEnvironmentsJson from './experimentEnvironments.json';
-import { Chains } from './chain';
+import { Chains } from './chains/chain';
+import initializeChains from './chains/initializeChains';
+import logger from './logger';
 
 /**
  * Updates the chain.randomNumberForSorting value every 30 seconds
@@ -13,45 +14,10 @@ import { Chains } from './chain';
 setInterval(
   Meteor.bindEnvironment(() => {
     Chains.updateRandomNumbersForSorting();
+    logger.log({ level: 'debug', message: 'Randomizing Chain sort' });
   }),
   30 * 1000
 );
-
-function initializeChains(
-  experimentName,
-  lengthOfChain,
-  numberOfChainsPerEnvironment,
-  positionOfMachineSolution,
-  hasMachineSolution,
-  batchId,
-  startingSolutionModelName,
-  machineSolutionModelName,
-  previousSolutionAnimationDurationInSeconds
-) {
-  console.log(
-    `Initializing chains for experiment ${experimentName}, Number of chains per env: ${numberOfChainsPerEnvironment}`
-  );
-
-  const experimentEnvironments = ExperimentEnvironments.loadAll(experimentName);
-  experimentEnvironments.forEach(experimentEnvironment => {
-    [...Array(numberOfChainsPerEnvironment).keys()].forEach(() => {
-      const chain = {
-        batchId,
-        experimentName,
-        hasMachineSolution,
-        lengthOfChain,
-        startingSolutionModelName,
-        machineSolutionModelName,
-        previousSolutionAnimationDurationInSeconds,
-        randomNumberForSorting: Math.random(), // this value is updated every 30 seconds
-        experimentEnvironmentId: experimentEnvironment._id,
-        environmentId: experimentEnvironment.environmentId,
-        positionOfMachineSolution: hasMachineSolution ? positionOfMachineSolution : null,
-      };
-      Chains.create(chain);
-    });
-  });
-}
 
 Empirica.batchInit((batch, treatments) => {
   treatments.forEach(treatment => {
@@ -62,7 +28,8 @@ Empirica.batchInit((batch, treatments) => {
        * solution, which is fetched from an external API, has to be saved in the chain
        */
       treatment.lengthOfChain + 1,
-      treatment.numberOfChainsPerEnvironment,
+      treatment.numberOfSeeds,
+      treatment.numberOfChainsPerSeed,
       treatment.positionOfMachineSolution,
       treatment.chainsHaveMachineSolution,
       batch._id,
@@ -74,14 +41,18 @@ Empirica.batchInit((batch, treatments) => {
 });
 
 Empirica.gameInit((game, treatment) => {
-  console.log(`Game Init: treatments: ${JSON.stringify(treatment)}`);
+  logger.log({
+    level: 'info',
+    message: `Game Init: treatments: ${JSON.stringify(treatment)}`,
+  });
 
   const {
     debug,
     experimentName,
     lengthOfChain,
     numberOfRounds,
-    numberOfChainsPerEnvironment,
+    numberOfSeeds,
+    numberOfChainsPerSeed,
     planningStageDurationInSeconds,
     playerCount,
     responseStageDurationInSeconds,
@@ -99,7 +70,8 @@ Empirica.gameInit((game, treatment) => {
     debug,
     experimentName,
     lengthOfChain,
-    numberOfChainsPerEnvironment,
+    numberOfSeeds,
+    numberOfChainsPerSeed,
     numberOfRounds,
     planningStageDurationInSeconds,
     playerCount,
@@ -109,13 +81,13 @@ Empirica.gameInit((game, treatment) => {
 
   const numberOfPracticeRounds = 2;
 
-  _.times(numberOfRounds + numberOfPracticeRounds, index => {
+  times(numberOfRounds + numberOfPracticeRounds, index => {
     const round = game.addRound();
 
     const isPractice = index < numberOfPracticeRounds;
     round.set('isPractice', isPractice);
 
-    // The player can view the environment and plan their solution
+    // The player can view the map and plan their solution
     round.addStage({
       name: 'plan',
       displayName: 'Watch previous player',
@@ -140,36 +112,24 @@ Empirica.gameInit((game, treatment) => {
 
 // eslint-disable-next-line no-unused-vars
 const resetDatabase = () => {
-  console.log('resetting database...');
-  ExperimentEnvironments.deleteAll();
+  logger.log({
+    level: 'info',
+    message: 'resetting database...',
+  });
   Solutions.deleteAll();
   Chains.deleteAll();
 };
 
 // eslint-disable-next-line no-unused-vars
-const initializeDatabase = () => {
-  console.log('initializing the experimentEnvironments...');
-  experimentEnvironmentsJson.forEach(experimentEnvironments => {
-    ExperimentEnvironments.create(experimentEnvironments);
-  });
-};
-
-// eslint-disable-next-line no-unused-vars
 const printDatabaseStatistics = () => {
-  const numberOfExperimentEnvironments = ExperimentEnvironments.count();
   const numberOfSolutions = Solutions.count();
   const numberOfChains = Chains.count();
 
-  console.log(
-    'Current Database stats: ',
-    JSON.stringify({
-      numberOfExperimentEnvironments,
-      numberOfSolutions,
-      numberOfChains,
-    })
-  );
+  logger.log({
+    level: 'info',
+    message: `Current Database stats: ${JSON.stringify({ numberOfSolutions, numberOfChains })}`,
+  });
 };
 
 // resetDatabase();
-// initializeDatabase();
 // printDatabaseStatistics();

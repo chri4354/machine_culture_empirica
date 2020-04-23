@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
-export const fetchMachineSolution = async data => {
+const fetchMachineSolution = async data => {
   return axios({
     method: 'POST',
     headers: {
@@ -11,3 +11,5 @@ export const fetchMachineSolution = async data => {
     url: Meteor.settings.machineBackendUrl,
   }).then(res => res.data.data);
 };
+
+export default fetchMachineSolution;

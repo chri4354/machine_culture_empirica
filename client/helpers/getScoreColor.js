@@ -20,8 +20,6 @@ const getScoreColor = val => {
   // value must be between [0, 510]
   let value = Math.min(Math.max(0, val / 100), 1) * 510;
 
-  console.log(val, value);
-
   let redValue;
   let greenValue;
   if (value < 255) {

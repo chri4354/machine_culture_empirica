@@ -1,14 +1,14 @@
 import Empirica from 'meteor/empirica:core';
 
 import { Solutions } from './solution';
-import { ExperimentEnvironments } from './experiment-environments';
-import { Chains } from './chain';
-import * as machineSolutionService from './machine-solution-service';
+import { Chains } from './chains/chain';
+import fetchMachineSolution from './machineSolutions/machine-solution-service';
 import { createTreatmentForSolution, pickChainFactorsFromChain } from './utils';
+import logger from './logger';
 
 Meteor.methods({
   fetchMachineSolution(params) {
-    return machineSolutionService.fetchMachineSolution(params);
+    return fetchMachineSolution(params);
   },
 });
 
@@ -46,9 +46,10 @@ Empirica.onRoundStart((game, round, players) => {
   const { batchId } = game;
 
   players.forEach(player => {
-    console.log(
-      `Loading ExperimentEnvironments for playerId: ${player._id}, experimentName: ${experimentName}, batchId: ${batchId}`
-    );
+    logger.log({
+      level: 'info',
+      message: `Loading Seeds for playerId: ${player._id}, experimentName: ${experimentName}, batchId: ${batchId}`,
+    });
 
     /**
      * For practice rounds, load a random chain without locking it.
@@ -60,15 +61,16 @@ Empirica.onRoundStart((game, round, players) => {
     if (!chain) {
       // There are no available chains for the player
       // TODO display error message to user or end the game
-      console.error(`No chains available for player ${player._id}`);
+      logger.log({
+        level: 'error',
+        message: `No chains available for player ${player._id}`,
+      });
       player.exit('No further games avaible for player.');
       return;
     }
 
     const chainFactors = pickChainFactorsFromChain(chain);
-    const environment = isPractice
-      ? ExperimentEnvironments.loadPracticeExperimentEnvironments()[round.index]
-      : ExperimentEnvironments.loadById(chain.experimentEnvironmentId);
+    const seed = isPractice ? round.index : chain.seed;
     let previousSolutionInChain;
     if (isPractice || chain.numberOfValidSolutions === 0) {
       /**
@@ -77,7 +79,7 @@ Empirica.onRoundStart((game, round, players) => {
        */
       const machineSolution = Meteor.call('fetchMachineSolution', {
         modelName: chainFactors.startingSolutionModelName,
-        environment,
+        seed,
         previousSolution: null,
       });
 
@@ -103,10 +105,10 @@ Empirica.onRoundStart((game, round, players) => {
     }
 
     /*
-     * We store the environment on the `player.round` object instead of the round object.
-     * If there are multiple players in the game then each player should have a different chain and environment.
+     * We store the seed on the `player.round` object instead of the round object.
+     * If there are multiple players in the game then each player should have a different chain and seed.
      */
-    player.round.set('environment', environment);
+    player.round.set('seed', seed);
     player.round.set('chain', chain);
     player.round.set('previousSolutionInChain', previousSolutionInChain || { actions: [] });
   });
@@ -124,16 +126,23 @@ Empirica.onRoundEnd((game, round, players) => {
 
   const { batchId } = game;
   players.forEach(player => {
-    const environment = player.round.get('environment');
-    if (!environment) {
-      // For some reason we are sometimes missing the environment.
+    const seed = player.round.get('seed');
+    if (!seed) {
+      // For some reason we are sometimes missing the seed.
       // This is just to survive these edge cases
       // TODO: finding the
-      console.error(`No environment found.`);
+      logger.log({
+        level: 'error',
+        message: `No seed found`,
+      });
       return;
     }
 
-    console.log(`Saving solution game: ${game._id} player: ${player._id} round: ${round._id}`);
+    logger.log({
+      level: 'info',
+      message: `Saving solution game: ${game._id} player: ${player._id} round: ${round._id}`,
+    });
+
     const solution = player.round.get('solution') || {};
     const chain = player.round.get('chain');
     const chainFactors = pickChainFactorsFromChain(chain);
@@ -156,7 +165,7 @@ Empirica.onRoundEnd((game, round, players) => {
       const previousSolution = loadPreviousValidSolution(chain._id);
       const machineSolution = Meteor.call('fetchMachineSolution', {
         modelName: chainFactors.machineSolutionModelName,
-        environment,
+        seed,
         previousSolution,
       });
 

@@ -1,4 +1,4 @@
-import { Solutions } from './solution';
+import { Solutions } from '../solution';
 
 export const Chains = new Mongo.Collection('chains');
 
@@ -42,11 +42,11 @@ const deleteAll = () => {
 const loadNextChainForPlayer = (playerId, batchId) => {
   const playerSolutions = Solutions.loadForPlayer(playerId);
   const playerSoltutionChainIds = playerSolutions.map(solution => solution.chainId);
-  const playerSolutionEnvironmentIds = playerSolutions.map(solution => solution.environmentId);
+  const playerSolutionSeeds = playerSolutions.map(solution => solution.seed);
   const chain = Chains.lockChainForPlayer(
     playerId,
     playerSoltutionChainIds,
-    playerSolutionEnvironmentIds,
+    playerSolutionSeeds,
     batchId
   );
   return chain;
@@ -84,22 +84,17 @@ const loadRandomChain = batchId => {
 };
 
 /**
- * A player must obtain a lock on a chain in order to play that chain/environment
+ * A player must obtain a lock on a chain in order to play that chain/seed
  *
  * @returns {chain | null}
  */
-const lockChainForPlayer = (
-  playerId,
-  playerSolutionChainIds,
-  playerSolutionEnvironmentIds,
-  batchId
-) => {
+const lockChainForPlayer = (playerId, playerSolutionChainIds, playerSolutionSeeds, batchId) => {
   // findAndModify updates one document
   return Chains.findAndModify({
     query: {
       _id: { $nin: playerSolutionChainIds },
       batchId,
-      environmentId: { $nin: playerSolutionEnvironmentIds },
+      seed: { $nin: playerSolutionSeeds },
       $expr: { $gt: ['$lengthOfChain', '$numberOfValidSolutions'] }, // the chain is not complete
       lockedByPlayerId: null,
     },

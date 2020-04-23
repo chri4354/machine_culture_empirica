@@ -5,9 +5,8 @@ export const Solutions = new Mongo.Collection('solutions');
  *
  * {
  *   chainId: string;
- *   environmentId: string;
+ *   seed: number;
  *   experimentName: string;
- *   experimentEnvironmentId: string;
  *   isValid: boolean;
  *   batchId: string;
  *   treatment: Object;
@@ -26,7 +25,6 @@ const count = () => {
 };
 
 const create = solution => {
-  // console.log("Saving solution...", solution);
   return Solutions.insert({
     ...solution,
     createdAt: new Date(),

@@ -1,12 +1,10 @@
 import React from 'react';
 
 import { Centered, ConsentButton } from 'meteor/empirica:core';
-import GameCanvas from '../components/GameCanvas';
 
 const Consent = () => (
   <Centered>
     <div className="consent">
-      <GameCanvas version={1} />
       <h1> Consent Form </h1>
       <p>
         This experiment is part of a scientific project at the Max Planck Institute for Human

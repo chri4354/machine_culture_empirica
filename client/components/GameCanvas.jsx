@@ -1,13 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useSpring, animated } from 'react-spring';
 import getScoreColor from '../helpers/getScoreColor';
+import { getCanvasPosition } from '../helpers/getCanvasPosition';
 import {
+  StyledCursor,
   StyledCurrentPlayerMark,
-  StyledLastPlayerMark,
+  StyledPreviousPlayerMark,
+  StyledLine,
   StyledMarkScoreText,
   StyledSvg,
 } from './GameCanvas.styled';
 
-const CurrentPlayerMark = ({ x, y, score }) => {
+const Cursor = React.memo(({ x, y, crossed }) => {
+  const radius = 5;
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      <StyledCursor r={radius} />
+      {crossed && (
+        <>
+          <StyledLine x1={-radius} y1={-radius} x2={radius} y2={radius} />
+          <StyledLine x1={radius} y1={-radius} x2={-radius} y2={radius} />
+        </>
+      )}
+    </g>
+  );
+});
+
+const CurrentPlayerMark = React.memo(({ x, y, score }) => {
   const radius = 5;
 
   return (
@@ -18,41 +37,89 @@ const CurrentPlayerMark = ({ x, y, score }) => {
       </StyledMarkScoreText>
     </g>
   );
-};
+});
 
-const LastPlayerMark = ({ x, y, score }) => {
+const PreviousPlayerMark = React.memo(({ x, y, score, animationDelay, isPlanStage }) => {
   const width = 10;
   const height = 10;
 
+  const props = useSpring({ from: { opacity: 0 }, to: { opacity: 1 }, delay: animationDelay });
+  console.log(isPlanStage);
+
   return (
-    <g transform={`translate(${x}, ${y})`}>
-      <StyledLastPlayerMark
+    <animated.g transform={`translate(${x - 5}, ${y - 5})`} style={props}>
+      <StyledPreviousPlayerMark
         width={10}
         height={10}
+        inactive={!isPlanStage}
         fill={getScoreColor(score)}
         transform={`rotate(45 ${width / 2} ${height / 2})`}
       />
-      <StyledMarkScoreText inactive x={width} y={height * 2}>
+      <StyledMarkScoreText inactive={!isPlanStage} x={width} y={height * 2}>
         {score}
       </StyledMarkScoreText>
-    </g>
+    </animated.g>
   );
-};
+});
 
-const GameCanvas = ({ version }) => {
+const previousPlayerMarks = (previousPlayerActions, isPlanStage) =>
+  previousPlayerActions.map(({ x, y, reward, step }) => {
+    return (
+      <PreviousPlayerMark
+        key={`previous-player-mark-${step}`}
+        x={x * 500}
+        y={y * 500}
+        score={reward}
+        animationDelay={isPlanStage ? step * 1000 : 0}
+        isPlanStage={isPlanStage}
+      />
+    );
+  });
+
+const playerMarks = playerActions =>
+  playerActions.map(({ x, y, reward, step }) => {
+    return (
+      <CurrentPlayerMark
+        key={`current-player-mark-${step}`}
+        x={x * 500}
+        y={y * 500}
+        score={reward}
+      />
+    );
+  });
+
+const GameCanvas = ({
+  previousPlayerActions,
+  currentPlayerActions,
+  isPlanStage,
+  playerCanAdd,
+  addAction,
+}) => {
+  const [mousePosition, setMousePosition] = useState(null);
+  const [isMouseInCanvas, setIsMouseInCanvas] = useState(true);
+
+  const trackMouse = event => {
+    const { x, y } = getCanvasPosition(event);
+
+    setMousePosition({ x: Math.round(x), y: Math.round(y) });
+  };
+
   return (
-    <StyledSvg className={version} width={700} height={700}>
+    <StyledSvg
+      id="game-canvas"
+      width={500}
+      height={500}
+      onMouseMove={trackMouse}
+      onClick={() => playerCanAdd && addAction(mousePosition)}
+      onMouseLeave={() => setIsMouseInCanvas(false)}
+      onMouseEnter={() => setIsMouseInCanvas(true)}
+    >
       <g>
-        <CurrentPlayerMark x={280} y={200} score={20} />
-        <CurrentPlayerMark x={50} y={80} score={10} />
-        <CurrentPlayerMark x={200} y={500} score={40} />
-        <CurrentPlayerMark x={600} y={600} score={70} />
-        <CurrentPlayerMark x={500} y={400} score={95} />
-        <LastPlayerMark x={320} y={210} score={10} />
-        <LastPlayerMark x={60} y={70} score={40} />
-        <LastPlayerMark x={240} y={500} score={60} />
-        <LastPlayerMark x={500} y={620} score={75} />
-        <LastPlayerMark x={510} y={380} score={85} />
+        {previousPlayerMarks(previousPlayerActions, isPlanStage)}
+        {playerMarks(currentPlayerActions)}
+        {mousePosition && isMouseInCanvas && (
+          <Cursor x={mousePosition.x} y={mousePosition.y} crossed={!playerCanAdd} />
+        )}
       </g>
     </StyledSvg>
   );

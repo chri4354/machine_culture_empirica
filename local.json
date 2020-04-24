@@ -8,5 +8,6 @@
       "password": "machineculture"
     }
   ],
-  "machineBackendUrl": "http://3.122.195.208/"
+  "machineBackendUrl": "http://3.122.195.208",
+  "gameBackendUrl": "http://localhost:8090"
 }

@@ -41,6 +41,7 @@ const loadPreviousValidSolution = chainId => {
 
 Empirica.onRoundStart((game, round, players) => {
   const globalFactors = game.get('globalFactors');
+  const { numberOfActionsPerRound } = globalFactors;
   const isPractice = round.get('isPractice');
   const experimentName = isPractice ? 'practice' : game.get('experimentName');
   const { batchId } = game;
@@ -65,13 +66,21 @@ Empirica.onRoundStart((game, round, players) => {
         level: 'error',
         message: `No chains available for player ${player._id}`,
       });
-      player.exit('No further games avaible for player.');
+      player.exit('No further games available for player.');
       return;
     }
 
+    logger.log({
+      level: 'debug',
+      message: `Loaded Chain: ${JSON.stringify(chain, null, 2)}`,
+    });
+
     const chainFactors = pickChainFactorsFromChain(chain);
-    const seed = isPractice ? round.index : chain.seed;
+
+    // Start from seed 1, seed 0 generates random rewards
+    const seed = isPractice ? round.index + 1 : chain.seed;
     let previousSolutionInChain;
+
     if (isPractice || chain.numberOfValidSolutions === 0) {
       /**
        * Load the initial solution.
@@ -81,6 +90,7 @@ Empirica.onRoundStart((game, round, players) => {
         modelName: chainFactors.startingSolutionModelName,
         seed,
         previousSolution: null,
+        numberOfActionsPerRound,
       });
 
       if (isPractice) {
@@ -139,7 +149,7 @@ Empirica.onRoundEnd((game, round, players) => {
     }
 
     logger.log({
-      level: 'info',
+      level: 'debug',
       message: `Saving solution game: ${game._id} player: ${player._id} round: ${round._id}`,
     });
 

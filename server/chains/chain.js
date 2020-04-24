@@ -1,4 +1,5 @@
 import { Solutions } from '../solution';
+import logger from '../logger';
 
 export const Chains = new Mongo.Collection('chains');
 
@@ -22,13 +23,20 @@ const count = () => {
   return Chains.find({}).count();
 };
 
-const create = chain => {
-  return Chains.insert({
-    ...chain,
+const create = chainData => {
+  const chain = {
+    ...chainData,
     lockedByPlayerId: null,
     numberOfValidSolutions: 0,
     createdAt: new Date(),
+  };
+
+  logger.log({
+    level: 'debug',
+    message: `Created chain: ${JSON.stringify(chain, null, 2)}`,
   });
+
+  return Chains.insert(chain);
 };
 
 const deleteAll = () => {

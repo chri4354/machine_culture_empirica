@@ -33,7 +33,9 @@ const getScoreColor = val => {
     redValue = Math.round(redValue);
   }
 
-  return `#${intToHex(redValue)}${intToHex(greenValue)}00`;
+  return `#${intToHex(redValue < 255 ? redValue : 255)}${intToHex(
+    greenValue < 255 ? greenValue : 255
+  )}00`;
 };
 
 export default getScoreColor;

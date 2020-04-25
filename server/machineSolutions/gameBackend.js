@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import logger from '../logger';
 import { getRandomClickAction, pixelsFrom0to1 } from '../utils';
 
-export const fetchReward = async (seed, position) => {
+export const fetchReward = async (seed, experimentName, position) => {
   const data = {
     requestId: uuidv4(),
     data: {
@@ -11,7 +11,7 @@ export const fetchReward = async (seed, position) => {
       environment: {
         type: 'catwell',
         version: '1',
-        experimentName: 'test',
+        experimentName,
         seed,
       },
     },
@@ -40,10 +40,10 @@ export const fetchReward = async (seed, position) => {
   return { x, y, reward: Math.round(reward) };
 };
 
-export const fetchRandomReward = ({ seed }) => fetchReward(seed, getRandomClickAction());
+export const fetchRandomReward = ({ seed }) => fetchReward(seed, 'test', getRandomClickAction());
 
 Meteor.methods({
-  async newAction(seed, { x, y }) {
+  async newAction(seed, experimentName, { x, y }) {
     logger.log({
       level: 'debug',
       message: `Called calculate reward from Frontend in seed ${seed} and position ${JSON.stringify(
@@ -51,7 +51,10 @@ Meteor.methods({
       )}`,
     });
 
-    const reward = await fetchReward(seed, { x: pixelsFrom0to1(x), y: pixelsFrom0to1(y) });
+    const reward = await fetchReward(seed, experimentName, {
+      x: pixelsFrom0to1(x),
+      y: pixelsFrom0to1(y),
+    });
 
     return reward;
   },

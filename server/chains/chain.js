@@ -1,4 +1,4 @@
-import { Solutions } from '../solution';
+import { Solutions } from '../solutions/solution';
 import logger from '../logger';
 
 export const Chains = new Mongo.Collection('chains');
@@ -51,6 +51,7 @@ const loadNextChainForPlayer = (playerId, batchId) => {
   const playerSolutions = Solutions.loadForPlayer(playerId);
   const playerSoltutionChainIds = playerSolutions.map(solution => solution.chainId);
   const playerSolutionSeeds = playerSolutions.map(solution => solution.seed);
+
   const chain = Chains.lockChainForPlayer(
     playerId,
     playerSoltutionChainIds,

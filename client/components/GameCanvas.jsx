@@ -44,7 +44,6 @@ const PreviousPlayerMark = React.memo(({ x, y, score, animationDelay, isPlanStag
   const height = 10;
 
   const props = useSpring({ from: { opacity: 0 }, to: { opacity: 1 }, delay: animationDelay });
-  console.log(isPlanStage);
 
   return (
     <animated.g transform={`translate(${x - 5}, ${y - 5})`} style={props}>

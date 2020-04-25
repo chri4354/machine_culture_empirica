@@ -49,7 +49,7 @@ Empirica.onRoundStart((game, round, players) => {
 
   for (const player of players) {
     console.log(
-      `Loading ExperimentEnvironments for playerId: ${player._id}, experimentName: ${experimentName}, batchId: ${batchId}`
+      `Loading ExperimentEnvironments for playerId ${player._id}, experimentName ${experimentName}, batchId ${batchId}`
     );
 
     /**
@@ -141,7 +141,7 @@ Empirica.onRoundEnd((game, round, players) => {
     }
 
     console.log(
-      `Saving solution game: ${game._id} player: ${player._id} round: ${round._id}`
+      `Saving solution game ${game._id} player ${player._id} round ${round._id}`
     );
     const solution = player.round.get("solution") || {};
     const chain = player.round.get("chain");

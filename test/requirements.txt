@@ -2,3 +2,4 @@ selenium
 jupyter
 ipython
 ipdb
+docopt

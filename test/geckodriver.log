@@ -1454,3 +1454,181 @@ Sandbox: Unexpected EOF, op 0 flags 00 path /usr/share/locale/en_US/LC_MESSAGES/
 1587824357764	Marionette	INFO	Listening on port 46583
 1587824357791	Marionette	WARN	TLS certificate errors will be ignored for this session
 1587824357876	Marionette	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 519, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 10850, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 5228, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Child 31320, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Child 32076, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 5174, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Child 31817, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 32689, Chrome_ChildThread] WARNING: pipe error: Broken pipe: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 30215, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Sandbox: Unexpected EOF, op 0 flags 00 path /usr/share/locale/en_US/LC_MESSAGES/libc.mo
+[Child 30165, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 10957, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Child 1011, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 10022, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 741, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+Sandbox: Unexpected EOF, op 0 flags 00 path /usr/share/locale/en_US/LC_MESSAGES/libc.mo
+[Child 30019, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+Sandbox: Unexpected EOF, op 0 flags 00 path /usr/share/locale/en_US/LC_MESSAGES/libc.mo
+[Child 10851, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+Sandbox: Unexpected EOF, op 0 flags 00 path /usr/share/locale/en_US/LC_MESSAGES/libc.mo
+[Child 9802, Chrome_ChildThread] WARNING: pipe error (32): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Child 9802, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1587825375649	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileI9pbXT"
+1587825375651	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofiletXd0mU"
+1587825375682	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileUZpd25"
+1587825375688	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileCGJzjD"
+*** You are running in headless mode.
+*** You are running in headless mode.
+*** You are running in headless mode.
+*** You are running in headless mode.
+1587825385089	Marionette	INFO	Listening on port 40649
+1587825385160	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825385546	Marionette	INFO	Listening on port 33997
+1587825385672	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825385786	Marionette	INFO	Listening on port 37989
+1587825385865	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825386119	Marionette	INFO	Listening on port 40525
+1587825386189	Marionette	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 13123, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1587825393803	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileudTL2O"
+1587825393810	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilezOC1nV"
+1587825393838	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilew4b1ud"
+*** You are running in headless mode.
+*** You are running in headless mode.
+*** You are running in headless mode.
+1587825394787	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileUihHNF"
+*** You are running in headless mode.
+1587825399833	Marionette	INFO	Listening on port 44129
+1587825399869	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825400344	Marionette	INFO	Listening on port 40647
+1587825400380	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825400448	Marionette	INFO	Listening on port 46469
+1587825400472	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825400666	Marionette	INFO	Listening on port 44653
+1587825400739	Marionette	WARN	TLS certificate errors will be ignored for this session
+[Parent 13543, Gecko_IOThread] WARNING: pipe error (55): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Parent 13531, Gecko_IOThread] WARNING: pipe error (66): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1587825519178	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileh4kBXd"
+*** You are running in headless mode.
+[Parent 13610, Gecko_IOThread] WARNING: pipe error (55): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1587825519752	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilegeapYI"
+*** You are running in headless mode.
+1587825520432	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileTimPK6"
+*** You are running in headless mode.
+1587825520941	Marionette	INFO	Listening on port 39861
+1587825521027	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825521900	Marionette	INFO	Listening on port 39443
+1587825521965	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825522457	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile9H9GyX"
+*** You are running in headless mode.
+1587825523116	Marionette	INFO	Listening on port 44213
+1587825523206	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileZF5huP"
+1587825523208	Marionette	WARN	TLS certificate errors will be ignored for this session
+*** You are running in headless mode.
+1587825524539	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile7LXQ24"
+*** You are running in headless mode.
+1587825524740	Marionette	INFO	Listening on port 46267
+1587825524849	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825525784	Marionette	INFO	Listening on port 36177
+1587825525846	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825526244	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile7KAp3g"
+*** You are running in headless mode.
+1587825527337	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileEdS06i"
+*** You are running in headless mode.
+1587825527642	Marionette	INFO	Listening on port 43229
+1587825527677	Marionette	WARN	TLS certificate errors will be ignored for this session
+[Parent 13533, Gecko_IOThread] WARNING: pipe error (75): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1587825529392	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileBPy60U"
+*** You are running in headless mode.
+1587825529499	Marionette	INFO	Listening on port 46709
+1587825529592	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825530405	Marionette	INFO	Listening on port 38263
+1587825530439	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile8HXjpj"
+1587825530468	Marionette	WARN	TLS certificate errors will be ignored for this session
+*** You are running in headless mode.
+1587825530910	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileqYbtXr"
+*** You are running in headless mode.
+1587825531746	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileI0hbee"
+*** You are running in headless mode.
+1587825532189	Marionette	INFO	Listening on port 45205
+1587825532253	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825533593	Marionette	INFO	Listening on port 33739
+1587825533698	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825533841	Marionette	INFO	Listening on port 46141
+1587825533975	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587825534688	Marionette	INFO	Listening on port 33569
+1587825534770	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826043874	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilemDwvx7"
+1587826043874	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileYVaVee"
+*** You are running in headless mode.
+*** You are running in headless mode.
+1587826044880	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileolCrHk"
+*** You are running in headless mode.
+1587826046058	Marionette	INFO	Listening on port 33601
+1587826046110	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826046137	Marionette	INFO	Listening on port 37675
+1587826046208	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826047311	Marionette	INFO	Listening on port 46491
+1587826047404	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826667349	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileIkCAS0"
+*** You are running in headless mode.
+1587826669157	Marionette	INFO	Listening on port 33381
+1587826669301	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826670614	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileGReivB"
+*** You are running in headless mode.
+1587826670710	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile2Cu4ka"
+*** You are running in headless mode.
+1587826672660	Marionette	INFO	Listening on port 36341
+1587826672727	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826672742	Marionette	INFO	Listening on port 33605
+1587826672827	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826673976	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile8u5lX7"
+*** You are running in headless mode.
+1587826674111	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile2671CB"
+*** You are running in headless mode.
+1587826676496	Marionette	INFO	Listening on port 43769
+1587826676547	Marionette	INFO	Listening on port 42585
+1587826676632	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826677462	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826678771	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofiley4z2MP"
+*** You are running in headless mode.
+1587826678912	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilejUUw25"
+*** You are running in headless mode.
+1587826681812	Marionette	INFO	Listening on port 38087
+1587826681887	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587826681922	Marionette	INFO	Listening on port 43727
+1587826682022	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587828523611	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileMV2vdG"
+1587828523612	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileLZ5K5j"
+1587828523612	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileNyOU6R"
+*** You are running in headless mode.
+*** You are running in headless mode.
+*** You are running in headless mode.
+1587828526779	Marionette	INFO	Listening on port 36245
+1587828526784	Marionette	INFO	Listening on port 33943
+1587828526831	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587828526867	Marionette	INFO	Listening on port 38791
+1587828526880	Marionette	WARN	TLS certificate errors will be ignored for this session
+1587828526906	Marionette	WARN	TLS certificate errors will be ignored for this session
+[Child 21026, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Child 21025, Chrome_ChildThread] WARNING: pipe error (16): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+[Child 21025, Chrome_ChildThread] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-oscv9o/firefox-61.0.1+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353

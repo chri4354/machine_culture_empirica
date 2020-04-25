@@ -31,7 +31,7 @@ function initializeChains(
   previousSolutionAnimationDurationInSeconds
 ) {
   console.log(
-    `Initializing chains for experiment ${experimentName}, Number of chains per env: ${numberOfChainsPerEnvironment}`
+    `Initializing chains for experiment ${experimentName}, Number of chains per env ${numberOfChainsPerEnvironment}`
   );
 
   const experimentEnvironments = ExperimentEnvironments.loadAll(experimentName);

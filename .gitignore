@@ -11,3 +11,4 @@ local.
 
 .deploy_stage
 .env.sh
+.env

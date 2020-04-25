@@ -1,0 +1,4 @@
+selenium
+jupyter
+ipython
+ipdb

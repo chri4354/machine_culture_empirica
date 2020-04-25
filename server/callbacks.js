@@ -40,6 +40,8 @@ const loadPreviousValidSolution = chainId => {
 };
 
 Empirica.onRoundStart((game, round, players) => {
+  console.time('onRoundStart');
+  game.set('timeRoundStarted', Date.now());
   const globalFactors = game.get("globalFactors");
   const isPractice = round.get("isPractice");
   const experimentName = isPractice ? "practice" : game.get("experimentName");
@@ -113,9 +115,11 @@ Empirica.onRoundStart((game, round, players) => {
       previousSolutionInChain || { actions: [] }
     );
   }
+  console.timeEnd('onRoundStart');
 });
 
 Empirica.onRoundEnd((game, round, players) => {
+  console.time('onRoundEnd');
   const isPractice = round.get("isPractice");
   const experimentName = game.get("experimentName");
   const globalFactors = game.get("globalFactors");
@@ -182,7 +186,29 @@ Empirica.onRoundEnd((game, round, players) => {
 
     // releasing the chain lock
     Chains.updateChainAfterRound(chain._id, player._id, numberOfValidSolutions);
+
+    // quick logging stuff
+    const timeRoundEnded = Date.now();
+    const timeRoundStarted = game.get('timeRoundStarted');
+    const lastRoundEnded = game.get('timeRoundEnded');
+    game.set('timeRoundEnded', timeRoundEnded);
+
+    const info = {
+      roundDuration: (timeRoundEnded - timeRoundStarted) / 1000,
+      roundSolutionValid: solution.isValid,
+      timeSinceLastRoundEnded: (timeRoundEnded - lastRoundEnded) / 1000,
+      playerId: player._id,
+      chainId: chain._id,
+      chainNumberOfValidSolutions: numberOfValidSolutions,
+      batchId,
+      chainHasMachineSolution: chain.hasMachineSolution,
+      isPractice,
+      environmentId: environment._id
+    }
+
+    console.log( `Round Ended: ${JSON.stringify(info)}`)
   }
+  console.timeEnd('onRoundEnd');
 });
 
 // onGameEnd is triggered when the game ends.

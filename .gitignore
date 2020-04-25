@@ -10,4 +10,5 @@ dev.json
 local.
 
 .deploy_stage
+.deploy_prod
 .env.sh

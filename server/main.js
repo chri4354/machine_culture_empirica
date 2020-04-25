@@ -12,7 +12,9 @@ import { Chains } from "./chain";
  */
 setInterval(
   Meteor.bindEnvironment(() => {
+    console.time('randomSortChains');
     Chains.updateRandomNumbersForSorting();
+    console.timeEnd('randomSortChains');
   }),
   30 * 1000
 );
@@ -105,7 +107,8 @@ Empirica.batchInit((batch, treatments) => {
 });
 
 Empirica.gameInit((game, treatment, players) => {
-  console.log(`Game Init: treatments: ${JSON.stringify(treatment)}`);
+  console.time('gameInit');
+  console.log(`Game Init treatments: ${JSON.stringify(treatment)}`);
 
   const {
     debug,
@@ -167,6 +170,7 @@ Empirica.gameInit((game, treatment, players) => {
       durationInSeconds: reviewStageDurationInSeconds
     });
   });
+  console.timeEnd('gameInit');
 });
 
 // resetDatabase();

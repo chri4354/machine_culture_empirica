@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import GameCanvas from '../components/GameCanvas';
 import { isSolutionValid, calculateScore } from '../../imports/utils';
@@ -62,6 +62,13 @@ const TaskStimulus = ({ game, stage, round, player, remainingSeconds }) => {
       });
     }
   };
+
+  useEffect(() => {
+    if (isResponseStage) {
+      // Create an empty solution when response stage starts
+      updateSolution([]);
+    }
+  }, [isResponseStage]);
 
   return (
     <div className="task-stimulus">

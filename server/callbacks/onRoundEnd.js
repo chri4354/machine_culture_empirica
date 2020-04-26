@@ -49,7 +49,12 @@ const onRoundEnd = (game, round, players) => {
       isMachineSolution: false,
       playerId: player._id,
     });
-    player.set('score', (player.get('score') || 0) + solution.totalReward);
+
+    if (solution.isValid) {
+      player.set('score', (player.get('score') || 0) + solution.totalReward);
+    } else {
+      player.set('score', (player.get('score') || 0) - game.get('missingSolutionPenalty'));
+    }
 
     let numberOfValidSolutions = solution.isValid
       ? chain.numberOfValidSolutions + 1

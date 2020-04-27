@@ -71,7 +71,8 @@ class TaskStimulus extends React.Component {
       this.setState({
         activeNodeId: startingNodeId,
         numberOfActionsRemaining: requiredSolutionLength,
-        roundScore: 0
+        roundScore: 0,
+        timeResponseStarted: Date.new()
       });
     }
     if (this.isResponseStage()) {
@@ -109,9 +110,6 @@ class TaskStimulus extends React.Component {
           (this.getPreviousSolutionAnimationDurationInSeconds() /
             actions.length) *
           1000;
-        const numberOfAnimationsStepsPerIteration = 4;
-        const durationOfAnimationStepMs =
-          durationOfIterationMs / numberOfAnimationsStepsPerIteration;
         await new Promise(function(resolve) {
           setTimeout(() => {
             that.setState({
@@ -122,7 +120,7 @@ class TaskStimulus extends React.Component {
               animationSource: true
             });
             resolve();
-          }, 0.1 * durationOfAnimationStepMs);
+          }, 0.1 / 1.3 * durationOfIterationMs);
         });
         await new Promise(function(resolve) {
           setTimeout(() => {
@@ -130,7 +128,7 @@ class TaskStimulus extends React.Component {
               animationTarget: true
             });
             resolve();
-          }, 0.1 * durationOfAnimationStepMs);
+          }, 0.1 / 1.3 * durationOfIterationMs);
         });
         await new Promise(function(resolve) {
           setTimeout(() => {
@@ -139,7 +137,7 @@ class TaskStimulus extends React.Component {
               animationSource: false
             });
             resolve();
-          }, 0.1 * durationOfAnimationStepMs);
+          }, 0.1 / 1.3 * durationOfIterationMs);
         });
         await new Promise(function(resolve) {
           setTimeout(() => {
@@ -149,7 +147,7 @@ class TaskStimulus extends React.Component {
               numberOfActionsTaken: prevState.numberOfActionsTaken + 1
             }));
             resolve();
-          }, 1 * durationOfAnimationStepMs);
+          }, 1 / 1.3 * durationOfIterationMs);
         });
       }
       that.setState({
@@ -192,7 +190,7 @@ class TaskStimulus extends React.Component {
       chainId: chain._id,
       previousSolutionId: previousSolution._id,
       timeElapsedInSeconds: isValid
-        ? this.props.stage.durationInSeconds - this.props.remainingSeconds
+        ? Date.new() - this.state.timeResponseStarted
         : null,
       totalReward: isValid ? calculateScore(actions) : missingSolutionPenalty
     };

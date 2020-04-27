@@ -39,9 +39,10 @@ const loadPreviousValidSolution = chainId => {
   return solutions && solutions.length && solutions[solutions.length - 1];
 };
 
-Empirica.onRoundStart((game, round, players) => {
+Empirica.onRoundStart((game, round) => {
   console.time('onRoundStart');
   game.set('timeRoundStarted', Date.now());
+  const players = game.players;
   const globalFactors = game.get("globalFactors");
   const isPractice = round.get("isPractice");
   const experimentName = isPractice ? "practice" : game.get("experimentName");
@@ -118,8 +119,9 @@ Empirica.onRoundStart((game, round, players) => {
   console.timeEnd('onRoundStart');
 });
 
-Empirica.onRoundEnd((game, round, players) => {
+Empirica.onRoundEnd((game, round) => {
   console.time('onRoundEnd');
+  const players = game.players;
   const isPractice = round.get("isPractice");
   const experimentName = game.get("experimentName");
   const globalFactors = game.get("globalFactors");
@@ -195,7 +197,7 @@ Empirica.onRoundEnd((game, round, players) => {
 
     const info = {
       roundDuration: (timeRoundEnded - timeRoundStarted) / 1000,
-      roundSolutionValid: solution.isValid,
+      roundSolutionValid: solution.isValid || false,
       timeSinceLastRoundEnded: (timeRoundEnded - lastRoundEnded) / 1000,
       playerId: player._id,
       chainId: chain._id,

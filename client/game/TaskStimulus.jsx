@@ -72,7 +72,7 @@ class TaskStimulus extends React.Component {
         activeNodeId: startingNodeId,
         numberOfActionsRemaining: requiredSolutionLength,
         roundScore: 0,
-        timeResponseStarted: Date.new()
+        timeResponseStarted: Date.now()
       });
     }
     if (this.isResponseStage()) {
@@ -190,7 +190,7 @@ class TaskStimulus extends React.Component {
       chainId: chain._id,
       previousSolutionId: previousSolution._id,
       timeElapsedInSeconds: isValid
-        ? Date.new() - this.state.timeResponseStarted
+        ? (Date.now() - this.state.timeResponseStarted) / 1000
         : null,
       totalReward: isValid ? calculateScore(actions) : missingSolutionPenalty
     };

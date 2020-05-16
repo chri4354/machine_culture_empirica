@@ -1,6 +1,7 @@
 node_modules/
 packages/
 .vscode/
+.docker/bundle/
 settings.json
 production.json
 prod.json

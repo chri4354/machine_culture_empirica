@@ -10,7 +10,7 @@ const fetchMachineSolution = async ({
 }) => {
   logger.log({
     level: 'debug',
-    message: `Fetching 4 Machine Solutions with params: ${JSON.stringify({
+    message: `Fetching ${numberOfActionsPerRound} Machine Solutions with params: ${JSON.stringify({
       modelName,
       seed,
       previousSolution,
@@ -24,7 +24,7 @@ const fetchMachineSolution = async ({
   const totalReward = actions.reduce((acc, curr) => acc + curr.reward, 0);
 
   logger.log({
-    level: 'info',
+    level: 'debug',
     message: `Machine solution actions ${JSON.stringify(actions)}`,
   });
 

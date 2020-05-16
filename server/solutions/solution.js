@@ -1,3 +1,5 @@
+import { createTreatmentForSolution } from '../utils';
+
 export const Solutions = new Mongo.Collection('solutions');
 
 /*
@@ -54,6 +56,33 @@ const loadById = _id => {
 
 const loadValidSolutionsForChain = chainId => {
   return Solutions.find({ chainId, isValid: true }, { sort: { createdAt: 1 } }).fetch();
+};
+
+export const saveMachineSolution = (
+  machineSolution,
+  batchId,
+  globalFactors,
+  chainFactors,
+  chainId,
+  experimentName,
+  previousSolutionId
+) => {
+  return Solutions.create({
+    ...machineSolution,
+    batchId,
+    chainId,
+    experimentName,
+    previousSolutionId,
+    treatment: createTreatmentForSolution(globalFactors, chainFactors),
+    isValid: true,
+    isMachineSolution: true,
+    playerId: null,
+  });
+};
+
+export const loadPreviousValidSolution = chainId => {
+  const solutions = Solutions.loadValidSolutionsForChain(chainId);
+  return solutions && solutions.length && solutions[solutions.length - 1];
 };
 
 Solutions.count = count;

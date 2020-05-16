@@ -7,10 +7,11 @@ set -e
 # Default values
 : ${HOME:="/home/meteor"}
 : ${APP_DIR:="${HOME}/www"}      # Location of built Meteor app
+: ${BUNDLE_DIR:="${HOME}/www"}      # Location of built Meteor app
 : ${SRC_DIR:="${HOME}/src"}      # Location of Meteor app source
 : ${BRANCH:="master"}
 : ${NODE_OPTIONS:=""}         # Options to pass to Node when executing app
-: ${SETTINGS_FILE:=""}        # Location of settings.json file
+: ${SETTINGS_FILE:="local.json"}        # Location of settings.json file
 : ${SETTINGS_URL:=""}         # Remote source for settings.json
 : ${MONGO_URL:="mongodb://${MONGO_PORT_27017_TCP_ADDR}:${MONGO_PORT_27017_TCP_PORT}/${DB}"}
 : ${PORT:="3000"}
@@ -181,8 +182,8 @@ if [ ! -e ${BUNDLE_DIR}/main.js ]; then
 fi
 
 # Process settings sources, if they exist
-if [ -f "${SETTINGS_FILE}" ]; then
-   export METEOR_SETTINGS=$(cat ${SETTINGS_FILE})
+if [ -f "${BUNDLE_DIR}/${SETTINGS_FILE}" ]; then
+   export METEOR_SETTINGS=$(cat ${BUNDLE_DIR}/${SETTINGS_FILE})
 fi
 if [ "x${SETTINGS_URL}" != "x" ]; then
    TMP_SETTINGS=$(curl -s ${SETTINGS_URL})

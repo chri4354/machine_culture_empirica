@@ -2,13 +2,15 @@
   "name": "empirica2",
   "private": true,
   "scripts": {
-    "start": "env-cmd meteor run --settings local.json",
+    "start": "npm run pull:submodules && npm run run:dev",
     "debug": "env-cmd meteor run --inspect-brk=9229 --settings local.json",
     "lint": "eslint \"**/*.{js,jsx}\"",
     "format": "prettier --write **/*.{js,jsx}",
     "build": "env-cmd meteor build .docker --directory --architecture=os.linux.x86_64 && cp local.json .docker/bundle/local.json",
     "docker:build": "docker build -t machine_culture .docker",
-    "docker:run": "docker run --rm -p 3000:3000 -e ROOT_URL=http://localhost:3000 -e MONGO_URL=mongodb://host.docker.internal:27017/machine_culture -e MONGO_OPLOG_URL=mongodb://host.docker.internal:27017/machine_culture machine_culture"
+    "docker:run": "docker run --rm -p 3000:3000 -e ROOT_URL=http://localhost:3000 -e MONGO_URL=mongodb://host.docker.internal:27017/machine_culture -e MONGO_OPLOG_URL=mongodb://host.docker.internal:27017/machine_culture machine_culture",
+    "run:dev": "env-cmd meteor run --settings local.json",
+    "pull:submodules": "git submodule update --init --recursive"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",

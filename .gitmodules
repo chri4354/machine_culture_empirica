@@ -1,0 +1,3 @@
+[submodule "packages/meteor-empirica-core"]
+	path = packages/meteor-empirica-core
+	url = https://github.com/LBrinkmann/meteor-empirica-core

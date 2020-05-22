@@ -1,0 +1,7 @@
+stages:
+  - docker-build
+
+dockerbuild:
+  stage: docker-build
+  script:
+    - echo "hello world"

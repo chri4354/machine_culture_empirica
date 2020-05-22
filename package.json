@@ -7,8 +7,8 @@
     "lint": "eslint \"**/*.{js,jsx}\"",
     "format": "prettier --write **/*.{js,jsx}",
     "build": "env-cmd meteor build .docker --directory --architecture=os.linux.x86_64 && cp local.json .docker/bundle/local.json",
-    "docker:build": "docker build -t social_attraction .docker",
-    "docker:run": "docker run --rm -p 3000:3000 -e ROOT_URL=http://localhost:3000 -e MONGO_URL=mongodb://host.docker.internal:27017/social_attraction social_attraction"
+    "docker:build": "docker build -t machine_culture .docker",
+    "docker:run": "docker run --rm -p 3000:3000 -e ROOT_URL=http://localhost:3000 -e MONGO_URL=mongodb://host.docker.internal:27017/machine_culture -e MONGO_OPLOG_URL=mongodb://host.docker.internal:27017/machine_culture machine_culture"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",

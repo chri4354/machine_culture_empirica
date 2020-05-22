@@ -17,5 +17,6 @@ dockerbuild:
     - chmod +x ./kubectl
     - mv ./kubectl /usr/local/bin/kubectl
     - aws eks update-kubeconfig --name chm-test-default --region eu-central-1 --role-arn arn:aws:iam::540467641217:role/chm.test.default.eks_Admin
+    - kubectl get ns
     - npm run build
     - npm run docker:build

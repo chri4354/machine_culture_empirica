@@ -52,7 +52,7 @@ python upload_environments.py ../data/select_environments.json
 To run this project locally:
 
 ```
-meteor --settings local.json
+NODE_TLS_REJECT_UNAUTHORIZED=0 meteor --settings local.json
 ```
 
 ## Introduction

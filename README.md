@@ -6,22 +6,51 @@ _This project was generated with [create-empirica-app](https://github.com/empiri
 
 ### Setup
 
-To build this app a custom verison of the `empirica-core` is required.
+To build this app a custom verison of the `empirica-core` is required. This is
+included as a submodule in this repository
 
 ```
-git clone git@github.com:LBrinkmann/meteor-empirica-core.git
+git submodule update --init --recursive
 ```
-The path to this repository needs to be added as a environment variable.
+
+Install the corresponding version of meteor.
+
 ```
-export METEOR_PACKAGE_DIRS=/path/to/folder/containing/empirica/core
+curl "https://install.meteor.com/?release=1.9.3" | sh
 ```
+
+Install the meteor project.
 
 ```
 meteor npm install
 ```
 
+### Insert environments
+
+Enter folder
+
+```
+cd python
+```
+
+Create environment, enter environment, install packages.
+
+```
+python3.9 -m venv .venv
+. .venv/bin/activate
+python % pip install -r requirements.txt
+```
+
+Insert environments into database
+
+```
+python upload_environments.py ../data/select_environments.json
+```
+
 ### Run locally
+
 To run this project locally:
+
 ```
 meteor --settings local.json
 ```
@@ -30,18 +59,18 @@ meteor --settings local.json
 
 See also: https://docs.google.com/presentation/d/1WeNTlvzua9MRpHEa1imxPuRFjh-6oa3Aq1bhDpM9vlQ/edit?usp=sharing
 
-The objective of this application is to study cultural evolution, expecially when 
+The objective of this application is to study cultural evolution, expecially when
 machines and humans co-develop.
 We study the play of different games. Within the games different actions do have
 different rewards. The objective of the player is to maximise his total reward.
-Each game can have different settings, which in general are randomly generated. 
-A specific setting is called `environment`.   
+Each game can have different settings, which in general are randomly generated.
+A specific setting is called `environment`.
 
-To mimic cultural evolution, we are running series of game rounds, where in each 
-round a player see the solution of a previous player. She is then invited to 
-give her own solution and potential improve on it. A Series of game rounds, 
+To mimic cultural evolution, we are running series of game rounds, where in each
+round a player see the solution of a previous player. She is then invited to
+give her own solution and potential improve on it. A Series of game rounds,
 in which information passed on, is called a `chain`. Within a chain the games is
-played with the same environment. 
+played with the same environment.
 
 Each chain has the same number of game rounds (`lengthOfChain`). At an specific
 position in the chain a machine can be inserted (`positionOfMachineSolution`),
@@ -50,16 +79,16 @@ In this case the environment, solution of the previous player, as well as, the
 `machineSolutionModelName` is send to a seperate endpoint, which will return
 its (machine) solution.
 
-Similarly for the first round within a chain, the same endpoint is requested for a 
+Similarly for the first round within a chain, the same endpoint is requested for a
 starting solution to be presented as the previous solution (`startingSolutionModelName`).
 
 ### Mapping on empirica concepts
 
-* **empirica batch** is a collection of games. Upon creation a defined number of chains is generated (see below). 
-These chains are fetched during gameplay on demand. 
-* **empirica game** Each player has his own empirica game. For this reason, the number of games should be as large as the maximum number of player expected.
-* **empirica round** The game has `numberOfRounds` rounds, plus 2 practice rounds. On each each round, a new chain is selected for the player to play. It is ensured, that never two player can play the same chain simultaniously and that never the same player is playing the same environment twice
-* **empirica stage** Each game has three stages. In the planing stage the player is time to plan his moves (`planningStageDurationInSeconds`). In the response stage she has time to enter a solution (`responseStageDurationInSeconds`). Finally there is a 5 second phase to review the reward recieved.
+- **empirica batch** is a collection of games. Upon creation a defined number of chains is generated (see below).
+  These chains are fetched during gameplay on demand.
+- **empirica game** Each player has his own empirica game. For this reason, the number of games should be as large as the maximum number of player expected.
+- **empirica round** The game has `numberOfRounds` rounds, plus 2 practice rounds. On each each round, a new chain is selected for the player to play. It is ensured, that never two player can play the same chain simultaniously and that never the same player is playing the same environment twice
+- **empirica stage** Each game has three stages. In the planing stage the player is time to plan his moves (`planningStageDurationInSeconds`). In the response stage she has time to enter a solution (`responseStageDurationInSeconds`). Finally there is a 5 second phase to review the reward recieved.
 
 ### Empirica Factors
 
@@ -89,7 +118,6 @@ Note: Each player can only play once each environment.
 - startingSolutionModelName (string) - model name used for the starting solution
 - machineSolutionModelName (string) - model name used for the machine solution
 - chainsHaveMachineSolution (boolean) - flag to indicate if the chain should have a machine solution
-
 
 ### Architecture
 
@@ -133,11 +161,13 @@ Host mpi-ec2-emp1
   IdentityFile /absolute/path/to/machine-culture-2.pem
   User ubuntu
 ```
+
 The `/absolute/path/to/machine-culture-2.pem` needs to be addopted.
 
 ##### Creating Tunnel
 
 To be able to connect to the database a ssh tunnel needs to be created. It is as simple as:
+
 ```
 ssh -L 3002:0.0.0.0:27017 mpi-ec2-emp1
 ```
@@ -162,7 +192,7 @@ To update the machine configuration: https://reqbin.com/pthff5f5
 
 ## Protokoll for running experiments
 
-### Step 1: Define Factors in Logbook 
+### Step 1: Define Factors in Logbook
 
 ### Step 2: Check if all factors are avaible in Empirica
 
@@ -172,15 +202,14 @@ To update the machine configuration: https://reqbin.com/pthff5f5
 
 Without machine:
 
-rounds = (number of environments) x (number of chains for each environment) x (number for length)
-                           +
-With machine: 
+rounds = (number of environments) x (number of chains for each environment) x (number for length) +
+With machine:
 rounds = (number of environments) x (number of chains for each environment) x (number for length)
 
 number length without machine = 3
 number length with machine = 2
 
-Minimum number of participants: 
+Minimum number of participants:
 (total number of rounds) / (number Of Rounds per participant)
 
 ### Step 5: Create Batch
